@@ -36,6 +36,7 @@ service_listener_options and also register the entity service in the service man
 ```
 'service_manager' => array(
     'invokables' => array(
+        'EntityRepositoryManager' => 'PolderKnowledge\EntityService\Service\EntityRepositoryManager',
         'EntityServiceManager' => 'PolderKnowledge\EntityService\Service\EntityServiceManager',
     ),
 ),
@@ -48,6 +49,17 @@ service_listener_options and also register the entity service in the service man
 	),
 ),
 ```
+
+Also make sure you configure the entity repository manager in a module.config.php:
+
+```
+'entity_repository_manager' => array(
+    'abstract_factories' => array(
+        'PolderKnowledge\EntityService\Service\DoctrineRepositoryAbstractFactory',
+    ),
+),
+```
+
 
 ## Repositories
 
