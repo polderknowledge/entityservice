@@ -15,7 +15,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class EntityServiceAbstractServiceFactory implements AbstractFactoryInterface
 {
-    const REPOSITORY_SERVICE_KEY = 'PolderKnowledge\EntityService\Service\EntityRepositoryManager';
+    const REPOSITORY_SERVICE_KEY = 'EntityRepositoryManager';
 
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
