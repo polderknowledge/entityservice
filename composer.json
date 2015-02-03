@@ -20,7 +20,8 @@
         "phing/phing": "2.9.*",
         "phpmd/phpmd": "1.*",
         "pdepend/pdepend": "1.*",
-        "phpdocumentor/phpdocumentor": "~2.8"
+        "phpdocumentor/phpdocumentor": "~2.8",
+        "zendframework/zend-validator": "2.3.*"
     },
     "autoload": {
         "psr-4": {
@@ -31,5 +32,8 @@
         "psr-4": {
             "PolderKnowledge\\EntityServiceTest\\": "tests/"
         }
+    },
+    "suggest": {
+        "zendframework/zend-validator": "To make use of the validators provided by this package."
     }
 }

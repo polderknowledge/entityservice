@@ -33,7 +33,7 @@ In order to make use of the EntityServiceManager, you need to configure it. Make
 service_listener_options and also register the entity service in the service manager. Add the following to 
 `config/application.config.php`.
 
-```
+```php
 'service_manager' => array(
     'invokables' => array(
         'EntityRepositoryManager' => 'PolderKnowledge\EntityService\Service\EntityRepositoryManager',
@@ -52,7 +52,7 @@ service_listener_options and also register the entity service in the service man
 
 Also make sure you configure the entity repository manager in a module.config.php:
 
-```
+```php
 'entity_repository_manager' => array(
     'abstract_factories' => array(
         'PolderKnowledge\EntityService\Service\DoctrineRepositoryAbstractFactory',
@@ -69,3 +69,42 @@ This library has a Doctrine ORM Repository which makes it possible to store and 
 via Doctrine ORM. This library provides an AbstractServiceFactory that can be used to fall back on.
 
 **NOTE:** This library does not require Doctrine ORM, make sure to add the library to your `composer.json`.
+
+## Validators
+
+This library provides two validators: EntityExists and EntityNotExists. These validators are derived from 
+Zend\Validator and therefor you should include "zendframework/zend-validator" in your composer.json.
+
+### EntityExists
+```php
+$this->add(array(
+    'name' => 'identity',
+    'required' => true,
+    'validators' => array(
+        array(
+            'name' => 'PolderKnowledge\EntityService\Validator\EntityExists',
+            'options' => array(
+                'entityService' => $this->getEntityService(),
+                'field' => 'id',
+            ),
+        ),
+    ),
+));
+```
+
+### EntityNotExists
+```php
+$this->add(array(
+    'name' => 'identity',
+    'required' => true,
+    'validators' => array(
+        array(
+            'name' => 'PolderKnowledge\EntityService\Validator\EntityNotExists',
+            'options' => array(
+                'entityService' => $this->getEntityService(),
+                'field' => 'id',
+            ),
+        ),
+    ),
+));
+```
