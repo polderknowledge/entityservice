@@ -22,6 +22,7 @@ abstract class AbstractEntityValidatorFactory implements FactoryInterface
 {
 
     /**
+     * Fetches a EntityServiceInterface instance from the EntityServiceManager
      *
      * @param ServiceLocatorInterface $serviceLocator
      * @param string $entityName

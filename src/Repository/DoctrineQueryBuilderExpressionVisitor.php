@@ -18,6 +18,7 @@ use Doctrine\Common\Collections\Expr\ExpressionVisitor;
 use Doctrine\Common\Collections\Expr\Value;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Comparison as OrmComparison;
+use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\QueryBuilder;
@@ -29,7 +30,8 @@ use Youngguns\StdLib\Criterion\Expression\MultiParameterExpression;
 use Youngguns\StdLib\Criterion\MultiParameterExpressionVisitorInterface;
 
 /**
- * The DoctrineQuerybuilderExpressionVisitor class is able to build a query expression.
+ * Class used to convert Criteria to doctrine orm expressions.
+ *
  */
 class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
     MultiParameterExpressionVisitorInterface,
@@ -69,9 +71,10 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
     protected $parameters = array();
 
     /**
-     * Initializes a new instance of this class.
+     * Wil initialize this class whit a root alias used for all fields and
+     * QueryBuilder to create the actual expressions
      *
-     * @param string $rootAlias
+     * @param $rootAlias
      * @param QueryBuilder $queryBuilder
      */
     public function __construct($rootAlias, QueryBuilder $queryBuilder)
@@ -115,6 +118,10 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
 
     /**
      * {@inheritDoc}
+     *
+     * @param CompositeExpression $expr
+     * @return Andx|Orx
+     * @throws RuntimeException
      */
     public function walkCompositeExpression(CompositeExpression $expr)
     {
@@ -137,9 +144,11 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
     }
 
     /**
+     * {@inheritdoc}
      *
-     * {@inheritDoc}
-     *
+     * @param Comparison $comparison
+     * @return OrmComparison
+     * @throws RuntimeException
      */
     public function walkComparison(Comparison $comparison)
     {
@@ -219,6 +228,12 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
         }
     }
 
+    /**
+     * Convert MultiParameterExpression to between expression
+     * @param MultiParameterExpression $expression
+     * @return Func
+     * @throws RuntimeException
+     */
     public function walkMultiParamExpression(MultiParameterExpression $expression)
     {
         $placeholders = $this->setParameters($expression);
@@ -231,6 +246,13 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
         }
     }
 
+    /**
+     * Convert DateTimeExpression to between expression
+     *
+     * @param DateTimeExpression $expression
+     * @return Func
+     * @throws RuntimeException
+     */
     public function walkDateTimeExpression(DateTimeExpression $expression)
     {
         $placeholders = $this->setParameters($expression);
@@ -246,6 +268,12 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
         }
     }
 
+    /**
+     * Set parameters to this class and return there names.
+     *
+     * @param $expression
+     * @return array
+     */
     protected function setParameters($expression)
     {
         $placeholders = array();
@@ -262,12 +290,20 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
 
     /**
      * {@inheritDoc}
+     *
+     * @param Value $value
      */
     public function walkValue(Value $value)
     {
         return $value->getValue();
     }
 
+    /**
+     * Dispatch the criteria
+     *
+     * @param Expression $expr
+     * @return Func|mixed
+     */
     public function dispatch(Expression $expr)
     {
         switch (true) {
@@ -280,6 +316,12 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
         }
     }
 
+    /**
+     * Create a unique parameter name.
+     *
+     * @param $fieldName
+     * @return mixed|string
+     */
     protected function getParameterName($fieldName)
     {
         $parameterName = str_replace('.', '_', $fieldName);

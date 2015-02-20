@@ -9,6 +9,10 @@
 
 namespace PolderKnowledge\EntityService\Feature;
 
+/**
+ * DeletableInterface makes it possible to check whether an object was removed or not.
+ * this can be useful for softdelete implementations
+ */
 interface DeletableInterface
 {
     /**

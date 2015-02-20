@@ -20,11 +20,15 @@ use Zend\Validator\AbstractValidator;
 abstract class AbstractEntityValidator extends AbstractValidator
 {
     /**
+     * EntityService instance used for validation
+     *
      * @var EntityServiceInterface
      */
     protected $entityService;
 
     /**
+     * method name that will be called on validation
+     *
      * @var string Method to be called
      */
     protected $method = 'findBy';
@@ -35,6 +39,8 @@ abstract class AbstractEntityValidator extends AbstractValidator
     protected $field = 'id';
 
     /**
+     * Set entity service used for validation
+     *
      * @param EntityServiceInterface $entityService
      */
     public function setEntityService(EntityServiceInterface $entityService)
@@ -63,6 +69,8 @@ abstract class AbstractEntityValidator extends AbstractValidator
     }
 
     /**
+     * Will call the configured method on self::$entityService using the value as criteria
+     *
      * @param mixed $value
      * @return ServiceResult|ServiceProblem
      */

@@ -13,6 +13,9 @@ use PolderKnowledge\EntityService\Validator\EntityExists;
 use Zend\ServiceManager\MutableCreationOptionsInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Factory for EntityExists validator.
+ */
 class EntityExistsFactory extends AbstractEntityValidatorFactory implements MutableCreationOptionsInterface
 {
     /**

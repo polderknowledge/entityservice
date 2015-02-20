@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\Criteria;
 use UnexpectedValueException;
 
 /**
- * The FlushableInterface interface makes it possible to read entities from a repository.
+ * The ReadableInterface interface makes it possible to read entities from a repository.
  */
 interface ReadableInterface
 {

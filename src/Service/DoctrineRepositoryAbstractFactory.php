@@ -13,8 +13,19 @@ use PolderKnowledge\EntityService\Repository\DoctrineORMRepository;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * DoctrineRepositoryAbstractFactory creates a default DoctrineORMRepository for an EntityService
+ */
 class DoctrineRepositoryAbstractFactory implements AbstractFactoryInterface
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param $name
+     * @param $requestedName
+     * @return bool
+     */
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
         // Ideally we would check if the class that we want to create is an instance of IdentifiableInterface.
@@ -24,6 +35,14 @@ class DoctrineRepositoryAbstractFactory implements AbstractFactoryInterface
         return true;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param $name
+     * @param $requestedName
+     * @return DoctrineORMRepository
+     */
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
         $serviceManager = $serviceLocator->getServiceLocator();

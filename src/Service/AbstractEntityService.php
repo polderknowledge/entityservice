@@ -27,32 +27,46 @@ use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Stdlib\CallbackHandler;
 
+/**
+ * Base class for application specific EntityServices. This is a fully event driven class.
+ * Each method trigger a method for extendability.
+ */
 abstract class AbstractEntityService implements
     EntityServiceInterface,
     ListenerAggregateInterface,
     TransactionAwareInterface
 {
     /**
+     * Repository used for all operations triggered by this service
+     *
      * @var FlushableInterface|ReadableInterface|WritableInterface|DeletableInterface|TransactionAwareInterface
      */
     protected $repository;
 
     /**
+     * Used to fetch repositories
+     *
      * @var EntityRepositoryManager
      */
     protected $repositoryManager;
 
     /**
+     * EventManager handeling all events triggered by this service
+     *
      * @var EventManagerInterface
      */
     protected $eventManager;
 
     /**
+     * Registered callbacks by this service since it implements a ListenerAggregateInterface
+     *
      * @var CallbackHandler[]
      */
     protected $listeners = array();
 
     /**
+     * Initialized Event
+     *
      * @var EntityEvent
      */
     protected $event;
@@ -96,6 +110,8 @@ abstract class AbstractEntityService implements
     }
 
     /**
+     * Will return the repository manager used to fetch repositories
+     *
      * @return EntityRepositoryManager
      */
     public function getRepositoryManager()
@@ -104,6 +120,8 @@ abstract class AbstractEntityService implements
     }
 
     /**
+     * Will return a repository for the given $entityName if one is available
+     *
      * @param string $entityName
      * @return DeletableInterface|FlushableInterface|ReadableInterface|WritableInterface
      */
@@ -117,6 +135,7 @@ abstract class AbstractEntityService implements
     }
 
     /**
+     * Get the pre initialized event object
      *
      * @return EntityEvent
      */
@@ -131,8 +150,10 @@ abstract class AbstractEntityService implements
     }
 
     /**
+     * Will create an EventManager when no EventManager was provided.
+     * The returned EventManager is used to handle events triggered by this service instance.
      *
-     * @return type
+     * @return EventManagerInterface
      */
     public function getEventManager()
     {
@@ -144,6 +165,9 @@ abstract class AbstractEntityService implements
     }
 
     /**
+     * Set the EventManager used by this service instance to handle its events.
+     * It will take care of disabling the old EventManager and will subscribe the internal
+     * listeners to the new EventManager
      *
      * @param EventManagerInterface $eventManager
      */
@@ -292,6 +316,8 @@ abstract class AbstractEntityService implements
     }
 
     /**
+     * Returns the name of the Entity handled by this service.
+     *
      * @return String
      */
     protected function getEntityServiceName()
@@ -300,6 +326,8 @@ abstract class AbstractEntityService implements
     }
 
     /**
+     * {@inheritdoc}
+     *
      * @param mixed $id
      */
     public function find($id)
@@ -314,6 +342,8 @@ abstract class AbstractEntityService implements
     }
 
     /**
+     * {@inheritdoc}
+     *
      * @param array|Criteria $criteria
      */
     public function findOneBy($criteria)
@@ -328,11 +358,13 @@ abstract class AbstractEntityService implements
     }
 
     /**
+     * {@inheritdoc}
      *
      * @param array|Criteria $criteria
      * @param array $order
      * @param type  $limit
      * @param type  $offset
+     * @throws RuntimeException
      */
     public function findBy($criteria, array $order = null, $limit = null, $offset = null)
     {
@@ -348,6 +380,15 @@ abstract class AbstractEntityService implements
         ));
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @param array|Criteria $criteria
+     * @param array $order
+     * @param type  $limit
+     * @param type  $offset
+     * @throws RuntimeException
+     */
     public function countBy($criteria, array $order = null, $limit = null, $offset = null)
     {
         if (!$this->repositoryIsReadable($this->getEntityServiceName())) {
@@ -363,7 +404,10 @@ abstract class AbstractEntityService implements
     }
 
     /**
+     * {@inheritdoc}
+     *
      * @param IdentifiableInterface $entity
+     * @throws RuntimeException
      */
     public function persist(IdentifiableInterface $entity)
     {
@@ -377,8 +421,10 @@ abstract class AbstractEntityService implements
     }
 
     /**
+     * {@inheritdoc}
      *
      * @param array $entities
+     * @throws RuntimeException
      */
     public function multiPersist(array $entities)
     {
@@ -392,8 +438,10 @@ abstract class AbstractEntityService implements
     }
 
     /**
+     * {@inheritdoc}
      *
      * @param IdentifiableInterface $entity
+     * @throws RuntimeException
      */
     public function delete(IdentifiableInterface $entity)
     {
@@ -407,8 +455,9 @@ abstract class AbstractEntityService implements
     }
 
     /**
-     *
+     * {@inheritdoc}
      * @param array|Criteria $criteria
+     * @throws RuntimeException
      */
     public function deleteBy($criteria)
     {
@@ -422,9 +471,10 @@ abstract class AbstractEntityService implements
     }
 
     /**
+     * will prepare the event object and trigger the event using the internal EventManager
      *
-     * @param  sting                                                                                        $name
-     * @param  array                                                                                        $params
+     * @param  sting $name
+     * @param  array $params
      * @return ServiceProblem|ServiceResult
      */
     protected function trigger($name, array $params)
@@ -639,6 +689,8 @@ abstract class AbstractEntityService implements
     }
 
     /**
+     * Calls the flush method on the repository when applicable
+     *
      * @return void
      */
     protected function flushRepository()
@@ -650,7 +702,10 @@ abstract class AbstractEntityService implements
     }
 
     /**
-     * @return boolean
+     * Returns true when the repository for $entityName is writable
+     *
+     * @param $entityName
+     * @return bool
      */
     protected function repositoryIsWritable($entityName)
     {
@@ -658,7 +713,10 @@ abstract class AbstractEntityService implements
     }
 
     /**
-     * @return boolean
+     * Returns true when the repository for $entityName is readable
+     *
+     * @param $entityName
+     * @return bool
      */
     protected function repositoryIsReadable($entityName)
     {
@@ -666,7 +724,10 @@ abstract class AbstractEntityService implements
     }
 
     /**
-     * @return boolean
+     * Returns true when the repository for $entityName has delete behavior
+     *
+     * @param $entityName
+     * @return bool
      */
     protected function repositoryIsDeletable($entityName)
     {

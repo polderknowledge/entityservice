@@ -17,14 +17,21 @@ use SplObjectStorage;
 use Zend\Stdlib\CallbackHandler;
 use Zend\Stdlib\PriorityQueue;
 
+/**
+ * Aggregate service to handle transactions
+ */
 class AggregateTransactionEntityService
 {
     /**
+     * Callbacks to execute during this transaction
+     *
      * @var PriorityQueue|CallbackHandler[]
      */
     protected $transactionCommands;
 
     /**
+     * Services involved in this transaction
+     *
      * @var SplObjectStorage|TransactionAwareInterface
      */
     protected $services;
@@ -42,6 +49,7 @@ class AggregateTransactionEntityService
      * Adds a command that should be executed.
      *
      * @param callable $callback Expects PHP callback
+     * @param array $parameters parameters for the callback
      * @param int $priority If provided, the priority at which to register the callable
      * @return CallbackHandler If attaching callable (to allow later unsubscribe);
      * @throws InvalidArgumentException
@@ -65,6 +73,11 @@ class AggregateTransactionEntityService
         return $handler;
     }
 
+    /**
+     * Execute the registered callbacks. Will perform a rollback when one of the callbacks throws an exception
+     *
+     * @throws ServiceException
+     */
     public function execute()
     {
         $this->beginTransaction();
@@ -82,6 +95,9 @@ class AggregateTransactionEntityService
         }
     }
 
+    /**
+     * Starts the transaction on all registered service
+     */
     private function beginTransaction()
     {
         foreach ($this->services as $service) {
@@ -89,6 +105,9 @@ class AggregateTransactionEntityService
         }
     }
 
+    /**
+     * Commits the transaction on all registered service
+     */
     private function commitTransaction()
     {
         foreach ($this->services as $service) {
@@ -96,6 +115,9 @@ class AggregateTransactionEntityService
         }
     }
 
+    /**
+     * Execute a rollback on all registered service
+     */
     private function rollbackTransaction()
     {
         foreach ($this->services as $service) {

@@ -156,7 +156,11 @@ class ServiceResult implements Countable, Iterator
         return $return;
     }
 
-    // Implementation of Countable::count()
+    /**
+     * {@inheritdoc}
+     *
+     * @return int|null
+     */
     public function count()
     {
         if (null === $this->count) {
@@ -166,19 +170,27 @@ class ServiceResult implements Countable, Iterator
         return $this->count;
     }
 
-    // Implementation of Iterator::current()
+    /**
+     * {@inheritdoc}
+     * @return mixed
+     */
     public function current()
     {
         return $this->dataSource->current();
     }
 
-    // Implementation of Iterator::key()
+    /**
+     * {@inheritdoc}
+     * @return int
+     */
     public function key()
     {
         return $this->position;
     }
 
-    // Implementation of Iterator::next()
+    /**
+     * {@inheritdoc}
+     */
     public function next()
     {
         $this->dataSource->next();
@@ -204,14 +216,19 @@ class ServiceResult implements Countable, Iterator
         }
     }
 
-    // Implementation of Iterator::rewind()
+    /**
+     * {@inheritdoc}
+     */
     public function rewind()
     {
         $this->dataSource->rewind();
         $this->position = 0;
     }
 
-    // Implementation of Iterator::valid()
+    /**
+     * {@inheritdoc}
+     * @return bool
+     */
     public function valid()
     {
         return $this->position >= 0 && $this->dataSource->valid();

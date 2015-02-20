@@ -13,6 +13,9 @@ use PolderKnowledge\EntityService\Validator\EntityNotExists;
 use Zend\ServiceManager\MutableCreationOptionsInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Factory for EntityNotExists validator
+ */
 class EntityNotExistsFactory extends AbstractEntityValidatorFactory implements MutableCreationOptionsInterface
 {
     /**

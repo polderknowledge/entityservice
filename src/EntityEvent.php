@@ -127,9 +127,9 @@ final class EntityEvent extends Event
     }
 
     /**
-     * Disables the stopping of event propagation.
+     * Disable the option of stopping the event propagation
      *
-     * @return EntityEvent Returns the instance of this class so that chaining can be used.
+     * @return self
      */
     public function disableStoppingOfPropagation()
     {
@@ -151,7 +151,7 @@ final class EntityEvent extends Event
      * Sets the message of the error that occured when working with the entity.
      *
      * @param string $error The error message to set.
-     * @return EntityEvent Returns the instance of this class so that chaining can be used.
+     * @return self
      */
     public function setError($error)
     {
@@ -162,7 +162,7 @@ final class EntityEvent extends Event
     /**
      * Gets the error number of the error that occured when working with the entity.
      *
-     * @return integer Returns an integer that is the error number.
+     * @return integer
      */
     public function getErrorNr()
     {

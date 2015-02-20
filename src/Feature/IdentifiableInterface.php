@@ -9,6 +9,9 @@
 
 namespace PolderKnowledge\EntityService\Feature;
 
+/**
+ * IdentifiableInterface makes it possible to identify a object by id
+ */
 interface IdentifiableInterface
 {
     /**

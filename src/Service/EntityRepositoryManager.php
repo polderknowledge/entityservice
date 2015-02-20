@@ -16,8 +16,16 @@ use PolderKnowledge\EntityService\Repository\ReadableInterface;
 use PolderKnowledge\EntityService\Repository\WritableInterface;
 use Zend\ServiceManager\AbstractPluginManager;
 
+/**
+ * Plugin manager for Repositories used by EntityServices
+ */
 class EntityRepositoryManager extends AbstractPluginManager
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @param mixed $plugin
+     */
     public function validatePlugin($plugin)
     {
         if ($plugin instanceof DeletableInterface ||

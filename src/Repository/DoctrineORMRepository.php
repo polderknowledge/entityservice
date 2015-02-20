@@ -18,7 +18,7 @@ use PolderKnowledge\EntityService\Feature\IdentifiableInterface;
 use PolderKnowledge\EntityService\Repository\DoctrineQueryBuilderExpressionVisitor;
 
 /**
- * A Doctrine ORM implementation of a repository class.
+ * Class DoctrineORMRepository is a default implementation for a repository using doctrine orm.
  */
 class DoctrineORMRepository implements
     DeletableInterface,
@@ -49,7 +49,7 @@ class DoctrineORMRepository implements
     protected $repository;
 
     /**
-     * Initializes a new instance of this class.
+     * Initializes the self::$entityManager and self::$entityName
      *
      * @param EntityManagerInterface $entityManager The Doctrine ORM entity manager used to retrieve and store data.
      * @param string $entityName The FQCN of the entity to work with.
@@ -60,7 +60,56 @@ class DoctrineORMRepository implements
         $this->entityName = $entityName;
     }
 
-    // Implementation of ReadableInterface::countBy
+    /**
+     * {@inheritdoc}
+     *
+     * @param mixed $id
+     * @return object
+     */
+    public function find($id)
+    {
+        return $this->entityManager->find($this->entityName, $id);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return array
+     */
+    public function findAll()
+    {
+        return $this->getRepository()->findAll();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param array|Criteria $criteria
+     * @param array $orderBy
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function findBy($criteria, array $orderBy = null, $limit = null, $offset = null)
+    {
+        if ($criteria instanceof Criteria) {
+            $queryBuilder = $this->getQueryBuilder($criteria, $orderBy, $limit, $offset);
+
+            return $queryBuilder->getQuery()->execute();
+        }
+
+        return $this->getRepository()->findBy($criteria, $orderBy, $limit, $offset);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param array|Criteria $criteria
+     * @param array $orderBy
+     * @param int $limit
+     * @param int $offset
+     * @return int
+     */
     public function countBy($criteria, array $orderBy = null, $limit = null, $offset = null)
     {
         if ($criteria instanceof Criteria) {
@@ -83,31 +132,12 @@ class DoctrineORMRepository implements
         return $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
-    // Implementation of ReadableInterface::find
-    public function find($id)
-    {
-        return $this->entityManager->find($this->entityName, $id);
-    }
-
-    // Implementation of ReadableInterface::findAll
-    public function findAll()
-    {
-        return $this->getRepository()->findAll();
-    }
-
-    // Implementation of ReadableInterface::findBy
-    public function findBy($criteria, array $orderBy = null, $limit = null, $offset = null)
-    {
-        if ($criteria instanceof Criteria) {
-            $queryBuilder = $this->getQueryBuilder($criteria, $orderBy, $limit, $offset);
-
-            return $queryBuilder->getQuery()->execute();
-        }
-
-        return $this->getRepository()->findBy($criteria, $orderBy, $limit, $offset);
-    }
-
-    // Implementation of ReadableInterface::findOneBy
+    /**
+     * {@inheritdoc}
+     *
+     * @param array|Criteria $criteria
+     * @return null|object
+     */
     public function findOneBy($criteria)
     {
         if ($criteria instanceof Criteria) {
@@ -120,7 +150,7 @@ class DoctrineORMRepository implements
     }
 
     /**
-     * Creates the QueryBuilder by the given criteria.
+     * {@inheritdoc}
      *
      * @param Criteria $criteria The criteria to find entities by.
      * @param array|null $orderBy An array with fields to order by. Set to null for default ordering.
@@ -158,7 +188,7 @@ class DoctrineORMRepository implements
     }
 
     /**
-     * Gets the Doctrine ORM EntityRepository.
+     * {@inheritdoc}
      *
      * @return EntityRepository
      */
@@ -171,25 +201,41 @@ class DoctrineORMRepository implements
         return $this->repository;
     }
 
-    // Implementation of FlushableInterface::persist
+    /**
+     * {@inheritdoc}
+     *
+     * @param IdentifiableInterface $entity
+     */
     public function flush(IdentifiableInterface $entity = null)
     {
         $this->entityManager->flush($entity);
     }
 
-    // Implementation of WritableInterface::persist
+    /**
+     * {@inheritdoc}
+     *
+     * @param IdentifiableInterface $entity
+     */
     public function persist(IdentifiableInterface $entity)
     {
         $this->entityManager->persist($entity);
     }
 
-    // Implementation of DeletableInterface::delete
+    /**
+     * {@inheritdoc}
+     *
+     * @param FeatureDeletable $entity
+     */
     public function delete(FeatureDeletable $entity)
     {
         $this->entityManager->remove($entity);
     }
 
-    // Implementation of DeletableInterface::deleteBy
+    /**
+     * {@inheritdoc}
+     *
+     * @param array|Criteria $criteria
+     */
     public function deleteBy($criteria)
     {
         $entities = $this->findBy($criteria);
@@ -199,19 +245,25 @@ class DoctrineORMRepository implements
         }
     }
 
-    // Implementation of TransactionAwareInterface::beginTransaction
+    /**
+     * {@inheritdoc}
+     */
     public function beginTransaction()
     {
         $this->entityManager->beginTransaction();
     }
 
-    // Implementation of TransactionAwareInterface::commit
+    /**
+     * {@inheritdoc}
+     */
     public function commitTransaction()
     {
         $this->entityManager->commit();
     }
 
-    // Implementation of TransactionAwareInterface::rollBackTransaction
+    /**
+     * {@inheritdoc}
+     */
     public function rollBackTransaction()
     {
         $this->entityManager->rollback();

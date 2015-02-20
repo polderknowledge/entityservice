@@ -13,19 +13,28 @@ use Doctrine\Common\Collections\Criteria;
 use PolderKnowledge\EntityService\Service\EntityServiceInterface;
 use Zend\Paginator\Adapter\AdapterInterface;
 
+/**
+ * Paginator adapter for EntityServices
+ */
 class EntityService implements AdapterInterface
 {
     /**
+     * EntityService used to fetch adapter
+     *
      * @var EntityServiceInterface
      */
     protected $entityService;
 
     /**
+     * Criteria used to fetch entities
+     *
      * @var array|Criteria
      */
     protected $criteria;
 
     /**
+     * Order used to fetch criteria
+     *
      * @var array
      */
     protected $order;

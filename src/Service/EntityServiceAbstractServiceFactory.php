@@ -13,10 +13,21 @@ use PolderKnowledge\EntityService\Service\DefaultEntityService;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Abstract service factory to create a DefaultEntityService
+ */
 class EntityServiceAbstractServiceFactory implements AbstractFactoryInterface
 {
     const REPOSITORY_SERVICE_KEY = 'EntityRepositoryManager';
 
+    /**
+     * {@inheritdoc}
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param $name
+     * @param $requestedName
+     * @return true
+     */
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
         // Ideally we would check if the class that we want to create is an instance of IdentifiableInterface.
@@ -26,6 +37,14 @@ class EntityServiceAbstractServiceFactory implements AbstractFactoryInterface
         return true;
     }
 
+    /**
+     * Creates a new instance of DefaultEntityService configured with the $requestedName
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param $name
+     * @param $requestedName
+     * @return DefaultEntityService
+     */
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
         $entityRepositoryManager = $serviceLocator->getServiceLocator()->get(self::REPOSITORY_SERVICE_KEY);

@@ -13,10 +13,16 @@ use Zend\EventManager\EventManagerAwareInterface;
 use Zend\ServiceManager\InitializerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Initializer to set the shared event manager to the entity service EventManager
+ */
 class EventManagerInitializer implements InitializerInterface
 {
     /**
      * {@inheritDoc}
+     *
+     * @param mixed $instance
+     * @param ServiceLocatorInterface $serviceLocator
      */
     public function initialize($instance, ServiceLocatorInterface $serviceLocator)
     {
