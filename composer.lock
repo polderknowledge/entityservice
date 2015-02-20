@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "db4fcc96b5830ee71dd341efe92d5518",
+    "hash": "af2cdd7eecbd95a79d28a8e2509e061a",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -4242,6 +4242,64 @@
             "homepage": "https://github.com/zendframework/zf2",
             "keywords": [
                 "math",
+                "zf2"
+            ],
+            "time": "2015-01-14 16:44:17"
+        },
+        {
+            "name": "zendframework/zend-paginator",
+            "version": "2.3.4",
+            "target-dir": "Zend/Paginator",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/Component_ZendPaginator.git",
+                "reference": "b96683f581ec5d181aa7cac01f12167f77138061"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendPaginator/zipball/b96683f581ec5d181aa7cac01f12167f77138061",
+                "reference": "b96683f581ec5d181aa7cac01f12167f77138061",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.23",
+                "zendframework/zend-stdlib": "self.version"
+            },
+            "require-dev": {
+                "zendframework/zend-cache": "self.version",
+                "zendframework/zend-db": "self.version",
+                "zendframework/zend-filter": "self.version",
+                "zendframework/zend-json": "self.version",
+                "zendframework/zend-servicemanager": "self.version",
+                "zendframework/zend-view": "self.version"
+            },
+            "suggest": {
+                "zendframework/zend-cache": "Zend\\Cache component to support cache features",
+                "zendframework/zend-db": "Zend\\Db component",
+                "zendframework/zend-filter": "Zend\\Filter component",
+                "zendframework/zend-json": "Zend\\Json component",
+                "zendframework/zend-servicemanager": "Zend\\ServiceManager component",
+                "zendframework/zend-view": "Zend\\View component"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3-dev",
+                    "dev-develop": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Zend\\Paginator\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "homepage": "https://github.com/zendframework/zf2",
+            "keywords": [
+                "paginator",
                 "zf2"
             ],
             "time": "2015-01-14 16:44:17"
