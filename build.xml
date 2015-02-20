@@ -40,8 +40,7 @@
             <formatter type="full" usefile="false"/>
             <formatter type="checkstyle" outfile="${builddir}/checkstyle-codesniffer.xml"/>
         </phpcodesniffer>
-        
-        <exec command="${bindir}/phpdoc -f ./ --template=checkstyle -t ${builddir} --cache-folder=${builddir}/phpdoc-cache" passthru="true" />
+        <exec command="${bindir}/phpdoc -d ${srcdir} --template=checkstyle -t ${builddir} --cache-folder=${builddir}/phpdoc-cache" passthru="true" />
     </target>
 
     <target name="phpmd" depends="prepare">
