@@ -21,6 +21,7 @@
         "phpmd/phpmd": "1.*",
         "pdepend/pdepend": "1.*",
         "phpdocumentor/phpdocumentor": "~2.8",
+        "zendframework/zend-paginator": "2.3.*",
         "zendframework/zend-validator": "2.3.*"
     },
     "autoload": {
