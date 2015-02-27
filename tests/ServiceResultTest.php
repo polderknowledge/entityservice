@@ -140,7 +140,8 @@ class ServiceResultTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException PolderKnowledge\EntityService\Exception\InvalidArgumentException
-     * @expectedExceptionMessage DataSource provided is not an array, nor does it implement Iterator or IteratorAggregate, got NULL
+     * @expectedExceptionMessage DataSource provided is not an array,
+     * nor does it implement Iterator or IteratorAggregate, got NULL
      */
     public function testWithInvalidConstructor()
     {

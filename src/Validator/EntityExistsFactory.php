@@ -49,5 +49,4 @@ class EntityExistsFactory extends AbstractEntityValidatorFactory implements Muta
     {
         $this->options = $options;
     }
-
 }

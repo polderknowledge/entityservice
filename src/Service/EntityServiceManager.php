@@ -40,10 +40,13 @@ class EntityServiceManager extends AbstractPluginManager
             return;
         }
 
-        throw new InvalidServiceNameException(sprintf(
-            'Plugin of type %s is invalid; must implement PolderKnowledge\EntityService\Service\EntityServiceInterface',
-            (is_object($plugin) ? get_class($plugin) : gettype($plugin)),
-            __NAMESPACE__
-        ));
+        throw new InvalidServiceNameException(
+            sprintf(
+                'Plugin of type %s is invalid;
+                must implement %s\EntityServiceInterface',
+                (is_object($plugin) ? get_class($plugin) : gettype($plugin)),
+                __NAMESPACE__
+            )
+        );
     }
 }

@@ -76,11 +76,14 @@ abstract class AbstractEntityValidator extends AbstractValidator
      */
     protected function fetchResult($value)
     {
-        return call_user_func_array(array(
-            $this->entityService,
-            $this->method
-        ), array(
-            'citeria' => array($this->field => $value)
-        ));
+        return call_user_func_array(
+            array(
+                $this->entityService,
+                $this->method
+            ),
+            array(
+                'citeria' => array($this->field => $value)
+            )
+        );
     }
 }

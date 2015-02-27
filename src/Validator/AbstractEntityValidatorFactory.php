@@ -38,5 +38,4 @@ abstract class AbstractEntityValidatorFactory implements FactoryInterface
 
         return $entityServiceManager->get($entityName);
     }
-
 }

@@ -50,5 +50,4 @@ class EntityNotExists extends AbstractEntityValidator
 
         return false;
     }
-
 }

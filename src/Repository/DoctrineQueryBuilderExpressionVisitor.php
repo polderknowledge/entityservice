@@ -31,7 +31,6 @@ use Youngguns\StdLib\Criterion\MultiParameterExpressionVisitorInterface;
 
 /**
  * Class used to convert Criteria to doctrine orm expressions.
- *
  */
 class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
     MultiParameterExpressionVisitorInterface,
@@ -165,7 +164,10 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
             case Comparison::NIN:
                 $this->parameters[] = $parameter;
 
-                return $this->queryBuilder->expr()->notIn($this->rootAlias . '.' . $comparison->getField(), $placeholder);
+                return $this->queryBuilder->expr()->notIn(
+                    $this->rootAlias . '.' . $comparison->getField(),
+                    $placeholder
+                );
 
             case Comparison::EQ:
             case Comparison::IS:
@@ -189,7 +191,7 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
             case ExpressionInterface::STARTS_WITH:
             case ExpressionInterface::ENDS_WITH:
                 $fieldExpression = sprintf('LOWER(%s.%s)', $this->rootAlias, $comparison->getField());
-                //fall through
+            //fall through
             case Comparison::CONTAINS:
                 $parameter->setValue('%' . strtolower($parameter->getValue()) . '%', $parameter->getType());
                 $this->parameters[] = $parameter;
@@ -220,7 +222,9 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
                     $this->parameters[] = $parameter;
 
                     return new OrmComparison(
-                        $this->rootAlias . '.' . $comparison->getField(), $operator, $placeholder
+                        $this->rootAlias . '.' . $comparison->getField(),
+                        $operator,
+                        $placeholder
                     );
                 }
 
@@ -240,7 +244,11 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
 
         switch ($expression->getOperator()) {
             case MultiParameterExpression::BETWEEN:
-                return $this->queryBuilder->expr()->between($this->rootAlias . '.' . $expression->getField(), $placeholders[0], $placeholders[1]);
+                return $this->queryBuilder->expr()->between(
+                    $this->rootAlias . '.' . $expression->getField(),
+                    $placeholders[0],
+                    $placeholders[1]
+                );
             default:
                 throw new RuntimeException("Unknown MultiParameterExpression operator: " . $expression->getOperator());
         }
@@ -249,7 +257,7 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
     /**
      * Convert DateTimeExpression to between expression
      *
-     * @param DateTimeExpression $expression
+     * @param  DateTimeExpression $expression
      * @return Func
      * @throws RuntimeException
      */
@@ -262,7 +270,11 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
             case DateTimeExpression::PREVIOUS_MONTH:
             case DateTimeExpression::CURRENT_YEAR:
             case DateTimeExpression::PREVIOUS_YEAR:
-                return $this->queryBuilder->expr()->between($this->rootAlias . '.' . $expression->getField(), $placeholders[0], $placeholders[1]);
+                return $this->queryBuilder->expr()->between(
+                    $this->rootAlias . '.' . $expression->getField(),
+                    $placeholders[0],
+                    $placeholders[1]
+                );
             default:
                 throw new RuntimeException("Unknown DateTimeExpression operator: " . $expression->getOperator());
         }
@@ -279,10 +291,10 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
         $placeholders = array();
 
         foreach ($expression->getValues() as $value) {
-                $parameterName = $this->getParameterName($expression->getField ());
-                $parameter = new Parameter($parameterName, $this->walkValue($value));
-                $placeholders[] = ':' . $parameterName;
-                $this->parameters[] = $parameter;
+            $parameterName = $this->getParameterName($expression->getField());
+            $parameter = new Parameter($parameterName, $this->walkValue($value));
+            $placeholders[] = ':' . $parameterName;
+            $this->parameters[] = $parameter;
         }
 
         return $placeholders;

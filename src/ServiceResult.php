@@ -75,11 +75,13 @@ class ServiceResult implements Countable, Iterator
         } elseif ($dataSource instanceof Iterator) {
             $this->dataSource = $dataSource;
         } else {
-            throw new InvalidArgumentException(sprintf(
-                'DataSource provided is not an array, ' .
-                'nor does it implement Iterator or IteratorAggregate, got %s',
-                (is_object($dataSource)) ? get_class($dataSource) : gettype($dataSource)
-            ));
+            throw new InvalidArgumentException(
+                sprintf(
+                    'DataSource provided is not an array, ' .
+                    'nor does it implement Iterator or IteratorAggregate, got %s',
+                    (is_object($dataSource)) ? get_class($dataSource) : gettype($dataSource)
+                )
+            );
         }
 
         return $this;
@@ -145,11 +147,13 @@ class ServiceResult implements Countable, Iterator
             } elseif (method_exists($row, 'getArrayCopy')) {
                 $return[] = $row->getArrayCopy();
             } else {
-                throw new RuntimeException(sprintf(
-                    'Rows as part of this DataSource, ' .
-                    'with type %s cannot be cast to an array',
-                    gettype($row)
-                ));
+                throw new RuntimeException(
+                    sprintf(
+                        'Rows as part of this DataSource, ' .
+                        'with type %s cannot be cast to an array',
+                        gettype($row)
+                    )
+                );
             }
         }
 

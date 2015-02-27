@@ -49,5 +49,4 @@ class EntityNotExistsFactory extends AbstractEntityValidatorFactory implements M
     {
         $this->options = $options;
     }
-
 }

@@ -394,11 +394,15 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     public function testPreStoppedCallReturnsServiceProblem()
     {
         // Arrange
-        $this->service->getEventManager()->attach('find', function ($e) {
-            $e->setError('dummy message')
-                ->setErrorNr(403)
-                ->stopPropagation();
-        }, 10);
+        $this->service->getEventManager()->attach(
+            'find',
+            function ($e) {
+                $e->setError('dummy message')
+                    ->setErrorNr(403)
+                    ->stopPropagation();
+            },
+            10
+        );
 
         // Act
         $result = $this->service->find(1);
@@ -413,13 +417,19 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     {
         // Arrange
         $this->service->getEventManager()->attach(
-            'find', function ($e) {
-            $e->setError('dummy message')
-                ->setErrorNr(403)
-                ->stopPropagation();
-        }, -10);
+            'find',
+            function ($e) {
+                $e->setError('dummy message')
+                    ->setErrorNr(403)
+                    ->stopPropagation();
+            },
+            -10
+        );
 
-        $this->service->getRepositoryForEntity(self::ENTITYNAME)->expects($this->once())->method('find')->will($this->returnValue(array()));
+        $this->service->getRepositoryForEntity(self::ENTITYNAME)
+            ->expects($this->once())
+            ->method('find')
+            ->will($this->returnValue(array()));
 
         // Act
         $result = $this->service->find(1);

@@ -80,7 +80,7 @@ class EntityServiceAbstractServiceFactoryTest extends PHPUnit_Framework_TestCase
             'PolderKnowledge\\EntityService\\Service\\DefaultEntityService',
             $this->factory->createServiceWithName(
                 $this->serviceLocatorMock,
-            'polderKnowledgeentityservicetestserviceassetcustomentitymock',
+                'polderKnowledgeentityservicetestserviceassetcustomentitymock',
                 'PolderKnowledge\\EntityServiceTest\\Service\\_Asset\\CustomEntityMock'
             )
         );

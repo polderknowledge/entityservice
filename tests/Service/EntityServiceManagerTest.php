@@ -28,7 +28,8 @@ class EntityServiceManagerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException PolderKnowledge\EntityService\Exception\InvalidServiceNameException
-     * @expectedExceptionMessage Plugin of type stdClass is invalid; must implement PolderKnowledge\EntityService\Service\EntityServiceInterface
+     * @expectedExceptionMessage Plugin of type stdClass is invalid;
+     * must implement PolderKnowledge\EntityService\Service\EntityServiceInterface
      */
     public function testManagerThrowsExceptionOnInvalidClass()
     {

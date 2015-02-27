@@ -33,7 +33,7 @@ class EntityExists extends AbstractEntityValidator
      * Returns true when $this->entityService returns an entity
      * when $this->method is called with the given criteria
      *
-     * @param mixed $value
+     * @param  mixed $value
      * @return boolean
      */
     public function isValid($value)
@@ -50,5 +50,4 @@ class EntityExists extends AbstractEntityValidator
 
         return false;
     }
-
 }

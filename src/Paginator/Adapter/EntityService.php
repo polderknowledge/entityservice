@@ -40,6 +40,8 @@ class EntityService implements AdapterInterface
     protected $order;
 
     /**
+     * Creates a new instance of this class
+     *
      * @param EntityServiceInterface $entityService
      * @param array|Criteria $criteria
      * @param array $order
