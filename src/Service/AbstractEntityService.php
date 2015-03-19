@@ -464,6 +464,7 @@ abstract class AbstractEntityService implements
             __FUNCTION__,
             array(
                 'entity' => $entity,
+                'isNew' => !$entity->hasId(),
             )
         );
     }
