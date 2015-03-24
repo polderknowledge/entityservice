@@ -12,10 +12,16 @@ possible to quickly access a manager class without the need of creating the repo
 
 ### Composer
 
-```
+```json
 "require": {
-    "polderknowledge/entityservice": "1.0.*"
-}
+    "polderknowledge/entityservice": "~1.0"
+},
+"repositories": [
+    {
+        "type": "composer",
+        "url": "http://packages.youngguns.nl"
+    }
+]
 ```
 
 ### Tests
