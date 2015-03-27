@@ -15,7 +15,6 @@ use Iterator;
 use IteratorAggregate;
 use PolderKnowledge\EntityService\Exception\InvalidArgumentException;
 use PolderKnowledge\EntityService\Exception\RuntimeException;
-use PolderKnowledge\EntityService\ServiceResult;
 
 /**
  * The ServiceResult class contains the result of a request to the entity service manager.
