@@ -187,30 +187,28 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
                 return $this->queryBuilder->expr()->neq($this->rootAlias . '.' . $comparison->getField(), $placeholder);
 
             case Comparison::CONTAINS:
-            case ExpressionInterface::NOT_CONTAINS:
-            case ExpressionInterface::STARTS_WITH:
-            case ExpressionInterface::ENDS_WITH:
-                $fieldExpression = sprintf('LOWER(%s.%s)', $this->rootAlias, $comparison->getField());
-            //fall through
-            case Comparison::CONTAINS:
+                $fieldExpression = $this->buildCaseInsensitiveExpression($comparison);
                 $parameter->setValue('%' . strtolower($parameter->getValue()) . '%', $parameter->getType());
                 $this->parameters[] = $parameter;
 
                 return $this->queryBuilder->expr()->like($fieldExpression, $placeholder);
 
             case ExpressionInterface::NOT_CONTAINS:
+                $fieldExpression = $this->buildCaseInsensitiveExpression($comparison);
                 $parameter->setValue('%' . strtolower($parameter->getValue()) . '%', $parameter->getType());
                 $this->parameters[] = $parameter;
 
                 return $this->queryBuilder->expr()->notLike($fieldExpression, $placeholder);
 
             case ExpressionInterface::STARTS_WITH:
+                $fieldExpression = $this->buildCaseInsensitiveExpression($comparison);
                 $parameter->setValue(strtolower($parameter->getValue()) . '%', $parameter->getType());
                 $this->parameters[] = $parameter;
 
                 return $this->queryBuilder->expr()->like($fieldExpression, $placeholder);
 
             case ExpressionInterface::ENDS_WITH:
+                $fieldExpression = $this->buildCaseInsensitiveExpression($comparison);
                 $parameter->setValue('%' . strtolower($parameter->getValue()), $parameter->getType());
                 $this->parameters[] = $parameter;
 
@@ -345,5 +343,14 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
         }
 
         return $parameterName;
+    }
+
+    /**
+     * @param Comparison $comparison
+     * @return string
+     */
+    private function buildCaseInsensitiveExpression(Comparison $comparison)
+    {
+        return sprintf('LOWER(%s.%s)', $this->rootAlias, $comparison->getField());
     }
 }
