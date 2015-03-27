@@ -346,6 +346,8 @@ class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
     }
 
     /**
+     * Create Lower expression
+     *
      * @param Comparison $comparison
      * @return string
      */
