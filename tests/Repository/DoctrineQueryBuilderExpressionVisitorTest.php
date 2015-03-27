@@ -47,9 +47,9 @@ class DoctrineQueryBuilderExpressionVisitorTest extends PHPUnit_Framework_TestCa
 
         $result = $this->fixture->walkComparison($input);
 
-        $this->assertEquals(static::ROOT_ALIAS . '.'.$field, $result->getLeftExpr());
+        $this->assertEquals(static::ROOT_ALIAS . '.' . $field, $result->getLeftExpr());
         $this->assertEquals($expectedOperator, $result->getOperator());
-        $this->assertEquals(':'. $field, $result->getRightExpr());
+        $this->assertEquals(':' . $field, $result->getRightExpr());
 
         $params = $this->fixture->getParameters();
 
@@ -137,7 +137,7 @@ class DoctrineQueryBuilderExpressionVisitorTest extends PHPUnit_Framework_TestCa
 
         $this->assertEquals($expectedField, $result->getLeftExpr());
         $this->assertEquals($expectedOperator, $result->getOperator());
-        $this->assertEquals(':'. $field, $result->getRightExpr());
+        $this->assertEquals(':' . $field, $result->getRightExpr());
         $this->assertEquals($field, $params[0]->getName());
         $this->assertEquals($expectedValue, $params[0]->getValue());
     }
