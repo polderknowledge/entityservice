@@ -50,7 +50,7 @@ class EntityServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->entityServiceMock->expects($this->once())
             ->method('findBy')
-            ->with( array(), null, 10, 10)
+            ->with(array(), null, 10, 10)
             ->willReturn($result);
 
         $actual = $this->fixture->getItems(10, 10);
