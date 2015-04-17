@@ -10,19 +10,19 @@
         "php": ">=5.5.0",
         "doctrine/collections": "1.2.*",
         "Youngguns/StdLib": ">=0.16,<1.0",
-        "zendframework/zend-eventmanager": "2.3.*",
-        "zendframework/zend-servicemanager": "2.3.*"
+        "zendframework/zend-eventmanager": "~2",
+        "zendframework/zend-servicemanager": "~2"
     },
     "require-dev": {
         "doctrine/orm": "2.4.*",
-        "phpunit/phpunit": "4.4.*",
+        "phpunit/phpunit": "~4.0",
         "squizlabs/php_codesniffer": "2.*",
         "phing/phing": "2.10.*",
         "phpmd/phpmd": "1.*",
         "pdepend/pdepend": "1.*",
         "phpdocumentor/phpdocumentor": "~2.8",
-        "zendframework/zend-paginator": "2.3.*",
-        "zendframework/zend-validator": "2.3.*"
+        "zendframework/zend-paginator": "~2",
+        "zendframework/zend-validator": "~2"
     },
     "autoload": {
         "psr-4": {
