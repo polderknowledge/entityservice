@@ -52,6 +52,14 @@ interface EntityServiceInterface extends EventManagerAwareInterface
     public function findBy($criteria, array $order = null, $limit = null, $offset = null);
 
     /**
+     * Find one object in the repository matching the criteria
+     *
+     * @param array|Criteria $criteria
+     * @return ServiceResult|ServiceProblem
+     */
+    public function findOneBy($criteria);
+
+    /**
      * Count the objects matching the criteria respecting the order, limit and offset.
      *
      * @param array|Criteria $criteria
