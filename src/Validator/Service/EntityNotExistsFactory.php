@@ -7,7 +7,7 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService\Validator;
+namespace PolderKnowledge\EntityService\Validator\Service;
 
 use PolderKnowledge\EntityService\Validator\EntityNotExists;
 use Zend\ServiceManager\MutableCreationOptionsInterface;

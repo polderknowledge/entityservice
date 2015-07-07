@@ -7,7 +7,7 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService\Validator;
+namespace PolderKnowledge\EntityService\Validator\Service;
 
 use PolderKnowledge\EntityService\Service\EntityServiceInterface;
 use Zend\ServiceManager\FactoryInterface;
@@ -20,7 +20,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 abstract class AbstractEntityValidatorFactory implements FactoryInterface
 {
-
     /**
      * Fetches a EntityServiceInterface instance from the EntityServiceManager
      *

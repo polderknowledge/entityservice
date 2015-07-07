@@ -9,8 +9,6 @@
 
 namespace PolderKnowledge\EntityService\Validator;
 
-use PolderKnowledge\EntityService\ServiceResult;
-
 /**
  * The EntityNotExists validator will validate a certain entity was found.
  * Validation will fail when the entity is present

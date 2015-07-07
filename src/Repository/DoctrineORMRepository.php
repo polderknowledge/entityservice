@@ -107,7 +107,6 @@ class DoctrineORMRepository implements
     public function delete(FeatureDeletable $entity)
     {
         $this->entityManager->remove($entity);
-        $this->entityManager->flush();
     }
 
     /**
@@ -122,8 +121,6 @@ class DoctrineORMRepository implements
         foreach ($entities as $entity) {
             $this->entityManager->remove($entity);
         }
-
-        $this->entityManager->flush();
     }
 
     /**
@@ -138,8 +135,6 @@ class DoctrineORMRepository implements
         foreach ($entities as $entity) {
             $this->entityManager->remove($entity);
         }
-
-        $this->entityManager->flush();
     }
 
     /**
@@ -205,12 +200,12 @@ class DoctrineORMRepository implements
     /**
      * {@inheritdoc}
      *
-     * @param array|Criteria $criteria
+     * @param Criteria $criteria
      * @return null|object
      */
     public function findOneByCriteria(Criteria $criteria)
     {
-        $queryBuilder = $this->getQueryBuilder($criteria, null, 1);
+        $queryBuilder = $this->getQueryBuilder($criteria);
         $result = $queryBuilder->getQuery()->getResult();
 
         return current($result);
@@ -220,12 +215,9 @@ class DoctrineORMRepository implements
      * {@inheritdoc}
      *
      * @param Criteria $criteria The criteria to find entities by.
-     * @param array|null $orderBy An array with fields to order by. Set to null for default ordering.
-     * @param int|null $limit The amount of entities to retrieve. Set to null for default amount.
-     * @param int|null $offset The offset to start retrieving entities from. Set to null for the default offset.
      * @return QueryBuilder
      */
-    protected function getQueryBuilder(Criteria $criteria, array $orderBy = null, $limit = null, $offset = null)
+    protected function getQueryBuilder(Criteria $criteria)
     {
         $queryBuilder = $this->getRepository()->createQueryBuilder('e');
 
@@ -237,16 +229,16 @@ class DoctrineORMRepository implements
             $queryBuilder->setParameters($visitor->getParameters());
         }
 
-        if ($offset !== null) {
-            $queryBuilder->setFirstResult($offset);
+        if ($criteria->getFirstResult() !== null) {
+            $queryBuilder->setFirstResult($criteria->getFirstResult());
         }
 
-        if ($limit !== null) {
-            $queryBuilder->setMaxResults($limit);
+        if ($criteria->getMaxResults() !== null) {
+            $queryBuilder->setMaxResults($criteria->getMaxResults());
         }
 
-        if (is_array($orderBy)) {
-            foreach ($orderBy as $field => $direction) {
+        if ($criteria->getOrderings()) {
+            foreach ($criteria->getOrderings() as $field => $direction) {
                 $queryBuilder->addOrderBy(sprintf('e.%s', $field), $direction);
             }
         }

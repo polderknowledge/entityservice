@@ -46,9 +46,9 @@ final class EntityEvent extends Event
     private $errornr;
 
     /**
-     * The ServiceResult containing a list with entities.
+     * The result of a service manager call.
      *
-     * @var ServiceResult
+     * @var mixed
      */
     private $result;
 
@@ -70,23 +70,20 @@ final class EntityEvent extends Event
     /**
      * Gets the list with entities that are the result of this event.
      *
-     * @return ServiceResult Returns an instance of ServiceResult. When no ServiceResult exists, one is created.
+     * @return mixed Returns the result of a service manager call.
      */
     public function getResult()
     {
-        if (null === $this->result) {
-            $this->result = new ServiceResult;
-        }
         return $this->result;
     }
 
     /**
      * Sets the list with entities that are the result of this event.
      *
-     * @param ServiceResult $result The instance of ServiceResult to set.
+     * @param mixed $result The result of a service manager call.
      * @return EntityEvent Returns the instance of this class so that chaining can be used.
      */
-    public function setResult(ServiceResult $result)
+    public function setResult($result)
     {
         $this->result = $result;
         return $this;

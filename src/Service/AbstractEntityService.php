@@ -20,8 +20,6 @@ use PolderKnowledge\EntityService\Repository\FlushableInterface;
 use PolderKnowledge\EntityService\Repository\ReadableInterface;
 use PolderKnowledge\EntityService\Repository\TransactionAwareInterface;
 use PolderKnowledge\EntityService\Repository\WritableInterface;
-use PolderKnowledge\EntityService\ServiceProblem;
-use PolderKnowledge\EntityService\ServiceResult;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
@@ -195,13 +193,11 @@ abstract class AbstractEntityService implements
             function (EntityEvent $event) {
                 $target = $event->getTarget();
                 $repository = $target->getRepositoryForEntity($event->getEntityClassName());
-                $resultSet = $event->getResult();
-                $resultSet->initialize(
-                    array(call_user_func_array(
-                        array($repository, 'countBy'),
-                        $event->getParams()
-                    ))
-                );
+
+                $event->setResult((int)call_user_func_array(
+                    array($repository, 'countBy'),
+                    $event->getParams()
+                ));
             },
             0
         );
@@ -211,13 +207,11 @@ abstract class AbstractEntityService implements
             function (EntityEvent $event) {
                 $target = $event->getTarget();
                 $repository = $target->getRepositoryForEntity($event->getEntityClassName());
-                $resultSet = $event->getResult();
-                $resultSet->initialize(
-                    array(call_user_func_array(
-                        array($repository, 'countByCriteria'),
-                        $event->getParams()
-                    ))
-                );
+
+                $event->setResult((int)call_user_func_array(
+                    array($repository, 'countByCriteria'),
+                    $event->getParams()
+                ));
             },
             0
         );
@@ -266,13 +260,11 @@ abstract class AbstractEntityService implements
             function (EntityEvent $event) {
                 $target = $event->getTarget();
                 $repository = $target->getRepositoryForEntity($event->getEntityClassName());
-                $resultSet = $event->getResult();
-                $resultSet->initialize(
-                    array(call_user_func_array(
-                        array($repository, 'find'),
-                        $event->getParams()
-                    ))
-                );
+
+                $event->setResult(call_user_func_array(
+                    array($repository, 'find'),
+                    $event->getParams()
+                ));
             },
             0
         );
@@ -282,13 +274,11 @@ abstract class AbstractEntityService implements
             function (EntityEvent $event) {
                 $target = $event->getTarget();
                 $repository = $target->getRepositoryForEntity($event->getEntityClassName());
-                $resultSet = $event->getResult();
-                $resultSet->initialize(
-                    array(call_user_func_array(
-                        array($repository, 'findAll'),
-                        $event->getParams()
-                    ))
-                );
+
+                $event->setResult(call_user_func_array(
+                    array($repository, 'findAll'),
+                    $event->getParams()
+                ));
             },
             0
         );
@@ -298,13 +288,11 @@ abstract class AbstractEntityService implements
             function (EntityEvent $event) {
                 $target = $event->getTarget();
                 $repository = $target->getRepositoryForEntity($event->getEntityClassName());
-                $resultSet = $event->getResult();
-                $resultSet->initialize(
-                    call_user_func_array(
-                        array($repository, 'findBy'),
-                        $event->getParams()
-                    )
-                );
+
+                $event->setResult(call_user_func_array(
+                    array($repository, 'findBy'),
+                    $event->getParams()
+                ));
             },
             0
         );
@@ -314,13 +302,11 @@ abstract class AbstractEntityService implements
             function (EntityEvent $event) {
                 $target = $event->getTarget();
                 $repository = $target->getRepositoryForEntity($event->getEntityClassName());
-                $resultSet = $event->getResult();
-                $resultSet->initialize(
-                    call_user_func_array(
-                        array($repository, 'findBy'),
-                        $event->getParams()
-                    )
-                );
+
+                $event->setResult(call_user_func_array(
+                    array($repository, 'findByCriteria'),
+                    $event->getParams()
+                ));
             },
             0
         );
@@ -330,13 +316,11 @@ abstract class AbstractEntityService implements
             function (EntityEvent $event) {
                 $target = $event->getTarget();
                 $repository = $target->getRepositoryForEntity($event->getEntityClassName());
-                $resultSet = $event->getResult();
-                $resultSet->initialize(
-                    array(call_user_func_array(
-                        array($repository, 'findOneBy'),
-                        $event->getParams()
-                    ))
-                );
+
+                $event->setResult(call_user_func_array(
+                    array($repository, 'findOneBy'),
+                    $event->getParams()
+                ));
             },
             0
         );
@@ -346,13 +330,11 @@ abstract class AbstractEntityService implements
             function (EntityEvent $event) {
                 $target = $event->getTarget();
                 $repository = $target->getRepositoryForEntity($event->getEntityClassName());
-                $resultSet = $event->getResult();
-                $resultSet->initialize(
-                    array(call_user_func_array(
-                        array($repository, 'findOneByCriteria'),
-                        $event->getParams()
-                    ))
-                );
+
+                $event->setResult(call_user_func_array(
+                    array($repository, 'findOneByCriteria'),
+                    $event->getParams()
+                ));
             },
             0
         );
@@ -648,7 +630,7 @@ abstract class AbstractEntityService implements
      *
      * @param  sting $name
      * @param  array $params
-     * @return ServiceProblem|ServiceResult
+     * @return mixed
      */
     protected function trigger($name, array $params)
     {
@@ -660,7 +642,7 @@ abstract class AbstractEntityService implements
 
         if ($responseCollection->stopped()) {
             if ($event->isError()) {
-                return new ServiceProblem($event->getError(), $event->getErrorNr());
+                throw new RuntimeException($event->getError(), $event->getErrorNr());
             }
         }
 

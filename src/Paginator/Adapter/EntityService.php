@@ -23,34 +23,26 @@ class EntityService implements AdapterInterface
      *
      * @var EntityServiceInterface
      */
-    protected $entityService;
+    private $entityService;
 
     /**
      * Criteria used to fetch entities
      *
      * @var array|Criteria
      */
-    protected $criteria;
-
-    /**
-     * Order used to fetch criteria
-     *
-     * @var array
-     */
-    protected $order;
+    private $criteria;
 
     /**
      * Creates a new instance of this class
      *
      * @param EntityServiceInterface $entityService
-     * @param array|Criteria $criteria
+     * @param Criteria $criteria The criteria to match.
      * @param array $order
      */
-    public function __construct(EntityServiceInterface $entityService, $criteria = array(), array $order = null)
+    public function __construct(EntityServiceInterface $entityService, Criteria $criteria = null)
     {
         $this->entityService = $entityService;
-        $this->criteria = $criteria;
-        $this->order = $order;
+        $this->criteria = is_object($criteria) ? clone $criteria : Criteria::create();
     }
 
     /**
@@ -60,11 +52,7 @@ class EntityService implements AdapterInterface
      */
     public function count()
     {
-        $result = $this->entityService->countBy(
-            is_object($this->criteria) ? clone $this->criteria : $this->criteria
-        );
-
-        return (int) $result->current();
+        return $this->entityService->countByCriteria($this->criteria);
     }
 
     /**
@@ -76,11 +64,9 @@ class EntityService implements AdapterInterface
      */
     public function getItems($offset, $itemCountPerPage)
     {
-        return $this->entityService->findBy(
-            is_object($this->criteria) ? clone $this->criteria : $this->criteria,
-            $this->order,
-            $itemCountPerPage,
-            $offset
-        );
+        $this->criteria->setFirstResult($offset);
+        $this->criteria->setMaxResults($itemCountPerPage);
+
+        return $this->entityService->findByCriteria($this->criteria);
     }
 }
