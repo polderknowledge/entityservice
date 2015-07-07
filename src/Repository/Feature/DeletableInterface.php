@@ -7,10 +7,10 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService\Repository;
+namespace PolderKnowledge\EntityService\Repository\Feature;
 
 use Doctrine\Common\Collections\Criteria;
-use PolderKnowledge\EntityService\Feature\DeletableInterface as FeatureDeletable;
+use PolderKnowledge\EntityService\Entity\Feature\DeletableInterface as FeatureDeletable;
 
 /**
  * The DeletableInterface interface makes it possible to delete entities from a repository.

@@ -7,7 +7,7 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService;
+namespace PolderKnowledge\EntityService\Event;
 
 use PolderKnowledge\EntityService\Exception\RuntimeException;
 use Zend\EventManager\Event;

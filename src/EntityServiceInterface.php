@@ -7,7 +7,7 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService\Service;
+namespace PolderKnowledge\EntityService;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -16,8 +16,6 @@ use PolderKnowledge\EntityService\Repository\FlushableInterface;
 use PolderKnowledge\EntityService\Repository\ReadableInterface;
 use PolderKnowledge\EntityService\Repository\WritableInterface;
 use PolderKnowledge\EntityService\Feature\IdentifiableInterface;
-use PolderKnowledge\EntityService\ServiceProblem;
-use PolderKnowledge\EntityService\ServiceResult;
 use Zend\EventManager\EventManagerAwareInterface;
 
 /**
@@ -29,7 +27,7 @@ interface EntityServiceInterface extends EventManagerAwareInterface
      * Count the objects matching the criteria respecting the order, limit and offset.
      *
      * @param array $criteria The criteria values to match on.
-     * @return ServiceResult|ServiceProblem
+     * @return int
      */
     public function countBy(array $criteria);
 
@@ -37,7 +35,7 @@ interface EntityServiceInterface extends EventManagerAwareInterface
      * Count the objects matching the criteria.
      *
      * @param Criteria $criteria The criteria object to match on.
-     * @return ServiceResult|ServiceProblem
+     * @return int
      */
     public function countByCriteria(Criteria $criteria);
 
@@ -66,7 +64,7 @@ interface EntityServiceInterface extends EventManagerAwareInterface
      * Find one object in the repository matching the $id
      *
      * @param mixed $id The id of the entity.
-     * @return ServiceResult|ServiceProblem
+     * @return object|null
      */
     public function find($id);
 
@@ -84,7 +82,7 @@ interface EntityServiceInterface extends EventManagerAwareInterface
      * @param array|null $order The array with fields to sort on.
      * @param int|null $limit The limit
      * @param int|null $offset
-     * @return ServiceResult|ServiceProblem
+     * @return array
      */
     public function findBy(array $criteria, array $order = null, $limit = null, $offset = null);
 
@@ -92,7 +90,7 @@ interface EntityServiceInterface extends EventManagerAwareInterface
      * Find one or more objects in the repository matching the criteria.
      *
      * @param Criteria $criteria The criteria object to match on.
-     * @return ServiceResult|ServiceProblem
+     * @return array
      */
     public function findByCriteria(Criteria $criteria);
 
@@ -101,7 +99,7 @@ interface EntityServiceInterface extends EventManagerAwareInterface
      *
      * @param array $criteria The criteria values to match on.
      * @param array $order The values to sort on.
-     * @return ServiceResult|ServiceProblem
+     * @return object|null
      */
     public function findOneBy(array $criteria, array $order);
 
@@ -109,7 +107,7 @@ interface EntityServiceInterface extends EventManagerAwareInterface
      * Find one object in the repository matching the criteria
      *
      * @param Criteria $criteria The criteria object to match on.
-     * @return ServiceResult|ServiceProblem
+     * @return object|null
      */
     public function findOneByCriteria(Criteria $criteria);
 

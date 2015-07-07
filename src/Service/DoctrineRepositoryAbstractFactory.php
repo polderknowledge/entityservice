@@ -9,7 +9,7 @@
 
 namespace PolderKnowledge\EntityService\Service;
 
-use PolderKnowledge\EntityService\Repository\DoctrineORMRepository;
+use PolderKnowledge\EntityService\Repository\Doctrine\DoctrineORMRepository;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

@@ -7,7 +7,7 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService\Service;
+namespace PolderKnowledge\EntityService;
 
 /**
  * The TransactionAwareInterface interface makes it possible work with transactions on a service.

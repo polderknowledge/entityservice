@@ -7,12 +7,12 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService\Service;
+namespace PolderKnowledge\EntityService;
 
 use Exception;
 use PolderKnowledge\EntityService\Exception\InvalidArgumentException;
 use PolderKnowledge\EntityService\Exception\ServiceException;
-use PolderKnowledge\EntityService\Service\TransactionAwareInterface;
+use PolderKnowledge\EntityService\TransactionAwareInterface;
 use SplObjectStorage;
 use Zend\Stdlib\CallbackHandler;
 use Zend\Stdlib\PriorityQueue;

@@ -7,15 +7,21 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService\Repository;
+namespace PolderKnowledge\EntityService\Repository\Doctrine;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use PolderKnowledge\EntityService\Feature\DeletableInterface as FeatureDeletable;
-use PolderKnowledge\EntityService\Feature\IdentifiableInterface;
-use PolderKnowledge\EntityService\Repository\DoctrineQueryBuilderExpressionVisitor;
+use PolderKnowledge\EntityService\Entity\Feature\DeletableInterface as FeatureDeletable;
+use PolderKnowledge\EntityService\Entity\Feature\IdentifiableInterface;
+use PolderKnowledge\EntityService\Repository\Doctrine\DoctrineQueryBuilderExpressionVisitor;
+use PolderKnowledge\EntityService\Repository\EntityRepositoryInterface;
+use PolderKnowledge\EntityService\Repository\Feature\DeletableInterface;
+use PolderKnowledge\EntityService\Repository\Feature\FlushableInterface;
+use PolderKnowledge\EntityService\Repository\Feature\ReadableInterface;
+use PolderKnowledge\EntityService\Repository\Feature\TransactionAwareInterface;
+use PolderKnowledge\EntityService\Repository\Feature\WritableInterface;
 
 /**
  * Class DoctrineORMRepository is a default implementation for a repository using doctrine orm.

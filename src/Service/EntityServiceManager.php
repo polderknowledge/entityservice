@@ -9,6 +9,7 @@
 
 namespace PolderKnowledge\EntityService\Service;
 
+use PolderKnowledge\EntityService\EntityServiceInterface;
 use PolderKnowledge\EntityService\Exception\InvalidServiceNameException;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ConfigInterface;
@@ -42,10 +43,9 @@ class EntityServiceManager extends AbstractPluginManager
 
         throw new InvalidServiceNameException(
             sprintf(
-                'Plugin of type %s is invalid;
-                must implement %s\EntityServiceInterface',
+                'Plugin of type %s is invalid; must implement %s',
                 (is_object($plugin) ? get_class($plugin) : gettype($plugin)),
-                __NAMESPACE__
+                'PolderKnowledge\EntityService\EntityServiceInterface'
             )
         );
     }

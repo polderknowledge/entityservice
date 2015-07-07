@@ -7,13 +7,13 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService\Service;
+namespace PolderKnowledge\EntityService\Repository\Service;
 
 use PolderKnowledge\EntityService\Exception\InvalidServiceNameException;
-use PolderKnowledge\EntityService\Repository\DeletableInterface;
-use PolderKnowledge\EntityService\Repository\FlushableInterface;
-use PolderKnowledge\EntityService\Repository\ReadableInterface;
-use PolderKnowledge\EntityService\Repository\WritableInterface;
+use PolderKnowledge\EntityService\Repository\Feature\DeletableInterface;
+use PolderKnowledge\EntityService\Repository\Feature\FlushableInterface;
+use PolderKnowledge\EntityService\Repository\Feature\ReadableInterface;
+use PolderKnowledge\EntityService\Repository\Feature\WritableInterface;
 use Zend\ServiceManager\AbstractPluginManager;
 
 /**

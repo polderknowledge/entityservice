@@ -7,7 +7,7 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService\Feature;
+namespace PolderKnowledge\EntityService\Entity\Feature;
 
 /**
  * IdentifiableInterface makes it possible to identify a object by id

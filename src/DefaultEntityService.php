@@ -7,7 +7,7 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService\Service;
+namespace PolderKnowledge\EntityService;
 
 /**
  * A default implementation of an entity service.

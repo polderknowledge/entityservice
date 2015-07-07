@@ -10,7 +10,7 @@
 namespace PolderKnowledge\EntityService\Paginator\Adapter;
 
 use Doctrine\Common\Collections\Criteria;
-use PolderKnowledge\EntityService\Service\EntityServiceInterface;
+use PolderKnowledge\EntityService\EntityServiceInterface;
 use Zend\Paginator\Adapter\AdapterInterface;
 
 /**

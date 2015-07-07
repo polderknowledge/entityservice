@@ -7,7 +7,7 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService\Repository;
+namespace PolderKnowledge\EntityService\Repository\Feature;
 
 use Doctrine\Common\Collections\Criteria;
 use UnexpectedValueException;

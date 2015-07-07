@@ -9,6 +9,7 @@
 
 namespace PolderKnowledge\EntityService\Service;
 
+use PolderKnowledge\EntityService\DefaultEntityService;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

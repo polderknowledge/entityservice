@@ -7,7 +7,7 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService\Feature;
+namespace PolderKnowledge\EntityService\Entity\Feature;
 
 /**
  * DeletableInterface makes it possible to check whether an object was removed or not.

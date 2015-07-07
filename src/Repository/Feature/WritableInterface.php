@@ -7,9 +7,9 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService\Repository;
+namespace PolderKnowledge\EntityService\Repository\Feature;
 
-use PolderKnowledge\EntityService\Feature\IdentifiableInterface;
+use PolderKnowledge\EntityService\Entity\Feature\IdentifiableInterface;
 
 /**
  * The WritableInterface interface makes it possible persist entities to a repository.

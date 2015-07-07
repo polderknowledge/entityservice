@@ -7,19 +7,20 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService\Service;
+namespace PolderKnowledge\EntityService;
 
 use Doctrine\Common\Collections\Criteria;
-use PolderKnowledge\EntityService\EntityEvent;
+use PolderKnowledge\EntityService\Event\EntityEvent;
 use PolderKnowledge\EntityService\Exception\RuntimeException;
 use PolderKnowledge\EntityService\Exception\ServiceException;
 use PolderKnowledge\EntityService\Feature\IdentifiableInterface;
-use PolderKnowledge\EntityService\Repository\DeletableInterface;
 use PolderKnowledge\EntityService\Repository\EntityRepositoryInterface;
-use PolderKnowledge\EntityService\Repository\FlushableInterface;
-use PolderKnowledge\EntityService\Repository\ReadableInterface;
-use PolderKnowledge\EntityService\Repository\TransactionAwareInterface;
-use PolderKnowledge\EntityService\Repository\WritableInterface;
+use PolderKnowledge\EntityService\Repository\Feature\DeletableInterface;
+use PolderKnowledge\EntityService\Repository\Feature\FlushableInterface;
+use PolderKnowledge\EntityService\Repository\Feature\ReadableInterface;
+use PolderKnowledge\EntityService\Repository\Feature\TransactionAwareInterface;
+use PolderKnowledge\EntityService\Repository\Feature\WritableInterface;
+use PolderKnowledge\EntityService\Repository\Service\EntityRepositoryManager;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
