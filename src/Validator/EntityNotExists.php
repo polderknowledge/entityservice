@@ -40,10 +40,8 @@ class EntityNotExists extends AbstractEntityValidator
     {
         $result = $this->fetchResult($value);
 
-        if ($result instanceof ServiceResult) {
-            if ($result->count() === 0) {
-                return true;
-            }
+        if (count($result) === 0) {
+            return true;
         }
 
         $this->error(self::ERROR_OBJECT_FOUND, $value);

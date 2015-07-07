@@ -9,8 +9,6 @@
 
 namespace PolderKnowledge\EntityService\Validator;
 
-use PolderKnowledge\EntityService\ServiceProblem;
-use PolderKnowledge\EntityService\ServiceResult;
 use PolderKnowledge\EntityService\Service\EntityServiceInterface;
 use Zend\Validator\AbstractValidator;
 
@@ -72,7 +70,7 @@ abstract class AbstractEntityValidator extends AbstractValidator
      * Will call the configured method on self::$entityService using the value as criteria
      *
      * @param mixed $value
-     * @return ServiceResult|ServiceProblem
+     * @return object
      */
     protected function fetchResult($value)
     {
