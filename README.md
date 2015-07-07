@@ -48,6 +48,12 @@ service_listener_options and also register the entity service in the service man
 ),
 'service_listener_options' => array(
 	array(
+		'service_manager' => 'EntityRepositoryManager',
+		'config_key'      => 'entity_repository_manager',
+		'interface'       => '',
+		'method'          => '',
+	),
+	array(
 		'service_manager' => 'EntityServiceManager',
 		'config_key'      => 'entity_service_manager',
 		'interface'       => '',
