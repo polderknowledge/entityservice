@@ -21,6 +21,7 @@ use PolderKnowledge\EntityService\Repository\DoctrineQueryBuilderExpressionVisit
  * Class DoctrineORMRepository is a default implementation for a repository using doctrine orm.
  */
 class DoctrineORMRepository implements
+    EntityRepositoryInterface,
     DeletableInterface,
     FlushableInterface,
     ReadableInterface,
@@ -63,6 +64,87 @@ class DoctrineORMRepository implements
     /**
      * {@inheritdoc}
      *
+     * @param array|Criteria $criteria
+     * @param array $orderBy
+     * @param int $limit
+     * @param int $offset
+     * @return int
+     */
+    public function countBy(array $criteria)
+    {
+        $queryBuilder = $this->getRepository()->createQueryBuilder('e');
+        $queryBuilder->select('count(e)');
+
+        if (!empty($criteria)) {
+            foreach ($criteria as $field => $value) {
+                $queryBuilder->andWhere($queryBuilder->expr()->eq('e.' . $field, ':'.$field));
+                $queryBuilder->setParameter(':'.$field, $value);
+            }
+        }
+
+        return $queryBuilder->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param Criteria $criteria The criteria to match on.
+     * @return int
+     */
+    public function countByCriteria(Criteria $criteria)
+    {
+        $queryBuilder = $this->getQueryBuilder($criteria);
+        $queryBuilder->select('count(e)');
+
+        return $queryBuilder->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param FeatureDeletable $entity
+     */
+    public function delete(FeatureDeletable $entity)
+    {
+        $this->entityManager->remove($entity);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param array $criteria
+     */
+    public function deleteBy(array $criteria)
+    {
+        $entities = $this->findBy($criteria);
+
+        foreach ($entities as $entity) {
+            $this->entityManager->remove($entity);
+        }
+
+        $this->entityManager->flush();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param array|Criteria $criteria
+     */
+    public function deleteByCriteria(Criteria $criteria)
+    {
+        $entities = $this->findByCriteria($criteria);
+
+        foreach ($entities as $entity) {
+            $this->entityManager->remove($entity);
+        }
+
+        $this->entityManager->flush();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @param mixed $id
      * @return object
      */
@@ -84,52 +166,40 @@ class DoctrineORMRepository implements
     /**
      * {@inheritdoc}
      *
-     * @param array|Criteria $criteria
-     * @param array $orderBy
-     * @param int $limit
-     * @param int $offset
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param int|null $limit
+     * @param int|null $offset
      * @return array
      */
-    public function findBy($criteria, array $orderBy = null, $limit = null, $offset = null)
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        if ($criteria instanceof Criteria) {
-            $queryBuilder = $this->getQueryBuilder($criteria, $orderBy, $limit, $offset);
-
-            return $queryBuilder->getQuery()->execute();
-        }
-
         return $this->getRepository()->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @param array|Criteria $criteria
-     * @param array $orderBy
-     * @param int $limit
-     * @param int $offset
-     * @return int
+     * @param Criteria $criteria
+     * @return array
      */
-    public function countBy($criteria, array $orderBy = null, $limit = null, $offset = null)
+    public function findByCriteria(Criteria $criteria)
     {
-        if ($criteria instanceof Criteria) {
-            $queryBuilder = $this->getQueryBuilder($criteria, $orderBy, $limit, $offset);
-            $queryBuilder->select('count(e)');
+        $queryBuilder = $this->getQueryBuilder($criteria);
 
-            return $queryBuilder->getQuery()->getSingleScalarResult();
-        }
+        return $queryBuilder->getQuery()->execute();
+    }
 
-        $queryBuilder = $this->getRepository()->createQueryBuilder('e');
-        $queryBuilder->select('count(e)');
-
-        if (!empty($criteria)) {
-            foreach ($criteria as $field => $value) {
-                $queryBuilder->andWhere($queryBuilder->expr()->eq('e.' . $field, ':'.$field));
-                $queryBuilder->setParameter(':'.$field, $value);
-            }
-        }
-
-        return $queryBuilder->getQuery()->getSingleScalarResult();
+    /**
+     * {@inheritdoc}
+     *
+     * @param array $criteria
+     * @param array|null $order
+     * @return null|object
+     */
+    public function findOneBy(array $criteria, array $order = null)
+    {
+        return $this->getRepository()->findOneBy($criteria, $order);
     }
 
     /**
@@ -138,15 +208,12 @@ class DoctrineORMRepository implements
      * @param array|Criteria $criteria
      * @return null|object
      */
-    public function findOneBy($criteria)
+    public function findOneByCriteria(Criteria $criteria)
     {
-        if ($criteria instanceof Criteria) {
-            $queryBuilder = $this->getQueryBuilder($criteria, null, 1);
-            $result = $queryBuilder->getQuery()->getResult();
-            return current($result);
-        }
+        $queryBuilder = $this->getQueryBuilder($criteria, null, 1);
+        $result = $queryBuilder->getQuery()->getResult();
 
-        return $this->getRepository()->findOneBy($criteria);
+        return current($result);
     }
 
     /**
@@ -188,11 +255,21 @@ class DoctrineORMRepository implements
     }
 
     /**
+     * Gets the Doctrine EntityManager.
+     *
+     * @return EntityManagerInterface
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @return EntityRepository
      */
-    protected function getRepository()
+    public function getRepository()
     {
         if ($this->repository === null) {
             $this->repository = $this->entityManager->getRepository($this->entityName);
@@ -219,30 +296,6 @@ class DoctrineORMRepository implements
     public function persist(IdentifiableInterface $entity)
     {
         $this->entityManager->persist($entity);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param FeatureDeletable $entity
-     */
-    public function delete(FeatureDeletable $entity)
-    {
-        $this->entityManager->remove($entity);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param array|Criteria $criteria
-     */
-    public function deleteBy($criteria)
-    {
-        $entities = $this->findBy($criteria);
-
-        foreach ($entities as $entity) {
-            $this->delete($entity);
-        }
     }
 
     /**

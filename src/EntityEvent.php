@@ -9,6 +9,7 @@
 
 namespace PolderKnowledge\EntityService;
 
+use PolderKnowledge\EntityService\Exception\RuntimeException;
 use Zend\EventManager\Event;
 
 /**
@@ -109,7 +110,14 @@ final class EntityEvent extends Event
      */
     public function setEntityClassName($name)
     {
-        $this->entityClassName = (string)$name;
+        $trimmedName = trim($name, '\\');
+
+        if (!class_exists($trimmedName)) {
+            throw new RuntimeException(sprintf('The class "%s" does not exist.', $trimmedName));
+        }
+
+        $this->entityClassName = $trimmedName;
+
         return $this;
     }
 

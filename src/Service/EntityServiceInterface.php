@@ -9,6 +9,7 @@
 
 namespace PolderKnowledge\EntityService\Service;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use PolderKnowledge\EntityService\Repository\DeletableInterface;
 use PolderKnowledge\EntityService\Repository\FlushableInterface;
@@ -25,6 +26,101 @@ use Zend\EventManager\EventManagerAwareInterface;
 interface EntityServiceInterface extends EventManagerAwareInterface
 {
     /**
+     * Count the objects matching the criteria respecting the order, limit and offset.
+     *
+     * @param array $criteria The criteria values to match on.
+     * @return ServiceResult|ServiceProblem
+     */
+    public function countBy(array $criteria);
+
+    /**
+     * Count the objects matching the criteria.
+     *
+     * @param Criteria $criteria The criteria object to match on.
+     * @return ServiceResult|ServiceProblem
+     */
+    public function countByCriteria(Criteria $criteria);
+
+    /**
+     * Deletes the given object from the repository
+     *
+     * @param IdentifiableInterface $entity The entity to delete.
+     */
+    public function delete(IdentifiableInterface $entity);
+
+    /**
+     * Deletes all objects matching the criteria from the repository
+     *
+     * @param array $criteria The criteria values to match on.
+     */
+    public function deleteBy(array $criteria);
+
+    /**
+     * Deletes all objects from the repository that match the given criteria.
+     *
+     * @param Criteria $criteria The criteria object to match on.
+     */
+    public function deleteByCriteria(Criteria $criteria);
+
+    /**
+     * Find one object in the repository matching the $id
+     *
+     * @param mixed $id The id of the entity.
+     * @return ServiceResult|ServiceProblem
+     */
+    public function find($id);
+
+    /**
+     * Finds all entities in the repository.
+     *
+     * @return array Returns the entities that exist.
+     */
+    public function findAll();
+
+    /**
+     * Find one or more objects in the repository matching the criteria respecting the order, limit and offset
+     *
+     * @param array $criteria The array with criteria to search on.
+     * @param array|null $order The array with fields to sort on.
+     * @param int|null $limit The limit
+     * @param int|null $offset
+     * @return ServiceResult|ServiceProblem
+     */
+    public function findBy(array $criteria, array $order = null, $limit = null, $offset = null);
+
+    /**
+     * Find one or more objects in the repository matching the criteria.
+     *
+     * @param Criteria $criteria The criteria object to match on.
+     * @return ServiceResult|ServiceProblem
+     */
+    public function findByCriteria(Criteria $criteria);
+
+    /**
+     * Find one object in the repository matching the criteria
+     *
+     * @param array $criteria The criteria values to match on.
+     * @param array $order The values to sort on.
+     * @return ServiceResult|ServiceProblem
+     */
+    public function findOneBy(array $criteria, array $order);
+
+    /**
+     * Find one object in the repository matching the criteria
+     *
+     * @param Criteria $criteria The criteria object to match on.
+     * @return ServiceResult|ServiceProblem
+     */
+    public function findOneByCriteria(Criteria $criteria);
+
+    /**
+     * Gets the repository that is used by the service.
+     *
+     * @return DeletableInterface|FlushableInterface|ReadableInterface|WritableInterface
+     */
+    public function getRepository();
+
+    /**
      * Will return a repository object for a given $entityName
      *
      * @param string $entityName The name of the entity to get the repository for.
@@ -33,119 +129,17 @@ interface EntityServiceInterface extends EventManagerAwareInterface
     public function getRepositoryForEntity($entityName);
 
     /**
-     * Find one object in the repository matching the $id
-     *
-     * @param mixed $id The id of the
-     * @return ServiceResult|ServiceProblem
-     */
-    public function find($id);
-
-    /**
-     * Find one or more objects in the repository matching the criteria respecting the order, limit and offset
-     *
-     * @param array|Criteria $criteria
-     * @param array $order
-     * @param int $limit
-     * @param int $offset
-     * @return ServiceResult|ServiceProblem
-     */
-    public function findBy($criteria, array $order = null, $limit = null, $offset = null);
-
-    /**
-     * Find one object in the repository matching the criteria
-     *
-     * @param array|Criteria $criteria
-     * @return ServiceResult|ServiceProblem
-     */
-    public function findOneBy($criteria);
-
-    /**
-     * Count the objects matching the criteria respecting the order, limit and offset.
-     *
-     * @param array|Criteria $criteria
-     * @param array $order
-     * @param int $limit
-     * @param int $offset
-     * @return ServiceResult|ServiceProblem
-     */
-    public function countBy($criteria, array $order = null, $limit = null, $offset = null);
-
-    /**
      * Persist the given object
      *
-     * @param IdentifiableInterface $entity
+     * @param IdentifiableInterface $entity The entity to persist.
      */
     public function persist(IdentifiableInterface $entity);
 
     /**
-     * Deletes the given object from the repository
+     * Persists multiple entities to repository.
      *
-     * @param IdentifiableInterface $entity
+     * @param array|Iterator|Collection $entities The collection with entities.
+     * @throws RuntimeException
      */
-    public function delete(IdentifiableInterface $entity);
-
-    /**
-     * Deletes all objects matching the criteria from the repository
-     *
-     * @param array|Criteria $criteria
-     */
-    public function deleteBy($criteria);
-
-    /**
-     * Sets the default order used in the find methods
-     *
-     * @param array $order
-     * @return void
-     */
-    public function setOrder(array $order);
-
-    /**
-     * Sets the default limit clause used in the find methods
-     *
-     * @param int $limit
-     * @return void
-     */
-    public function setLimit($limit);
-
-    /**
-     * Sets the default offset used in the find methods
-     *
-     * @param int $offset
-     * @return void
-     */
-    public function setOffset($offset);
-
-    /**
-     * Returns the default order criteria used in the find methods
-     *
-     * @return array
-     */
-    public function getOrder();
-
-    /**
-     * Returns the default limit used in the find methods
-     *
-     * @return int
-     */
-    public function getLimit();
-
-    /**
-     * Returns the default offset used in the find methods
-     *
-     * @return int
-     */
-    public function getOffset();
-
-    /**
-     * Clears data set manipulation info like ordering and limitation
-     *
-     * Filter can be one or a combination of the following values
-     * - order
-     * - limit
-     * - offset
-     *
-     * @param $filter
-     * @return void
-     */
-    public function clear($filter);
+    public function multiPersist($entities);
 }
