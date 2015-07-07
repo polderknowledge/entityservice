@@ -36,15 +36,13 @@ class EntityRepositoryManager extends AbstractPluginManager
             return;
         }
 
-        throw new InvalidServiceNameException(
-            sprintf(
-                'Plugin of type %s is invalid; must implement '
-                . 'PolderKnowledge\EntityService\Repository\ReadableInterface'
-                . 'or PolderKnowledge\EntityService\Repository\WritableInterface'
-                . 'or PolderKnowledge\EntityService\Repository\FlushableInterface'
-                . 'or PolderKnowledge\EntityService\Repository\DeletableInterface',
-                is_object($plugin) ? get_class($plugin) : gettype($plugin)
-            )
-        );
+        throw new InvalidServiceNameException(sprintf(
+            'Plugin of type %s is invalid; must implement '
+            . 'PolderKnowledge\EntityService\Repository\ReadableInterface'
+            . ' or PolderKnowledge\EntityService\Repository\WritableInterface'
+            . ' or PolderKnowledge\EntityService\Repository\FlushableInterface'
+            . ' or PolderKnowledge\EntityService\Repository\DeletableInterface',
+            is_object($plugin) ? get_class($plugin) : gettype($plugin)
+        ));
     }
 }
