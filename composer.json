@@ -1,11 +1,5 @@
 {
     "name": "polderknowledge/entityservice",
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "http://packages.youngguns.nl"
-        }
-    ],
     "require": {
         "php": ">=5.5.0",
         "doctrine/collections": "~1.2",
@@ -14,16 +8,17 @@
         "zendframework/zend-servicemanager": "~2"
     },
     "require-dev": {
+        "polderknowledge/build-tools": "dev-master@dev",
         "doctrine/orm": "~2.4",
-        "phpunit/phpunit": "~4.0",
-        "squizlabs/php_codesniffer": "~2.0",
-        "phing/phing": "~2.10",
-        "phpmd/phpmd": "~1.0",
-        "pdepend/pdepend": "~1.0",
-        "phpdocumentor/phpdocumentor": "~2.8",
         "zendframework/zend-paginator": "~2",
         "zendframework/zend-validator": "~2"
     },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://packages.youngguns.nl"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "PolderKnowledge\\EntityService\\": "src/"
