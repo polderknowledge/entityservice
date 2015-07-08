@@ -7,16 +7,16 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService\Service;
+namespace PolderKnowledge\EntityService\Repository\Doctrine\Service;
 
-use PolderKnowledge\EntityService\Repository\Doctrine\DoctrineORMRepository;
+use PolderKnowledge\EntityService\Repository\Doctrine\ORMRepository;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * DoctrineRepositoryAbstractFactory creates a default DoctrineORMRepository for an EntityService
+ * RepositoryAbstractFactory creates a default ORMRepository for an EntityService
  */
-class DoctrineRepositoryAbstractFactory implements AbstractFactoryInterface
+class RepositoryAbstractFactory implements AbstractFactoryInterface
 {
     /**
      * {@inheritdoc}
@@ -41,13 +41,13 @@ class DoctrineRepositoryAbstractFactory implements AbstractFactoryInterface
      * @param ServiceLocatorInterface $serviceLocator
      * @param $name
      * @param $requestedName
-     * @return DoctrineORMRepository
+     * @return ORMRepository
      */
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
         $serviceManager = $serviceLocator->getServiceLocator();
         $entityManager = $serviceManager->get("Doctrine\Orm\EntityManager");
 
-        return new DoctrineORMRepository($entityManager, $requestedName);
+        return new ORMRepository($entityManager, $requestedName);
     }
 }

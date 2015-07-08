@@ -13,9 +13,9 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use PolderKnowledge\EntityService\Entity\Feature\DeletableInterface as FeatureDeletable;
-use PolderKnowledge\EntityService\Entity\Feature\IdentifiableInterface;
-use PolderKnowledge\EntityService\Repository\Doctrine\DoctrineQueryBuilderExpressionVisitor;
+use PolderKnowledge\EntityService\Entity\Feature\DeletableInterface as EntityFeatureDeletable;
+use PolderKnowledge\EntityService\Entity\Feature\IdentifiableInterface as EntityFeatureIdentifiable;
+use PolderKnowledge\EntityService\Repository\Doctrine\QueryBuilderExpressionVisitor;
 use PolderKnowledge\EntityService\Repository\EntityRepositoryInterface;
 use PolderKnowledge\EntityService\Repository\Feature\DeletableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\FlushableInterface;
@@ -24,9 +24,9 @@ use PolderKnowledge\EntityService\Repository\Feature\TransactionAwareInterface;
 use PolderKnowledge\EntityService\Repository\Feature\WritableInterface;
 
 /**
- * Class DoctrineORMRepository is a default implementation for a repository using doctrine orm.
+ * Class ORMRepository is a default implementation for a repository using doctrine orm.
  */
-class DoctrineORMRepository implements
+class ORMRepository implements
     EntityRepositoryInterface,
     DeletableInterface,
     FlushableInterface,
@@ -70,7 +70,7 @@ class DoctrineORMRepository implements
     /**
      * {@inheritdoc}
      *
-     * @param array|Criteria $criteria
+     * @param array $criteria
      * @param array $orderBy
      * @param int $limit
      * @param int $offset
@@ -108,9 +108,9 @@ class DoctrineORMRepository implements
     /**
      * {@inheritdoc}
      *
-     * @param FeatureDeletable $entity
+     * @param EntityFeatureDeletable $entity
      */
-    public function delete(FeatureDeletable $entity)
+    public function delete(EntityFeatureDeletable $entity)
     {
         $this->entityManager->remove($entity);
     }
@@ -132,7 +132,7 @@ class DoctrineORMRepository implements
     /**
      * {@inheritdoc}
      *
-     * @param array|Criteria $criteria
+     * @param Criteria $criteria
      */
     public function deleteByCriteria(Criteria $criteria)
     {
@@ -227,7 +227,7 @@ class DoctrineORMRepository implements
     {
         $queryBuilder = $this->getRepository()->createQueryBuilder('e');
 
-        $visitor = new DoctrineQueryBuilderExpressionVisitor('e', $queryBuilder);
+        $visitor = new QueryBuilderExpressionVisitor('e', $queryBuilder);
 
         $whereExpression = $criteria->getWhereExpression();
         if ($whereExpression !== null) {
@@ -279,9 +279,9 @@ class DoctrineORMRepository implements
     /**
      * {@inheritdoc}
      *
-     * @param IdentifiableInterface $entity
+     * @param EntityFeatureIdentifiable $entity
      */
-    public function flush(IdentifiableInterface $entity = null)
+    public function flush(EntityFeatureIdentifiable $entity = null)
     {
         $this->entityManager->flush($entity);
     }
@@ -289,9 +289,9 @@ class DoctrineORMRepository implements
     /**
      * {@inheritdoc}
      *
-     * @param IdentifiableInterface $entity
+     * @param EntityFeatureIdentifiable $entity
      */
-    public function persist(IdentifiableInterface $entity)
+    public function persist(EntityFeatureIdentifiable $entity)
     {
         $this->entityManager->persist($entity);
     }

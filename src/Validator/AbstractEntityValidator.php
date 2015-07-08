@@ -80,7 +80,7 @@ abstract class AbstractEntityValidator extends AbstractValidator
                 $this->method
             ),
             array(
-                'citeria' => array($this->field => $value)
+                'criteria' => array($this->field => $value)
             )
         );
     }

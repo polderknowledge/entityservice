@@ -32,7 +32,7 @@ use Youngguns\StdLib\Criterion\MultiParameterExpressionVisitorInterface;
 /**
  * Class used to convert Criteria to doctrine orm expressions.
  */
-class DoctrineQueryBuilderExpressionVisitor extends ExpressionVisitor implements
+class QueryBuilderExpressionVisitor extends ExpressionVisitor implements
     MultiParameterExpressionVisitorInterface,
     DateTimeExpressionVisitorInterface
 {

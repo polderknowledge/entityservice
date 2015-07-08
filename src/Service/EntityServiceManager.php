@@ -45,7 +45,7 @@ class EntityServiceManager extends AbstractPluginManager
             sprintf(
                 'Plugin of type %s is invalid; must implement %s',
                 (is_object($plugin) ? get_class($plugin) : gettype($plugin)),
-                'PolderKnowledge\EntityService\EntityServiceInterface'
+                EntityServiceInterface::class
             )
         );
     }
