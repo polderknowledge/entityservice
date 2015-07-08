@@ -20,34 +20,24 @@ use PolderKnowledge\EntityService\Repository\Feature\FlushableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\ReadableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\TransactionAwareInterface;
 use PolderKnowledge\EntityService\Repository\Feature\WritableInterface;
-use PolderKnowledge\EntityService\Repository\Service\EntityRepositoryManager;
+use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use Zend\Stdlib\CallbackHandler;
 
 /**
  * Base class for application specific EntityServices. This is a fully event driven class.
  * Each method trigger a method for extendability.
  */
-abstract class AbstractEntityService implements
+abstract class AbstractEntityService extends AbstractListenerAggregate implements
     EntityServiceInterface,
-    ListenerAggregateInterface,
     TransactionAwareInterface
 {
     /**
-     * Used to fetch repositories
+     * The repository that is used for this entity service.
      *
-     * @var EntityRepositoryManager
+     * @var EntityRepositoryInterface
      */
-    private $repositoryManager;
-
-    /**
-     * A list with repositories that are used in the service.
-     *
-     * @var EntityRepositoryInterface[]
-     */
-    private $repositories;
+    private $repository;
 
     /**
      * EventManager handeling all events triggered by this service
@@ -55,13 +45,6 @@ abstract class AbstractEntityService implements
      * @var EventManagerInterface
      */
     private $eventManager;
-
-    /**
-     * Registered callbacks by this service since it implements a ListenerAggregateInterface
-     *
-     * @var CallbackHandler[]
-     */
-    private $listeners;
 
     /**
      * Initialized Event
@@ -73,51 +56,25 @@ abstract class AbstractEntityService implements
     /**
      * Initializes a new instance of this class.
      *
-     * @param EntityRepositoryManager $manager The repository manager used to find the repository for the entity.
+     * @param EntityRepositoryInterface $repository The repository that is used to communicate with.
      * @param string $entityClassName The FQCN of the entity.
      */
-    public function __construct(EntityRepositoryManager $manager, $entityClassName)
+    public function __construct(EntityRepositoryInterface $repository, $entityClassName)
     {
-        $this->repositoryManager = $manager;
-        $this->repositories = array();
+        $this->repository = $repository;
         $this->listeners = array();
 
         $this->getEvent()->setEntityClassName($entityClassName);
     }
 
     /**
-     * Will return the repository manager used to fetch repositories
-     *
-     * @return EntityRepositoryManager
-     */
-    public function getRepositoryManager()
-    {
-        return $this->repositoryManager;
-    }
-
-    /**
      * Gets the repository that is used by the service.
      *
-     * @return DeletableInterface|FlushableInterface|ReadableInterface|WritableInterface
+     * @return EntityRepositoryInterface
      */
-    public function getRepository()
+    protected function getRepository()
     {
-        return $this->getRepositoryForEntity($this->getEvent()->getEntityClassName());
-    }
-
-    /**
-     * Will return a repository object for a given $entityName
-     *
-     * @param string $entityName The name of the entity to get the repository for.
-     * @return DeletableInterface|FlushableInterface|ReadableInterface|WritableInterface
-     */
-    public function getRepositoryForEntity($entityName)
-    {
-        if (!isset($this->repositories[$entityName]) || null === $this->repositories[$entityName]) {
-            $this->repositories[$entityName] = $this->getRepositoryManager()->get($entityName);
-        }
-
-        return $this->repositories[$entityName];
+        return $this->repository;
     }
 
     /**
@@ -192,8 +149,7 @@ abstract class AbstractEntityService implements
         $this->listeners[] = $events->attach(
             'countBy',
             function (EntityEvent $event) {
-                $target = $event->getTarget();
-                $repository = $target->getRepositoryForEntity($event->getEntityClassName());
+                $repository = $event->getTarget()->getRepository();
 
                 $event->setResult((int)call_user_func_array(
                     array($repository, 'countBy'),
@@ -206,8 +162,7 @@ abstract class AbstractEntityService implements
         $this->listeners[] = $events->attach(
             'countByCriteria',
             function (EntityEvent $event) {
-                $target = $event->getTarget();
-                $repository = $target->getRepositoryForEntity($event->getEntityClassName());
+                $repository = $event->getTarget()->getRepository();
 
                 $event->setResult((int)call_user_func_array(
                     array($repository, 'countByCriteria'),
@@ -220,8 +175,8 @@ abstract class AbstractEntityService implements
         $this->listeners[] = $events->attach(
             'delete',
             function (EntityEvent $event) {
-                $target = $event->getTarget();
-                $repository = $target->getRepositoryForEntity($event->getEntityClassName());
+                $repository = $event->getTarget()->getRepository();
+
                 call_user_func_array(array($repository, 'delete'), $event->getParams());
                 if ($repository instanceof FlushableInterface) {
                     $repository->flush();
@@ -233,8 +188,8 @@ abstract class AbstractEntityService implements
         $this->listeners[] = $events->attach(
             'deleteBy',
             function (EntityEvent $event) {
-                $target = $event->getTarget();
-                $repository = $target->getRepositoryForEntity($event->getEntityClassName());
+                $repository = $event->getTarget()->getRepository();
+
                 call_user_func_array(array($repository, 'deleteBy'), $event->getParams());
                 if ($repository instanceof FlushableInterface) {
                     $repository->flush();
@@ -246,8 +201,8 @@ abstract class AbstractEntityService implements
         $this->listeners[] = $events->attach(
             'deleteByCriteria',
             function (EntityEvent $event) {
-                $target = $event->getTarget();
-                $repository = $target->getRepositoryForEntity($event->getEntityClassName());
+                $repository = $event->getTarget()->getRepository();
+
                 call_user_func_array(array($repository, 'deleteByCriteria'), $event->getParams());
                 if ($repository instanceof FlushableInterface) {
                     $repository->flush();
@@ -259,8 +214,7 @@ abstract class AbstractEntityService implements
         $this->listeners[] = $events->attach(
             'find',
             function (EntityEvent $event) {
-                $target = $event->getTarget();
-                $repository = $target->getRepositoryForEntity($event->getEntityClassName());
+                $repository = $event->getTarget()->getRepository();
 
                 $event->setResult(call_user_func_array(
                     array($repository, 'find'),
@@ -273,8 +227,7 @@ abstract class AbstractEntityService implements
         $this->listeners[] = $events->attach(
             'findAll',
             function (EntityEvent $event) {
-                $target = $event->getTarget();
-                $repository = $target->getRepositoryForEntity($event->getEntityClassName());
+                $repository = $event->getTarget()->getRepository();
 
                 $event->setResult(call_user_func_array(
                     array($repository, 'findAll'),
@@ -287,8 +240,7 @@ abstract class AbstractEntityService implements
         $this->listeners[] = $events->attach(
             'findBy',
             function (EntityEvent $event) {
-                $target = $event->getTarget();
-                $repository = $target->getRepositoryForEntity($event->getEntityClassName());
+                $repository = $event->getTarget()->getRepository();
 
                 $event->setResult(call_user_func_array(
                     array($repository, 'findBy'),
@@ -301,8 +253,7 @@ abstract class AbstractEntityService implements
         $this->listeners[] = $events->attach(
             'findByCriteria',
             function (EntityEvent $event) {
-                $target = $event->getTarget();
-                $repository = $target->getRepositoryForEntity($event->getEntityClassName());
+                $repository = $event->getTarget()->getRepository();
 
                 $event->setResult(call_user_func_array(
                     array($repository, 'findByCriteria'),
@@ -315,8 +266,7 @@ abstract class AbstractEntityService implements
         $this->listeners[] = $events->attach(
             'findOneBy',
             function (EntityEvent $event) {
-                $target = $event->getTarget();
-                $repository = $target->getRepositoryForEntity($event->getEntityClassName());
+                $repository = $event->getTarget()->getRepository();
 
                 $event->setResult(call_user_func_array(
                     array($repository, 'findOneBy'),
@@ -329,8 +279,7 @@ abstract class AbstractEntityService implements
         $this->listeners[] = $events->attach(
             'findOneByCriteria',
             function (EntityEvent $event) {
-                $target = $event->getTarget();
-                $repository = $target->getRepositoryForEntity($event->getEntityClassName());
+                $repository = $event->getTarget()->getRepository();
 
                 $event->setResult(call_user_func_array(
                     array($repository, 'findOneByCriteria'),
@@ -343,8 +292,8 @@ abstract class AbstractEntityService implements
         $this->listeners[] = $events->attach(
             'persist',
             function (EntityEvent $event) {
-                $target = $event->getTarget();
-                $repository = $target->getRepositoryForEntity($event->getEntityClassName());
+                $repository = $event->getTarget()->getRepository();
+
                 call_user_func_array(array($repository, 'persist'), $event->getParams());
                 if ($repository instanceof FlushableInterface) {
                     $repository->flush();
@@ -356,12 +305,13 @@ abstract class AbstractEntityService implements
         $this->listeners[] = $events->attach(
             'multiPersist',
             function (EntityEvent $event) {
-                $target = $event->getTarget();
-                $repository = $target->getRepositoryForEntity($event->getEntityClassName());
+                $repository = $event->getTarget()->getRepository();
+
                 $entities = current($event->getParams());
                 foreach ($entities as $entity) {
                     call_user_func_array(array($repository, 'persist'), array($entity));
                 }
+
                 if ($repository instanceof FlushableInterface) {
                     $repository->flush();
                 }
@@ -376,21 +326,6 @@ abstract class AbstractEntityService implements
             },
             -1
         );
-    }
-
-    /**
-     * Detach all previously attached listeners
-     *
-     * @param EventManagerInterface $events
-     * @return void
-     */
-    public function detach(EventManagerInterface $events)
-    {
-        foreach ($this->listeners as $index => $listener) {
-            if ($events->detach($listener)) {
-                unset($this->listeners[$index]);
-            }
-        }
     }
 
     /**
@@ -411,8 +346,11 @@ abstract class AbstractEntityService implements
      */
     public function delete(IdentifiableInterface $entity)
     {
-        if (!$this->repositoryIsDeletable($this->getEntityServiceName())) {
-            throw new RuntimeException('Repository is not deletable');
+        if (!$this->isRepositoryDeletable()) {
+            throw new RuntimeException(sprintf(
+                'The repository for %s is not deletable.',
+                $this->getEntityServiceName()
+            ));
         }
 
         return $this->trigger(__FUNCTION__, array(
@@ -427,8 +365,11 @@ abstract class AbstractEntityService implements
      */
     public function deleteBy(array $criteria)
     {
-        if (!$this->repositoryIsDeletable($this->getEntityServiceName())) {
-            throw new RuntimeException('Repository is not deletable');
+        if (!$this->isRepositoryDeletable()) {
+            throw new RuntimeException(sprintf(
+                'The repository for %s is not deletable.',
+                $this->getEntityServiceName()
+            ));
         }
 
         return $this->trigger(__FUNCTION__, array(
@@ -444,8 +385,11 @@ abstract class AbstractEntityService implements
      */
     public function deleteByCriteria(Criteria $criteria)
     {
-        if (!$this->repositoryIsDeletable($this->getEntityServiceName())) {
-            throw new RuntimeException('Repository is not deletable');
+        if (!$this->isRepositoryDeletable()) {
+            throw new RuntimeException(sprintf(
+                'The repository for %s is not deletable.',
+                $this->getEntityServiceName()
+            ));
         }
 
         return $this->trigger(__FUNCTION__, array(
@@ -461,8 +405,11 @@ abstract class AbstractEntityService implements
      */
     public function countBy(array $criteria)
     {
-        if (!$this->isRepositoryReadable($this->getEntityServiceName())) {
-            throw new RuntimeException('Repository is not readable');
+        if (!$this->isRepositoryReadable()) {
+            throw new RuntimeException(sprintf(
+                'The repository for %s is not readable.',
+                $this->getEntityServiceName()
+            ));
         }
 
         return $this->trigger(__FUNCTION__, array(
@@ -478,8 +425,11 @@ abstract class AbstractEntityService implements
      */
     public function countByCriteria(Criteria $criteria)
     {
-        if (!$this->isRepositoryReadable($this->getEntityServiceName())) {
-            throw new RuntimeException('Repository is not readable');
+        if (!$this->isRepositoryReadable()) {
+            throw new RuntimeException(sprintf(
+                'The repository for %s is not readable.',
+                $this->getEntityServiceName()
+            ));
         }
 
         return $this->trigger(__FUNCTION__, array(
@@ -494,8 +444,11 @@ abstract class AbstractEntityService implements
      */
     public function find($id)
     {
-        if (!$this->isRepositoryReadable($this->getEntityServiceName())) {
-            throw new RuntimeException('Repository is not readable');
+        if (!$this->isRepositoryReadable()) {
+            throw new RuntimeException(sprintf(
+                'The repository for %s is not readable.',
+                $this->getEntityServiceName()
+            ));
         }
 
         return $this->trigger(__FUNCTION__, array(
@@ -510,8 +463,11 @@ abstract class AbstractEntityService implements
      */
     public function findAll()
     {
-        if (!$this->isRepositoryReadable($this->getEntityServiceName())) {
-            throw new RuntimeException('Repository is not readable');
+        if (!$this->isRepositoryReadable()) {
+            throw new RuntimeException(sprintf(
+                'The repository for %s is not readable.',
+                $this->getEntityServiceName()
+            ));
         }
 
         return $this->trigger(__FUNCTION__, array());
@@ -520,7 +476,7 @@ abstract class AbstractEntityService implements
     /**
      * {@inheritdoc}
      *
-     * @param array|Criteria $criteria
+     * @param array $criteria
      * @param array|null $order
      * @param int|null $limit
      * @param int|null $offset
@@ -528,8 +484,11 @@ abstract class AbstractEntityService implements
      */
     public function findBy(array $criteria, array $order = null, $limit = null, $offset = null)
     {
-        if (!$this->isRepositoryReadable($this->getEntityServiceName())) {
-            throw new RuntimeException('Repository is not readable');
+        if (!$this->isRepositoryReadable()) {
+            throw new RuntimeException(sprintf(
+                'The repository for %s is not readable.',
+                $this->getEntityServiceName()
+            ));
         }
 
         return $this->trigger(__FUNCTION__, array(
@@ -548,8 +507,11 @@ abstract class AbstractEntityService implements
      */
     public function findByCriteria(Criteria $criteria)
     {
-        if (!$this->isRepositoryReadable($this->getEntityServiceName())) {
-            throw new RuntimeException('Repository is not readable');
+        if (!$this->isRepositoryReadable()) {
+            throw new RuntimeException(sprintf(
+                'The repository for %s is not readable.',
+                $this->getEntityServiceName()
+            ));
         }
 
         return $this->trigger(__FUNCTION__, array(
@@ -565,8 +527,11 @@ abstract class AbstractEntityService implements
      */
     public function findOneBy(array $criteria, array $order = null)
     {
-        if (!$this->isRepositoryReadable($this->getEntityServiceName())) {
-            throw new RuntimeException('Repository is not readable');
+        if (!$this->isRepositoryReadable()) {
+            throw new RuntimeException(sprintf(
+                'The repository for %s is not readable.',
+                $this->getEntityServiceName()
+            ));
         }
 
         return $this->trigger(__FUNCTION__, array(
@@ -582,8 +547,11 @@ abstract class AbstractEntityService implements
      */
     public function findOneByCriteria(Criteria $criteria)
     {
-        if (!$this->isRepositoryReadable($this->getEntityServiceName())) {
-            throw new RuntimeException('Repository is not readable');
+        if (!$this->isRepositoryReadable()) {
+            throw new RuntimeException(sprintf(
+                'The repository for %s is not readable.',
+                $this->getEntityServiceName()
+            ));
         }
 
         return $this->trigger(__FUNCTION__, array(
@@ -599,8 +567,11 @@ abstract class AbstractEntityService implements
      */
     public function persist(IdentifiableInterface $entity)
     {
-        if (!$this->isRepositoryWritable($this->getEntityServiceName())) {
-            throw new RuntimeException('Repository is not writable');
+        if (!$this->isRepositoryWritable()) {
+            throw new RuntimeException(sprintf(
+                'The repository for %s is not writable.',
+                $this->getEntityServiceName()
+            ));
         }
 
         return $this->trigger(__FUNCTION__, array(
@@ -617,8 +588,11 @@ abstract class AbstractEntityService implements
      */
     public function multiPersist($entities)
     {
-        if (!$this->isRepositoryWritable($this->getEntityServiceName())) {
-            throw new RuntimeException('Repository is not writable');
+        if (!$this->isRepositoryWritable()) {
+            throw new RuntimeException(sprintf(
+                'The repository for %s is not writable.',
+                $this->getEntityServiceName()
+            ));
         }
 
         return $this->trigger(__FUNCTION__, array(
@@ -658,10 +632,13 @@ abstract class AbstractEntityService implements
     public function beginTransaction()
     {
         if ($this->isTransactionEnabled() === false) {
-            throw new ServiceException('Repository doesn\'t support Transactions');
+            throw new ServiceException(sprintf(
+                'The repository for %s doesn\'t support Transactions',
+                $this->getEntityServiceName()
+            ));
         }
 
-        $this->getRepositoryForEntity($this->getEntityServiceName())->beginTransaction();
+        $this->getRepository()->beginTransaction();
     }
 
     /**
@@ -672,10 +649,13 @@ abstract class AbstractEntityService implements
     public function commitTransaction()
     {
         if ($this->isTransactionEnabled() === false) {
-            throw new ServiceException('Repository doesn\'t support Transactions');
+            throw new ServiceException(sprintf(
+                'The repository for %s doesn\'t support Transactions',
+                $this->getEntityServiceName()
+            ));
         }
 
-        $this->getRepositoryForEntity($this->getEntityServiceName())->commitTransaction();
+        $this->getRepository()->commitTransaction();
     }
 
     /**
@@ -686,10 +666,13 @@ abstract class AbstractEntityService implements
     public function rollBackTransaction()
     {
         if ($this->isTransactionEnabled() === false) {
-            throw new ServiceException('Repository doesn\'t support Transactions');
+            throw new ServiceException(sprintf(
+                'The repository for %s doesn\'t support Transactions',
+                $this->getEntityServiceName()
+            ));
         }
 
-        $this->getRepositoryForEntity($this->getEntityServiceName())->rollBackTransaction();
+        $this->getRepository()->rollBackTransaction();
     }
 
     /**
@@ -697,7 +680,7 @@ abstract class AbstractEntityService implements
      */
     public function isTransactionEnabled()
     {
-        return $this->getRepositoryForEntity($this->getEntityServiceName()) instanceof TransactionAwareInterface;
+        return $this->getRepository() instanceof TransactionAwareInterface;
     }
 
     /**
@@ -719,9 +702,9 @@ abstract class AbstractEntityService implements
      * @param $entityName
      * @return bool
      */
-    protected function isRepositoryWritable($entityName)
+    protected function isRepositoryWritable()
     {
-        return $this->getRepositoryForEntity($entityName) instanceof WritableInterface;
+        return $this->getRepository() instanceof WritableInterface;
     }
 
     /**
@@ -730,9 +713,9 @@ abstract class AbstractEntityService implements
      * @param $entityName
      * @return bool
      */
-    protected function isRepositoryReadable($entityName)
+    protected function isRepositoryReadable()
     {
-        return $this->getRepositoryForEntity($entityName) instanceof ReadableInterface;
+        return $this->getRepository() instanceof ReadableInterface;
     }
 
     /**
@@ -741,8 +724,8 @@ abstract class AbstractEntityService implements
      * @param $entityName
      * @return bool
      */
-    protected function repositoryIsDeletable($entityName)
+    protected function isRepositoryDeletable()
     {
-        return $this->getRepositoryForEntity($entityName) instanceof DeletableInterface;
+        return $this->getRepository() instanceof DeletableInterface;
     }
 }

@@ -11,10 +11,6 @@ namespace PolderKnowledge\EntityService;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use PolderKnowledge\EntityService\Repository\DeletableInterface;
-use PolderKnowledge\EntityService\Repository\FlushableInterface;
-use PolderKnowledge\EntityService\Repository\ReadableInterface;
-use PolderKnowledge\EntityService\Repository\WritableInterface;
 use PolderKnowledge\EntityService\Feature\IdentifiableInterface;
 use Zend\EventManager\EventManagerAwareInterface;
 
@@ -110,21 +106,6 @@ interface EntityServiceInterface extends EventManagerAwareInterface
      * @return object|null
      */
     public function findOneByCriteria(Criteria $criteria);
-
-    /**
-     * Gets the repository that is used by the service.
-     *
-     * @return DeletableInterface|FlushableInterface|ReadableInterface|WritableInterface
-     */
-    public function getRepository();
-
-    /**
-     * Will return a repository object for a given $entityName
-     *
-     * @param string $entityName The name of the entity to get the repository for.
-     * @return DeletableInterface|FlushableInterface|ReadableInterface|WritableInterface
-     */
-    public function getRepositoryForEntity($entityName);
 
     /**
      * Persist the given object

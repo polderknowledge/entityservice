@@ -49,6 +49,6 @@ class EntityServiceAbstractServiceFactory implements AbstractFactoryInterface
     {
         $entityRepositoryManager = $serviceLocator->getServiceLocator()->get(self::REPOSITORY_SERVICE_KEY);
 
-        return new DefaultEntityService($entityRepositoryManager, $requestedName);
+        return new DefaultEntityService($entityRepositoryManager->get($requestedName), $requestedName);
     }
 }
