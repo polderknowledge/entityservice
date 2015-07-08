@@ -104,6 +104,7 @@ final class EntityEvent extends Event
      *
      * @param string $name The FQCN of the entity.
      * @return EntityEvent Returns the instance of this class so that chaining can be used.
+     * @throws RuntimeException
      */
     public function setEntityClassName($name)
     {
