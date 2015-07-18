@@ -27,19 +27,7 @@ interface ReadableInterface
      * @return int Returns the amount of entities that are found.
      * @throws UnexpectedValueException
      */
-    public function countBy(array $criteria);
-
-    /**
-     * Counts entities by a set of criteria.
-     *
-     * Optionally sorting and limiting details can be passed. An implementation may throw an UnexpectedValueException
-     * if certain values of the sorting or limiting details are not supported.
-     *
-     * @param Criteria $criteria The criteria to find entities by.
-     * @return int Returns the amount of entities that are found.
-     * @throws UnexpectedValueException
-     */
-    public function countByCriteria(Criteria $criteria);
+    public function countBy($criteria);
 
     /**
      * Tries to find an entity in the repository by the given identifier.
@@ -62,41 +50,17 @@ interface ReadableInterface
      * Optionally sorting and limiting details can be passed. An implementation may throw an UnexpectedValueException
      * if certain values of the sorting or limiting details are not supported.
      *
-     * @param array $criteria The criteria to find entities by.
-     * @param array|null $orderBy An array with fields to order by. Set to null for default ordering.
-     * @param int|null $limit The amount of entities to retrieve. Set to null for default amount.
-     * @param int|null $offset The offset to start retrieving entities from. Set to null for the default offset.
-     * @return object[] Returns an array with found entities. Returns an empty array when no entities are found.
+     * @param array|Criteria $criteria The criteria to find entities by.
+     * @return array Returns an array with found entities. Returns an empty array when no entities are found.
      * @throws UnexpectedValueException Thrown when provided parameters are not supported.
      */
-    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null);
-
-    /**
-     * Tries to find entities by a set of criteria.
-     *
-     * Optionally sorting and limiting details can be passed. An implementation may throw an UnexpectedValueException
-     * if certain values of the sorting or limiting details are not supported.
-     *
-     * @param Criteria $criteria The criteria to find entities by.
-     * @return object[] Returns an array with found entities. Returns an empty array when no entities are found.
-     * @throws UnexpectedValueException Thrown when provided parameters are not supported.
-     */
-    public function findByCriteria(Criteria $criteria);
+    public function findBy($criteria);
 
     /**
      * Tries to find a single entity by a set of criteria.
      *
-     * @param array $criteria The criteria. The criteria to find the entity by.
-     * @param array $orderBy An array with fields to order by. Set to null for default ordering.
+     * @param array|Criteria $criteria The criteria. The criteria to find the entity by.
      * @return object Returns the entity that is found or null when no entity is found.
      */
-    public function findOneBy(array $criteria, array $orderBy = null);
-
-    /**
-     * Tries to find a single entity by a set of criteria.
-     *
-     * @param Criteria $criteria The criteria. The criteria to find the entity by.
-     * @return object Returns the entity that is found or null when no entity is found.
-     */
-    public function findOneByCriteria(Criteria $criteria);
+    public function findOneBy($criteria);
 }

@@ -9,7 +9,7 @@
 
 namespace PolderKnowledge\EntityService\Validator\Service;
 
-use PolderKnowledge\EntityService\Service\EntityServiceInterface;
+use PolderKnowledge\EntityService\EntityServiceInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -34,6 +34,7 @@ abstract class AbstractEntityValidatorFactory implements FactoryInterface
         }
 
         $entityServiceManager = $serviceLocator->get('EntityServiceManager');
+
 
         return $entityServiceManager->get($entityName);
     }

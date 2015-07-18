@@ -67,7 +67,7 @@ class QueryBuilderExpressionVisitor extends ExpressionVisitor implements
      *
      * @var array
      */
-    protected $parameters = array();
+    protected $parameters;
 
     /**
      * Wil initialize this class whit a root alias used for all fields and
@@ -80,6 +80,7 @@ class QueryBuilderExpressionVisitor extends ExpressionVisitor implements
     {
         $this->rootAlias = $rootAlias;
         $this->queryBuilder = $queryBuilder;
+        $this->parameters = array();
     }
 
     /**

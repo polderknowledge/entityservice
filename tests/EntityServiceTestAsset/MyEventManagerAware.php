@@ -7,10 +7,18 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-ini_set('error_reporting', E_ALL);
+namespace PolderKnowledge\EntityServiceTestAsset;
 
-$loader = require __DIR__ . '/../vendor/autoload.php';
+use Zend\EventManager\EventManagerAwareInterface;
+use Zend\EventManager\EventManagerInterface;
 
-if (!isset($loader)) {
-    throw new RuntimeException('vendor/autoload.php could not be found. Did you run `php composer.phar install`?');
+class MyEventManagerAware implements EventManagerAwareInterface
+{
+    public function setEventManager(EventManagerInterface $eventManager)
+    {
+    }
+
+    public function getEventManager()
+    {
+    }
 }

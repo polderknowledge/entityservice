@@ -12,7 +12,6 @@ namespace PolderKnowledge\EntityService\Repository\Doctrine;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use PolderKnowledge\EntityService\Entity\Feature\DeletableInterface as EntityFeatureDeletable;
 use PolderKnowledge\EntityService\Entity\Feature\IdentifiableInterface as EntityFeatureIdentifiable;
 use PolderKnowledge\EntityService\Repository\Doctrine\QueryBuilderExpressionVisitor;
@@ -68,15 +67,9 @@ class ORMRepository implements
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param array $criteria
-     * @param array $orderBy
-     * @param int $limit
-     * @param int $offset
-     * @return int
+     * @inheritdoc
      */
-    public function countBy(array $criteria)
+    public function countBy($criteria)
     {
         $queryBuilder = $this->getRepository()->createQueryBuilder('e');
         $queryBuilder->select('count(e)');
@@ -92,23 +85,7 @@ class ORMRepository implements
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param Criteria $criteria The criteria to match on.
-     * @return int
-     */
-    public function countByCriteria(Criteria $criteria)
-    {
-        $queryBuilder = $this->getQueryBuilder($criteria);
-        $queryBuilder->select('count(e)');
-
-        return $queryBuilder->getQuery()->getSingleScalarResult();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param EntityFeatureDeletable $entity
+     * @inheritdoc
      */
     public function delete(EntityFeatureDeletable $entity)
     {
@@ -116,11 +93,9 @@ class ORMRepository implements
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param array $criteria
+     * @inheritdoc
      */
-    public function deleteBy(array $criteria)
+    public function deleteBy($criteria)
     {
         $entities = $this->findBy($criteria);
 
@@ -130,24 +105,7 @@ class ORMRepository implements
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param Criteria $criteria
-     */
-    public function deleteByCriteria(Criteria $criteria)
-    {
-        $entities = $this->findByCriteria($criteria);
-
-        foreach ($entities as $entity) {
-            $this->entityManager->remove($entity);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param mixed $id
-     * @return object
+     * @inheritdoc
      */
     public function find($id)
     {
@@ -155,9 +113,7 @@ class ORMRepository implements
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @return array
+     * @inheritdoc
      */
     public function findAll()
     {
@@ -165,63 +121,43 @@ class ORMRepository implements
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param array $criteria
-     * @param array|null $orderBy
-     * @param int|null $limit
-     * @param int|null $offset
-     * @return array
+     * @inheritdoc
      */
-    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    public function findBy($criteria)
     {
-        return $this->getRepository()->findBy($criteria, $orderBy, $limit, $offset);
-    }
+        if (!$criteria instanceof Criteria) {
+            $criteriaParams = $criteria;
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param Criteria $criteria
-     * @return array
-     */
-    public function findByCriteria(Criteria $criteria)
-    {
+            $criteria = Criteria::create();
+            foreach ($criteriaParams as $name => $value) {
+                $criteria->andWhere(Criteria::expr()->eq($name, $value));
+            }
+        }
+
         $queryBuilder = $this->getQueryBuilder($criteria);
 
-        return $queryBuilder->getQuery()->execute();
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param array $criteria
-     * @param array|null $order
-     * @return null|object
+     * @inheritdoc
      */
-    public function findOneBy(array $criteria, array $order = null)
+    public function findOneBy($criteria)
     {
-        return $this->getRepository()->findOneBy($criteria, $order);
-    }
+        if (!$criteria instanceof Criteria) {
+            $criteriaParams = $criteria;
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param Criteria $criteria
-     * @return null|object
-     */
-    public function findOneByCriteria(Criteria $criteria)
-    {
+            $criteria = Criteria::create();
+            $criteria->where($criteriaParams);
+        }
+
         $queryBuilder = $this->getQueryBuilder($criteria);
-        $result = $queryBuilder->getQuery()->getResult();
 
-        return current($result);
+        return $queryBuilder->getQuery()->getSingleResult();
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param Criteria $criteria The criteria to find entities by.
-     * @return QueryBuilder
+     * @inheritdoc
      */
     protected function getQueryBuilder(Criteria $criteria)
     {
@@ -263,9 +199,7 @@ class ORMRepository implements
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @return EntityRepository
+     * @inheritdoc
      */
     public function getRepository()
     {
@@ -277,9 +211,7 @@ class ORMRepository implements
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param EntityFeatureIdentifiable $entity
+     * @inheritdoc
      */
     public function flush(EntityFeatureIdentifiable $entity = null)
     {
@@ -287,9 +219,7 @@ class ORMRepository implements
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param EntityFeatureIdentifiable $entity
+     * @inheritdoc
      */
     public function persist(EntityFeatureIdentifiable $entity)
     {
@@ -297,7 +227,7 @@ class ORMRepository implements
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function beginTransaction()
     {
@@ -305,7 +235,7 @@ class ORMRepository implements
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function commitTransaction()
     {
@@ -313,7 +243,7 @@ class ORMRepository implements
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rollBackTransaction()
     {

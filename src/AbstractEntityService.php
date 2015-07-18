@@ -9,17 +9,16 @@
 
 namespace PolderKnowledge\EntityService;
 
-use Doctrine\Common\Collections\Criteria;
 use PolderKnowledge\EntityService\Event\EntityEvent;
 use PolderKnowledge\EntityService\Exception\RuntimeException;
 use PolderKnowledge\EntityService\Exception\ServiceException;
-use PolderKnowledge\EntityService\Feature\IdentifiableInterface;
+use PolderKnowledge\EntityService\Entity\Feature\IdentifiableInterface;
 use PolderKnowledge\EntityService\Repository\EntityRepositoryInterface;
 use PolderKnowledge\EntityService\Repository\Feature\DeletableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\FlushableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\ReadableInterface;
-use PolderKnowledge\EntityService\Repository\Feature\TransactionAwareInterface;
 use PolderKnowledge\EntityService\Repository\Feature\WritableInterface;
+use PolderKnowledge\EntityService\TransactionAwareInterface;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
@@ -160,19 +159,6 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
         );
 
         $this->listeners[] = $events->attach(
-            'countByCriteria',
-            function (EntityEvent $event) {
-                $repository = $event->getTarget()->getRepository();
-
-                $event->setResult((int)call_user_func_array(
-                    array($repository, 'countByCriteria'),
-                    $event->getParams()
-                ));
-            },
-            0
-        );
-
-        $this->listeners[] = $events->attach(
             'delete',
             function (EntityEvent $event) {
                 $repository = $event->getTarget()->getRepository();
@@ -191,19 +177,6 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
                 $repository = $event->getTarget()->getRepository();
 
                 call_user_func_array(array($repository, 'deleteBy'), $event->getParams());
-                if ($repository instanceof FlushableInterface) {
-                    $repository->flush();
-                }
-            },
-            0
-        );
-
-        $this->listeners[] = $events->attach(
-            'deleteByCriteria',
-            function (EntityEvent $event) {
-                $repository = $event->getTarget()->getRepository();
-
-                call_user_func_array(array($repository, 'deleteByCriteria'), $event->getParams());
                 if ($repository instanceof FlushableInterface) {
                     $repository->flush();
                 }
@@ -251,38 +224,12 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
         );
 
         $this->listeners[] = $events->attach(
-            'findByCriteria',
-            function (EntityEvent $event) {
-                $repository = $event->getTarget()->getRepository();
-
-                $event->setResult(call_user_func_array(
-                    array($repository, 'findByCriteria'),
-                    $event->getParams()
-                ));
-            },
-            0
-        );
-
-        $this->listeners[] = $events->attach(
             'findOneBy',
             function (EntityEvent $event) {
                 $repository = $event->getTarget()->getRepository();
 
                 $event->setResult(call_user_func_array(
                     array($repository, 'findOneBy'),
-                    $event->getParams()
-                ));
-            },
-            0
-        );
-
-        $this->listeners[] = $events->attach(
-            'findOneByCriteria',
-            function (EntityEvent $event) {
-                $repository = $event->getTarget()->getRepository();
-
-                $event->setResult(call_user_func_array(
-                    array($repository, 'findOneByCriteria'),
                     $event->getParams()
                 ));
             },
@@ -339,10 +286,7 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param IdentifiableInterface $entity
-     * @throws RuntimeException
+     * @inheritdoc
      */
     public function delete(IdentifiableInterface $entity)
     {
@@ -359,11 +303,9 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * {@inheritdoc}
-     * @param array $criteria
-     * @throws RuntimeException
+     * @inheritdoc
      */
-    public function deleteBy(array $criteria)
+    public function deleteBy($criteria)
     {
         if (!$this->isRepositoryDeletable()) {
             throw new RuntimeException(sprintf(
@@ -378,32 +320,9 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param Criteria $criteria
-     * @throws RuntimeException
+     * @inheritdoc
      */
-    public function deleteByCriteria(Criteria $criteria)
-    {
-        if (!$this->isRepositoryDeletable()) {
-            throw new RuntimeException(sprintf(
-                'The repository for %s is not deletable.',
-                $this->getEntityServiceName()
-            ));
-        }
-
-        return $this->trigger(__FUNCTION__, array(
-            'criteria' => $criteria,
-        ));
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param array $criteria
-     * @throws RuntimeException
-     */
-    public function countBy(array $criteria)
+    public function countBy($criteria)
     {
         if (!$this->isRepositoryReadable()) {
             throw new RuntimeException(sprintf(
@@ -418,29 +337,7 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param Criteria $criteria
-     * @throws RuntimeException
-     */
-    public function countByCriteria(Criteria $criteria)
-    {
-        if (!$this->isRepositoryReadable()) {
-            throw new RuntimeException(sprintf(
-                'The repository for %s is not readable.',
-                $this->getEntityServiceName()
-            ));
-        }
-
-        return $this->trigger(__FUNCTION__, array(
-            'criteria' => $criteria,
-        ));
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param mixed $id
+     * @inheritdoc
      */
     public function find($id)
     {
@@ -457,9 +354,7 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @return array Returns the entities that exist.
+     * @inheritdoc
      */
     public function findAll()
     {
@@ -474,38 +369,9 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param array $criteria
-     * @param array|null $order
-     * @param int|null $limit
-     * @param int|null $offset
-     * @throws RuntimeException
+     * @inheritdoc
      */
-    public function findBy(array $criteria, array $order = null, $limit = null, $offset = null)
-    {
-        if (!$this->isRepositoryReadable()) {
-            throw new RuntimeException(sprintf(
-                'The repository for %s is not readable.',
-                $this->getEntityServiceName()
-            ));
-        }
-
-        return $this->trigger(__FUNCTION__, array(
-            'criteria' => $criteria,
-            'order' => $order,
-            'limit' => $limit,
-            'offset' => $offset
-        ));
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param Criteria $criteria
-     * @throws RuntimeException
-     */
-    public function findByCriteria(Criteria $criteria)
+    public function findBy($criteria)
     {
         if (!$this->isRepositoryReadable()) {
             throw new RuntimeException(sprintf(
@@ -520,32 +386,9 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param array $criteria
-     * @param array|null $order
+     * @inheritdoc
      */
-    public function findOneBy(array $criteria, array $order = null)
-    {
-        if (!$this->isRepositoryReadable()) {
-            throw new RuntimeException(sprintf(
-                'The repository for %s is not readable.',
-                $this->getEntityServiceName()
-            ));
-        }
-
-        return $this->trigger(__FUNCTION__, array(
-            'criteria' => $criteria,
-            'order' => $order,
-        ));
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param Criteria $criteria
-     */
-    public function findOneByCriteria(Criteria $criteria)
+    public function findOneBy($criteria)
     {
         if (!$this->isRepositoryReadable()) {
             throw new RuntimeException(sprintf(
@@ -615,10 +458,8 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
 
         $responseCollection = $this->getEventManager()->trigger($event);
 
-        if ($responseCollection->stopped()) {
-            if ($event->isError()) {
-                throw new RuntimeException($event->getError(), $event->getErrorNr());
-            }
+        if ($responseCollection->stopped() && $event->isError()) {
+            throw new RuntimeException($event->getError(), $event->getErrorNr());
         }
 
         return $event->getResult();
@@ -681,19 +522,6 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     public function isTransactionEnabled()
     {
         return $this->getRepository() instanceof TransactionAwareInterface;
-    }
-
-    /**
-     * Calls the flush method on the repository when applicable
-     *
-     * @return void
-     */
-    protected function flushRepository()
-    {
-        $repository = $this->getRepository();
-        if ($repository instanceof FlushableInterface) {
-            $repository->flush();
-        }
     }
 
     /**

@@ -52,7 +52,7 @@ class EntityService implements AdapterInterface
      */
     public function count()
     {
-        return $this->entityService->countByCriteria($this->criteria);
+        return $this->entityService->countBy($this->criteria);
     }
 
     /**
@@ -67,6 +67,6 @@ class EntityService implements AdapterInterface
         $this->criteria->setFirstResult($offset);
         $this->criteria->setMaxResults($itemCountPerPage);
 
-        return $this->entityService->findByCriteria($this->criteria);
+        return $this->entityService->findBy($this->criteria);
     }
 }

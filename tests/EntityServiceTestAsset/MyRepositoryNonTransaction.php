@@ -7,16 +7,18 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityServiceTest\Service\_Asset;
+namespace PolderKnowledge\EntityServiceTestAsset;
 
-use PolderKnowledge\EntityService\Feature\IdentifiableInterface;
-use PolderKnowledge\EntityService\Feature\DeletableInterface as FeatureDeletable;
-use PolderKnowledge\EntityService\Repository\DeletableInterface;
-use PolderKnowledge\EntityService\Repository\FlushableInterface;
-use PolderKnowledge\EntityService\Repository\ReadableInterface;
-use PolderKnowledge\EntityService\Repository\WritableInterface;
+use PolderKnowledge\EntityService\Entity\Feature\DeletableInterface as FeatureDeletable;
+use PolderKnowledge\EntityService\Entity\Feature\IdentifiableInterface;
+use PolderKnowledge\EntityService\Repository\EntityRepositoryInterface;
+use PolderKnowledge\EntityService\Repository\Feature\DeletableInterface;
+use PolderKnowledge\EntityService\Repository\Feature\FlushableInterface;
+use PolderKnowledge\EntityService\Repository\Feature\ReadableInterface;
+use PolderKnowledge\EntityService\Repository\Feature\WritableInterface;
 
-class RepositoryMock implements
+class MyRepositoryNonTransaction implements
+    EntityRepositoryInterface,
     DeletableInterface,
     FlushableInterface,
     ReadableInterface,

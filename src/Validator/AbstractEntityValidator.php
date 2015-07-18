@@ -9,7 +9,7 @@
 
 namespace PolderKnowledge\EntityService\Validator;
 
-use PolderKnowledge\EntityService\Service\EntityServiceInterface;
+use PolderKnowledge\EntityService\EntityServiceInterface;
 use Zend\Validator\AbstractValidator;
 
 /**

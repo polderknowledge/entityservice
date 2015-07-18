@@ -7,21 +7,13 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityServiceTest\_Asset;
+namespace PolderKnowledge\EntityServiceTestAsset;
 
-use IteratorAggregate;
+use Zend\ServiceManager\AbstractPluginManager;
 
-class ServiceResultIteratorAggregate implements IteratorAggregate
+class MyPluginManager extends AbstractPluginManager
 {
-    private $data;
-
-    public function __construct($data)
+    public function validatePlugin($plugin)
     {
-        $this->data = $data;
-    }
-
-    public function getIterator()
-    {
-        return $this->data;
     }
 }

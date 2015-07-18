@@ -10,6 +10,7 @@
 namespace PolderKnowledge\EntityService\Service;
 
 use PolderKnowledge\EntityService\EntityServiceInterface;
+use PolderKnowledge\EntityService\Event\EventManagerInitializer;
 use PolderKnowledge\EntityService\Exception\InvalidServiceNameException;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ConfigInterface;

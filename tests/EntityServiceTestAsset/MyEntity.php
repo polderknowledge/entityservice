@@ -7,17 +7,13 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityServiceTest\Service\_Asset;
+namespace PolderKnowledge\EntityServiceTestAsset;
 
-use PolderKnowledge\EntityService\Feature\DeletableInterface;
-use PolderKnowledge\EntityService\Feature\IdentifiableInterface;
+use PolderKnowledge\EntityService\Entity\Feature\DeletableInterface;
+use PolderKnowledge\EntityService\Entity\Feature\IdentifiableInterface;
 
-class CustomEntityMock implements IdentifiableInterface, DeletableInterface
+class MyEntity implements IdentifiableInterface, DeletableInterface
 {
-    public function isDeleted()
-    {
-    }
-
     public function getId()
     {
     }
@@ -27,6 +23,10 @@ class CustomEntityMock implements IdentifiableInterface, DeletableInterface
     }
 
     public function setId($id)
+    {
+    }
+
+    public function isDeleted()
     {
     }
 }

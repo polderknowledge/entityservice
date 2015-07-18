@@ -3,20 +3,20 @@
     "require": {
         "php": ">=5.5.0",
         "doctrine/collections": "~1.2",
-        "Youngguns/StdLib": ">=0.16,<1.0",
-        "zendframework/zend-eventmanager": "~2",
-        "zendframework/zend-servicemanager": "~2"
+        "youngguns/stdlib": "~0.17",
+        "zendframework/zend-eventmanager": "~2.5",
+        "zendframework/zend-servicemanager": "~2.5"
     },
     "require-dev": {
         "polderknowledge/build-tools": "dev-master@dev",
         "doctrine/orm": "~2.4",
-        "zendframework/zend-paginator": "~2",
-        "zendframework/zend-validator": "~2"
+        "zendframework/zend-paginator": "~2.5",
+        "zendframework/zend-validator": "~2.5"
     },
     "repositories": [
         {
             "type": "composer",
-            "url": "http://packages.youngguns.nl"
+            "url": "http://developers.polderknowledge.nl/packages"
         }
     ],
     "autoload": {
@@ -26,7 +26,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "PolderKnowledge\\EntityServiceTest\\": "tests/"
+            "PolderKnowledge\\": "tests/"
         }
     },
     "suggest": {

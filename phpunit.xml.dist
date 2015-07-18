@@ -1,4 +1,4 @@
-<phpunit bootstrap="./tests/Bootstrap.php" colors="true">
+<phpunit bootstrap="./tests/bootstrap.php">
     <testsuites>
         <testsuite name="Polder Knowledge Entity Service Test Suite">
             <directory>./tests</directory>
@@ -10,14 +10,9 @@
             <directory>tests/</directory>
             <directory>vendor/</directory>
         </blacklist>
+
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory>src/</directory>
         </whitelist>
     </filter>
-
-    <logging>
-        <log type="coverage-html" target="build/coverage-html" />
-        <log type="coverage-clover" target="build/coverage.xml"/>
-        <log type="junit" target="build/test-suites.xml" logIncompleteSkipped="false"/>
-    </logging>
 </phpunit>

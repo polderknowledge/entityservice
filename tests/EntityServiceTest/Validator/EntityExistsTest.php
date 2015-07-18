@@ -11,7 +11,7 @@ namespace PolderKnowledge\EntityServiceTest\Validator;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
-use PolderKnowledge\EntityService\ServiceResult;
+use PolderKnowledge\EntityService\EntityServiceInterface;
 use PolderKnowledge\EntityService\Validator\EntityExists;
 
 /**
@@ -34,8 +34,9 @@ class EntityExistsTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        $this->entityServiceMock = $this->getMock(EntityServiceInterface::class);
+
         $this->fixture = new EntityExists();
-        $this->entityServiceMock = $this->getMock('\PolderKnowledge\EntityService\Service\EntityServiceInterface');
         $this->fixture->setEntityService($this->entityServiceMock);
     }
 
@@ -44,14 +45,26 @@ class EntityExistsTest extends PHPUnit_Framework_TestCase
      * @covers PolderKnowledge\EntityService\Validator\EntityExists::setField
      * @covers PolderKnowledge\EntityService\Validator\EntityExists::setMethod
      * @covers PolderKnowledge\EntityService\Validator\EntityExists::setEntityService
+     * @covers PolderKnowledge\EntityService\Validator\EntityExists::fetchResult
      *
      * @dataProvider optionsDataProvider
      */
     public function testIsValidForConfiguration($options, $expected)
     {
-        $this->initializeMock(array(new \stdClass), $expected);
+        // Arrange
+        $this->entityServiceMock
+            ->expects($this->once())
+            ->method($expected['method'])
+            ->with(array($expected['field'] => 'foo'))
+            ->willReturn(array('entry'));
+
         $this->fixture->setOptions($options);
-        $this->assertTrue($this->fixture->isValid('foo'));
+
+        // Act
+        $result = $this->fixture->isValid('foo');
+
+        // Assert
+        $this->assertTrue($result);
     }
 
     /**
@@ -71,51 +84,47 @@ class EntityExistsTest extends PHPUnit_Framework_TestCase
             ),
             array(
                 'options' => array(
-                    'method' => 'find'
+                    'method' => 'find',
                 ),
                 'expected' => array(
                     'method' => 'find',
                     'field' => 'id',
                 ),
-            )
+            ),
+            array(
+                'options' => array(
+                    'method' => 'find',
+                    'field' => 'id',
+                ),
+                'expected' => array(
+                    'method' => 'find',
+                    'field' => 'id',
+                ),
+            ),
         );
     }
 
     /**
      * @covers PolderKnowledge\EntityService\Validator\EntityExists::isValid
+     * @covers PolderKnowledge\EntityService\Validator\EntityExists::fetchResult
      */
     public function testIsValidReturnsFalseWithEmptyResult()
     {
-        $this->initializeMock(
-            array(),
-            array(
-                'method' => 'findBy',
-                'field' => 'id',
-            )
-        );
-        $this->assertFalse($this->fixture->isValid('foo'));
+        // Arrange
+        $this->entityServiceMock
+            ->expects($this->once())
+            ->method('findBy')
+            ->with(array('id' => 'foo'))
+            ->willReturn(array());
+
+        // Act
+        $result = $this->fixture->isValid('foo');
+
+        // Assert
+        $this->assertFalse($result);
         $this->assertEquals(
             array('noObjectFound' => 'No object matching \'foo\' was found'),
             $this->fixture->getMessages()
         );
-    }
-
-    /**
-     * Initializes the entityServiceMock to expect
-     * a method call with a succesfull return
-     *
-     * @param array $resultData
-     * @param array $expected
-     */
-    protected function initializeMock(array $resultData, array $expected)
-    {
-        $result = new ServiceResult();
-        $result->initialize($resultData);
-
-        $this->entityServiceMock
-            ->expects($this->once())
-            ->method($expected['method'])
-            ->with(array($expected['field'] => 'foo'))
-            ->willReturn($result);
     }
 }

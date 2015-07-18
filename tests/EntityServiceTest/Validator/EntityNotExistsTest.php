@@ -11,7 +11,7 @@ namespace PolderKnowledge\EntityServiceTest\Validator;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
-use PolderKnowledge\EntityService\ServiceResult;
+use PolderKnowledge\EntityService\EntityServiceInterface;
 use PolderKnowledge\EntityService\Validator\EntityNotExists;
 
 /**
@@ -20,41 +20,51 @@ use PolderKnowledge\EntityService\Validator\EntityNotExists;
 class EntityNotExistsTest extends PHPUnit_Framework_TestCase
 {
     /**
-     *
-     * @var
+     * @var EntityNotExists
      */
     protected $fixture;
 
     /**
-     *
      * @var PHPUnit_Framework_MockObject_MockObject
      */
     protected $entityServiceMock;
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function setUp()
     {
+        $this->entityServiceMock = $this->getMock(EntityServiceInterface::class);
+
         $this->fixture = new EntityNotExists();
-        $this->entityServiceMock = $this->getMock('\PolderKnowledge\EntityService\Service\EntityServiceInterface');
         $this->fixture->setEntityService($this->entityServiceMock);
     }
 
     /**
-     *
      * @covers PolderKnowledge\EntityService\Validator\EntityNotExists::isValid
      * @covers PolderKnowledge\EntityService\Validator\EntityNotExists::setField
      * @covers PolderKnowledge\EntityService\Validator\EntityNotExists::setMethod
      * @covers PolderKnowledge\EntityService\Validator\EntityNotExists::setEntityService
+     * @covers PolderKnowledge\EntityService\Validator\EntityNotExists::fetchResult
      *
      * @dataProvider optionsDataProvider
      */
     public function testIsValidForConfiguration($options, $expected)
     {
-        $this->initializeMock(array(), $expected);
+        // Arrange
+        $this->entityServiceMock
+            ->expects($this->once())
+            ->method($expected['method'])
+            ->with(array($expected['field'] => 'foo'))
+            ->willReturn(array());
+
         $this->fixture->setOptions($options);
-        $this->assertTrue($this->fixture->isValid('foo'));
+
+        // Act
+        $result = $this->fixture->isValid('foo');
+
+        // Assert
+        $this->assertTrue($result);
     }
 
     /**
@@ -86,39 +96,24 @@ class EntityNotExistsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers PolderKnowledge\EntityService\Validator\EntityNotExists::isValid
+     * @covers PolderKnowledge\EntityService\Validator\EntityNotExists::fetchResult
      */
     public function testIsValidReturnsFalseWithNonEmptyResult()
     {
-        $this->initializeMock(
-            array(new \stdClass()),
-            array(
-                'method' => 'findBy',
-                'field' => 'id',
-            )
-        );
-        $this->assertFalse($this->fixture->isValid('foo'));
-        $this->assertEquals(
-            array('objectFound' => 'Object matching \'foo\' was found'),
-            $this->fixture->getMessages()
-        );
-    }
-
-    /**
-     * Initializes the entityServiceMock to expect
-     * a method call with a succesfull return
-     *
-     * @param array $resultData
-     * @param array $expected
-     */
-    protected function initializeMock(array $resultData, array $expected)
-    {
-        $result = new ServiceResult();
-        $result->initialize($resultData);
-
+        // Arrange
         $this->entityServiceMock
             ->expects($this->once())
-            ->method($expected['method'])
-            ->with(array($expected['field'] => 'foo'))
-            ->willReturn($result);
+            ->method('findBy')
+            ->with(array('id' => 'foo'))
+            ->willReturn(array('entry'));
+
+        // Act
+        $result = $this->fixture->isValid('foo');
+
+        // Assert
+        $this->assertFalse($result);
+        $this->assertEquals(array(
+            'objectFound' => 'Object matching \'foo\' was found'
+        ), $this->fixture->getMessages());
     }
 }
