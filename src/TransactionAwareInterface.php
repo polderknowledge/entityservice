@@ -36,7 +36,7 @@ interface TransactionAwareInterface
     public function rollBackTransaction();
 
     /**
-     * Returns true when posible to start an transaction
+     * Returns true when possible to start an transaction
      *
      * @return boolean
      */

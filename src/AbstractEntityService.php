@@ -9,6 +9,9 @@
 
 namespace PolderKnowledge\EntityService;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Iterator;
 use PolderKnowledge\EntityService\Event\EntityEvent;
 use PolderKnowledge\EntityService\Exception\RuntimeException;
 use PolderKnowledge\EntityService\Exception\ServiceException;
@@ -286,7 +289,10 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * @inheritdoc
+     * Deletes the given object from the repository
+     *
+     * @param IdentifiableInterface $entity The entity to delete.
+     * @return mixed
      */
     public function delete(IdentifiableInterface $entity)
     {
@@ -303,7 +309,10 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * @inheritdoc
+     * Deletes all objects matching the criteria from the repository
+     *
+     * @param array|Criteria $criteria The criteria values to match on.
+     * @return mixed
      */
     public function deleteBy($criteria)
     {
@@ -320,7 +329,10 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * @inheritdoc
+     * Count the objects matching the criteria respecting the order, limit and offset.
+     *
+     * @param array|Criteria $criteria The criteria values to match on.
+     * @return int
      */
     public function countBy($criteria)
     {
@@ -337,7 +349,10 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * @inheritdoc
+     * Find one object in the repository matching the $id
+     *
+     * @param mixed $id The id of the entity.
+     * @return object|null
      */
     public function find($id)
     {
@@ -354,7 +369,9 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * @inheritdoc
+     * Finds all entities in the repository.
+     *
+     * @return array Returns the entities that exist.
      */
     public function findAll()
     {
@@ -369,7 +386,10 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * @inheritdoc
+     * Find one or more objects in the repository matching the criteria respecting the order, limit and offset
+     *
+     * @param array|Criteria $criteria The array with criteria to search on.
+     * @return array
      */
     public function findBy($criteria)
     {
@@ -386,7 +406,10 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * @inheritdoc
+     * Find one object in the repository matching the criteria
+     *
+     * @param array|Criteria $criteria The criteria values to match on.
+     * @return object|null
      */
     public function findOneBy($criteria)
     {
@@ -403,9 +426,10 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * {@inheritdoc}
+     * Persist the given object
      *
      * @param IdentifiableInterface $entity
+     * @return mixed
      * @throws RuntimeException
      */
     public function persist(IdentifiableInterface $entity)
@@ -424,9 +448,10 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * {@inheritdoc}
+     * Persists multiple entities to repository.
      *
      * @param array|Iterator|Collection $entities The collection with entities.
+     * @return mixed
      * @throws RuntimeException
      */
     public function multiPersist($entities)
@@ -446,7 +471,7 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     /**
      * will prepare the event object and trigger the event using the internal EventManager
      *
-     * @param  sting $name
+     * @param  string $name
      * @param  array $params
      * @return mixed
      */
@@ -466,7 +491,7 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * {@inheritDoc}
+     * Starts a new transaction.
      *
      * @throws ServiceException
      */
@@ -483,7 +508,7 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * {@inheritDoc}
+     * Commits a started transaction.
      *
      * @throws ServiceException
      */
@@ -500,7 +525,7 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * {@inheritDoc}
+     * Rolls back a started transaction.
      *
      * @throws ServiceException
      */
@@ -517,7 +542,7 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * {@inheritDoc}
+     * Returns true when possible to start an transaction
      */
     public function isTransactionEnabled()
     {
@@ -527,7 +552,6 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     /**
      * Returns true when the repository for $entityName is writable
      *
-     * @param $entityName
      * @return bool
      */
     protected function isRepositoryWritable()
@@ -538,7 +562,6 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     /**
      * Returns true when the repository for $entityName is readable
      *
-     * @param $entityName
      * @return bool
      */
     protected function isRepositoryReadable()
@@ -549,7 +572,6 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     /**
      * Returns true when the repository for $entityName has delete behavior
      *
-     * @param $entityName
      * @return bool
      */
     protected function isRepositoryDeletable()

@@ -10,8 +10,8 @@
 namespace PolderKnowledge\EntityService\Repository\Doctrine;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use PolderKnowledge\EntityService\Entity\Feature\DeletableInterface as EntityFeatureDeletable;
 use PolderKnowledge\EntityService\Entity\Feature\IdentifiableInterface as EntityFeatureIdentifiable;
 use PolderKnowledge\EntityService\Repository\Doctrine\QueryBuilderExpressionVisitor;
@@ -50,7 +50,7 @@ class ORMRepository implements
     /**
      * The Doctrine ORM repository that is used to retrieve and store data.
      *
-     * @var EntityRepository
+     * @var ObjectRepository
      */
     protected $repository;
 
@@ -67,7 +67,14 @@ class ORMRepository implements
     }
 
     /**
-     * @inheritdoc
+     * Counts entities by a set of criteria.
+     *
+     * Optionally sorting and limiting details can be passed. An implementation may throw an UnexpectedValueException
+     * if certain values of the sorting or limiting details are not supported.
+     *
+     * @param array|Criteria $criteria The criteria to find entities by.
+     * @return int Returns the amount of entities that are found.
+     * @throws UnexpectedValueException
      */
     public function countBy($criteria)
     {
@@ -85,7 +92,9 @@ class ORMRepository implements
     }
 
     /**
-     * @inheritdoc
+     * Deletes the given object
+     *
+     * @param EntityFeatureDeletable $entity The entity to delete.
      */
     public function delete(EntityFeatureDeletable $entity)
     {
@@ -93,7 +102,10 @@ class ORMRepository implements
     }
 
     /**
-     * @inheritdoc
+     * Removes objects by a set of criteria.
+     *
+     * @param array|Criteria $criteria
+     * @return int Returns the number of records that are deleted.
      */
     public function deleteBy($criteria)
     {
@@ -105,7 +117,10 @@ class ORMRepository implements
     }
 
     /**
-     * @inheritdoc
+     * Tries to find an entity in the repository by the given identifier.
+     *
+     * @param mixed $id The id of the entity which can be any type of object.
+     * @return object|null Returns the entity that matches the identifier or null when no instance is found.
      */
     public function find($id)
     {
@@ -113,7 +128,9 @@ class ORMRepository implements
     }
 
     /**
-     * @inheritdoc
+     * Tries to find all entities in the repository.
+     *
+     * @return object[] Returns an array with entities that are found.
      */
     public function findAll()
     {
@@ -121,7 +138,14 @@ class ORMRepository implements
     }
 
     /**
-     * @inheritdoc
+     * Tries to find entities by a set of criteria.
+     *
+     * Optionally sorting and limiting details can be passed. An implementation may throw an UnexpectedValueException
+     * if certain values of the sorting or limiting details are not supported.
+     *
+     * @param array|Criteria $criteria The criteria to find entities by.
+     * @return array Returns an array with found entities. Returns an empty array when no entities are found.
+     * @throws UnexpectedValueException Thrown when provided parameters are not supported.
      */
     public function findBy($criteria)
     {
@@ -140,7 +164,10 @@ class ORMRepository implements
     }
 
     /**
-     * @inheritdoc
+     * Tries to find a single entity by a set of criteria.
+     *
+     * @param array|Criteria $criteria The criteria. The criteria to find the entity by.
+     * @return object Returns the entity that is found or null when no entity is found.
      */
     public function findOneBy($criteria)
     {
@@ -157,7 +184,10 @@ class ORMRepository implements
     }
 
     /**
-     * @inheritdoc
+     * Creates a new query builder using the $criteria.
+     *
+     * @param Criteria $criteria
+     * @return \Doctrine\ORM\QueryBuilder
      */
     protected function getQueryBuilder(Criteria $criteria)
     {
@@ -199,7 +229,9 @@ class ORMRepository implements
     }
 
     /**
-     * @inheritdoc
+     * Returns the doctrine repository.
+     *
+     * @return ObjectRepository
      */
     public function getRepository()
     {
@@ -211,7 +243,10 @@ class ORMRepository implements
     }
 
     /**
-     * @inheritdoc
+     * Will flush the given entity. If non given all queued entities will be flushed.
+     *
+     * @param EntityFeatureIdentifiable $entity The entity to flush.
+     * @return void
      */
     public function flush(EntityFeatureIdentifiable $entity = null)
     {
@@ -219,7 +254,9 @@ class ORMRepository implements
     }
 
     /**
-     * @inheritdoc
+     * Persist the given entity.
+     *
+     * @param EntityFeatureIdentifiable $entity The entity to persist.
      */
     public function persist(EntityFeatureIdentifiable $entity)
     {
@@ -227,7 +264,9 @@ class ORMRepository implements
     }
 
     /**
-     * @inheritdoc
+     * Starts a new transaction.
+     *
+     * @return void
      */
     public function beginTransaction()
     {
@@ -235,7 +274,9 @@ class ORMRepository implements
     }
 
     /**
-     * @inheritdoc
+     * Commits a started transaction.
+     *
+     * @return void
      */
     public function commitTransaction()
     {
@@ -243,7 +284,9 @@ class ORMRepository implements
     }
 
     /**
-     * @inheritdoc
+     * Rolls back a started transaction.
+     *
+     * @return void
      */
     public function rollBackTransaction()
     {
