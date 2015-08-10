@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2a9d859c185c82ad473af905e73a1b7f",
+    "hash": "f1d3f365233a5050b159e248a0496f45",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -75,32 +75,49 @@
         {
             "name": "youngguns/stdlib",
             "version": "0.17.0",
-            "target-dir": "Youngguns/StdLib",
             "source": {
                 "type": "git",
                 "url": "git@git.redknot.nl:youngguns/stdlib.git",
-                "reference": "6b8d392dcd2dc7afb71aca4ec2faed2ce6090580"
+                "reference": "bbc6e15d65f53331416e380ef61603c3be774781"
             },
             "require": {
                 "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "doctrine/collections": "~1.2",
+                "phpunit/phpunit": "~4.0",
+                "youngguns/doctrine": "~0.9",
+                "zendframework/zend-code": "~2.0",
+                "zendframework/zend-eventmanager": "~2.0",
+                "zendframework/zend-servicemanager": "~2.0"
             },
             "suggest": {
                 "doctrine/collection": "Criteria are used by Creterion namespace in this package"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Youngguns\\StdLib\\": ""
+                "psr-4": {
+                    "Youngguns\\StdLib\\": "src/"
                 }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "YounggunsTest\\StdLib\\": "tests/"
+                },
+                "files": [
+                    "tests/functions.php",
+                    "tests/ServiceLocatorStub.php"
+                ]
             },
             "license": [
                 "proprietary"
             ],
             "description": "StdLib component",
+            "homepage": "http://developers.polderknowledge.nl/gitlab/youngguns/stdlib",
             "keywords": [
                 "YoungGuns"
             ],
-            "time": "2015-01-21 09:34:47"
+            "time": "2015-06-29 13:57:01"
         },
         {
             "name": "zendframework/zend-eventmanager",
@@ -2550,7 +2567,7 @@
             "source": {
                 "type": "git",
                 "url": "git@git.redknot.nl:polderknowledge/build-tools.git",
-                "reference": "978505a020178a5d1dd2791a303bda02690671e1"
+                "reference": "15e770fc12befdeea2b7479998387d43a76d8460"
             },
             "require": {
                 "phing/phing": "~2.10",
@@ -2576,7 +2593,7 @@
                 }
             ],
             "description": "A library package containing default build scripts for common usage",
-            "time": "2015-06-23 11:23:12"
+            "time": "2015-08-09 08:18:52"
         },
         {
             "name": "polderknowledge/coding-standards",
