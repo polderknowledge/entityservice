@@ -9,8 +9,6 @@
 
 namespace PolderKnowledge\EntityService\Validator;
 
-use PolderKnowledge\EntityService\ServiceResult;
-
 /**
  * The EntityExists validator will validate a certain entity was found. Validation will
  * fail when the entity is not present
@@ -40,14 +38,14 @@ class EntityExists extends AbstractEntityValidator
     {
         $result = $this->fetchResult($value);
 
-        if ($result instanceof ServiceResult) {
-            if ($result->count() === 1) {
-                return true;
-            }
+        // The following code will check if we have a valid result. In case of an empty array (we did not get a valid
+        // match) the not-operator will result to true, causing the error to be set. In case of a null value (no object
+        // has been found), the not-operator will also result to true.
+        if (!$result) {
+            $this->error(self::ERROR_NO_OBJECT_FOUND, $value);
+            return false;
         }
 
-        $this->error(self::ERROR_NO_OBJECT_FOUND, $value);
-
-        return false;
+        return true;
     }
 }

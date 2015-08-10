@@ -1,23 +1,26 @@
-<phpunit bootstrap="./tests/Bootstrap.php" colors="true">
+<?xml version="1.0" encoding="utf-8"?>
+
+<phpunit bootstrap="tests/bootstrap.php" colors="true" strict="true">
     <testsuites>
-        <testsuite name="Polder Knowledge Entity Service Test Suite">
-            <directory>./tests</directory>
+        <testsuite name="PkEntityService">
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
-
     <filter>
-        <blacklist>
-            <directory>tests/</directory>
-            <directory>vendor/</directory>
-        </blacklist>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory>src/</directory>
+        <whitelist>
+            <directory suffix=".php">src/</directory>
         </whitelist>
     </filter>
-
     <logging>
-        <log type="coverage-html" target="build/coverage-html" />
+        <log type="coverage-html"
+            title="phpDocumentor"
+            target="build/coverage"
+            charset="UTF-8"
+            yui="true"
+            highlight="false"
+            lowUpperBound="35"
+            highLowerBound="70" />
         <log type="coverage-clover" target="build/coverage.xml"/>
-        <log type="junit" target="build/test-suites.xml" logIncompleteSkipped="false"/>
+        <log type="junit" target="build/test-suites.xml" logIncompleteSkipped="false" />
     </logging>
 </phpunit>

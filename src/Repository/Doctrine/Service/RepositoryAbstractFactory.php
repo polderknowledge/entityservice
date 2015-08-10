@@ -7,26 +7,24 @@
  * @license http://polderknowledge.nl/license/proprietary proprietary
  */
 
-namespace PolderKnowledge\EntityService\Service;
+namespace PolderKnowledge\EntityService\Repository\Doctrine\Service;
 
-use PolderKnowledge\EntityService\DefaultEntityService;
+use PolderKnowledge\EntityService\Repository\Doctrine\ORMRepository;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Abstract service factory to create a DefaultEntityService
+ * RepositoryAbstractFactory creates a default ORMRepository for an EntityService
  */
-class EntityServiceAbstractServiceFactory implements AbstractFactoryInterface
+class RepositoryAbstractFactory implements AbstractFactoryInterface
 {
-    const REPOSITORY_SERVICE_KEY = 'EntityRepositoryManager';
-
     /**
      * {@inheritdoc}
      *
      * @param ServiceLocatorInterface $serviceLocator
      * @param $name
      * @param $requestedName
-     * @return true
+     * @return bool
      */
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
@@ -38,17 +36,18 @@ class EntityServiceAbstractServiceFactory implements AbstractFactoryInterface
     }
 
     /**
-     * Creates a new instance of DefaultEntityService configured with the $requestedName
+     * {@inheritdoc}
      *
      * @param ServiceLocatorInterface $serviceLocator
      * @param $name
      * @param $requestedName
-     * @return DefaultEntityService
+     * @return ORMRepository
      */
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
-        $entityRepositoryManager = $serviceLocator->getServiceLocator()->get(self::REPOSITORY_SERVICE_KEY);
+        $serviceManager = $serviceLocator->getServiceLocator();
+        $entityManager = $serviceManager->get("Doctrine\Orm\EntityManager");
 
-        return new DefaultEntityService($entityRepositoryManager->get($requestedName), $requestedName);
+        return new ORMRepository($entityManager, $requestedName);
     }
 }
