@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<phpunit bootstrap="tests/bootstrap.php" colors="true" strict="true">
+<phpunit bootstrap="tests/bootstrap.php" backupGlobals="false" colors="true">
     <testsuites>
         <testsuite name="PkEntityService">
             <directory>./tests/</directory>
