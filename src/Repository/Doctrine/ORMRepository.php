@@ -78,10 +78,13 @@ class ORMRepository implements
      */
     public function countBy($criteria)
     {
+        /* @var $queryBuilder \Doctrine\ORM\QueryBuilder */
         $queryBuilder = $this->getRepository()->createQueryBuilder('e');
         $queryBuilder->select('count(e)');
 
-        if (!empty($criteria)) {
+        if ($criteria instanceof Criteria) {
+            $queryBuilder->addCriteria($criteria);
+        } elseif (!empty($criteria)) {
             foreach ($criteria as $field => $value) {
                 $queryBuilder->andWhere($queryBuilder->expr()->eq('e.' . $field, ':'.$field));
                 $queryBuilder->setParameter(':'.$field, $value);
