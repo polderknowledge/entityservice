@@ -83,7 +83,11 @@ class ORMRepository implements
         $queryBuilder->select('count(e)');
 
         if ($criteria instanceof Criteria) {
-            $queryBuilder->addCriteria($criteria);
+            $clonedCriteria = clone $criteria;
+            $clonedCriteria->setFirstResult(null);
+            $clonedCriteria->setMaxResults(null);
+
+            $queryBuilder->addCriteria($clonedCriteria);
         } elseif (!empty($criteria)) {
             foreach ($criteria as $field => $value) {
                 $queryBuilder->andWhere($queryBuilder->expr()->eq('e.' . $field, ':'.$field));
