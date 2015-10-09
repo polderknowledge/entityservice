@@ -182,7 +182,9 @@ class ORMRepository implements
             $criteriaParams = $criteria;
 
             $criteria = Criteria::create();
-            $criteria->where($criteriaParams);
+            foreach ($criteriaParams as $name => $value) {
+                $criteria->andWhere($criteria->expr()->eq($name, $value));
+            }
         }
 
         $queryBuilder = $this->getQueryBuilder($criteria);
