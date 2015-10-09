@@ -187,6 +187,9 @@ class ORMRepository implements
             }
         }
 
+        $criteria->setFirstResult(0);
+        $criteria->setMaxResults(1);
+
         $queryBuilder = $this->getQueryBuilder($criteria);
 
         return $queryBuilder->getQuery()->getSingleResult();
