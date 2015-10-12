@@ -174,7 +174,7 @@ class ORMRepository implements
      * Tries to find a single entity by a set of criteria.
      *
      * @param array|Criteria $criteria The criteria. The criteria to find the entity by.
-     * @return object Returns the entity that is found or null when no entity is found.
+     * @return object|null Returns the entity that is found or null when no entity is found.
      */
     public function findOneBy($criteria)
     {
@@ -192,7 +192,7 @@ class ORMRepository implements
 
         $queryBuilder = $this->getQueryBuilder($criteria);
 
-        return $queryBuilder->getQuery()->getSingleResult();
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
     /**
