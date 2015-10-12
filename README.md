@@ -4,7 +4,7 @@ Minimum PHP version: 5.5.0
 
 ## Introduction
 
-This library provides functionality to work with entities. An entity is the representation of an object that usually 
+This library provides functionality to work with entities. An entity is the representation of an object that usually
 can be retrieved from- and stored on a storage device (e.g. database, webservice, file system). This library makes it
 possible to quickly access a manager class without the need of creating the repositories.
 
@@ -36,14 +36,14 @@ vendor/bin/phpunit
 ### Zend Framework 2
 
 In order to make use of the EntityServiceManager, you need to configure it. Make sure to add an entry to the
-service_listener_options and also register the entity service in the service manager. Add the following to 
+service_listener_options and also register the entity service in the service manager. Add the following to
 `config/application.config.php`.
 
 ```php
 'service_manager' => array(
     'invokables' => array(
-        'EntityRepositoryManager' => 'PolderKnowledge\EntityService\Service\EntityRepositoryManager',
-        'EntityServiceManager' => 'PolderKnowledge\EntityService\Service\EntityServiceManager',
+        'EntityRepositoryManager' => 'PolderKnowledge\\EntityService\\Repository\\Service\\EntityRepositoryManager',
+        'EntityServiceManager' => 'PolderKnowledge\\EntityService\\Service\\EntityServiceManager',
     ),
 ),
 'service_listener_options' => array(
@@ -67,7 +67,7 @@ Also make sure you configure the entity repository manager in a module.config.ph
 ```php
 'entity_repository_manager' => array(
     'abstract_factories' => array(
-        'PolderKnowledge\EntityService\Service\DoctrineRepositoryAbstractFactory',
+        'PolderKnowledge\\EntityService\\Repository\\Doctrine\\Service\\RepositoryAbstractFactory',
     ),
 ),
 ```
@@ -84,7 +84,7 @@ via Doctrine ORM. This library provides an AbstractServiceFactory that can be us
 
 ## Validators
 
-This library provides two validators: EntityExists and EntityNotExists. These validators are derived from 
+This library provides two validators: EntityExists and EntityNotExists. These validators are derived from
 Zend\Validator and therefor you should include "zendframework/zend-validator" in your composer.json.
 
 ### EntityExists
@@ -94,7 +94,7 @@ $this->add(array(
     'required' => true,
     'validators' => array(
         array(
-            'name' => 'PolderKnowledge\EntityService\Validator\EntityExists',
+            'name' => 'PolderKnowledge\\EntityService\\Validator\\EntityExists',
             'options' => array(
                 'entityService' => $this->getEntityService(),
                 'field' => 'id',
@@ -111,7 +111,7 @@ $this->add(array(
     'required' => true,
     'validators' => array(
         array(
-            'name' => 'PolderKnowledge\EntityService\Validator\EntityNotExists',
+            'name' => 'PolderKnowledge\\EntityService\\Validator\\EntityNotExists',
             'options' => array(
                 'entityService' => $this->getEntityService(),
                 'field' => 'id',
