@@ -1,0 +1,16 @@
+before_script:
+ - composer install
+
+stages:
+  - test
+
+php55:
+  script:
+    - ./vendor/bin/phing
+  stage: test
+
+php70:
+  image: docker.polderknowledge.nl/ci/php:7.0
+  script:
+    - ./vendor/bin/phpunit
+  stage: test
