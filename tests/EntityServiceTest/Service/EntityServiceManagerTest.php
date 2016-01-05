@@ -12,6 +12,7 @@ namespace PolderKnowledge\EntityServiceTest\Service;
 use PHPUnit_Framework_TestCase;
 use PolderKnowledge\EntityService\EntityServiceInterface;
 use PolderKnowledge\EntityService\Service\EntityServiceManager;
+use PolderKnowledge\EntityServiceTestAsset\MyEntity;
 use stdClass;
 
 class EntityServiceManagerTest extends PHPUnit_Framework_TestCase
@@ -27,7 +28,7 @@ class EntityServiceManagerTest extends PHPUnit_Framework_TestCase
         // Assert
         $this->assertTrue($entityServiceManager->canCreateFromAbstractFactory(
             'polderKnowledgeentityservicetestserviceassetcustomentitymock',
-            'PolderKnowledge\\EntityServiceTest\\Service\\_Asset\\CustomEntityMock'
+            MyEntity::class
         ));
     }
 

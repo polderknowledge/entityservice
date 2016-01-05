@@ -22,18 +22,41 @@ class EntityServiceAbstractServiceFactoryTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @covers PolderKnowledge\EntityService\Service\EntityServiceAbstractServiceFactory::canCreateServiceWithName
+     * @dataProvider serviceNameProvider
      */
-    public function testCanCreateServiceWithName()
+    public function testCanCreateServiceWithName($serviceName, $expectedResult)
     {
         // Arrange
         $entityServiceAbstractServiceFactory = new EntityServiceAbstractServiceFactory();
         $mock = $this->getMockForAbstractClass('Zend\ServiceManager\ServiceLocatorInterface');
 
         // Act
-        $result = $entityServiceAbstractServiceFactory->canCreateServiceWithName($mock, null, null);
+        $result = $entityServiceAbstractServiceFactory->canCreateServiceWithName($mock, null, $serviceName);
 
         // Assert
-        $this->assertTrue($result);
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    public function serviceNameProvider()
+    {
+        return [
+            [
+                'serviceName' => MyEntity::class,
+                'result' => true,
+            ],
+            [
+                'serviceName' => EntityServiceAbstractServiceFactory::class,
+                'result' => false,
+            ],
+            [
+                'serviceName' => 1234,
+                'result' => false,
+            ],
+            [
+                'serviceName' => null,
+                'result' => false,
+            ],
+        ];
     }
 
     /**
