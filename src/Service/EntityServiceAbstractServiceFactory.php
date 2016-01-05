@@ -11,6 +11,7 @@ namespace PolderKnowledge\EntityService\Service;
 
 use PolderKnowledge\EntityService\DefaultEntityService;
 use PolderKnowledge\EntityService\Entity\Feature\IdentifiableInterface;
+use ReflectionClass;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -35,7 +36,7 @@ class EntityServiceAbstractServiceFactory implements AbstractFactoryInterface
             return false;
         }
 
-        $reflectionClass = new \ReflectionClass($requestedName);
+        $reflectionClass = new ReflectionClass($requestedName);
         return $reflectionClass->implementsInterface(IdentifiableInterface::class);
     }
 
