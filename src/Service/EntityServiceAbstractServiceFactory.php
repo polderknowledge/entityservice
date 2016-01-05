@@ -10,6 +10,7 @@
 namespace PolderKnowledge\EntityService\Service;
 
 use PolderKnowledge\EntityService\DefaultEntityService;
+use PolderKnowledge\EntityService\Entity\Feature\IdentifiableInterface;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -30,11 +31,12 @@ class EntityServiceAbstractServiceFactory implements AbstractFactoryInterface
      */
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
-        // Ideally we would check if the class that we want to create is an instance of IdentifiableInterface.
-        // Unforunaltey we cannot check if that is the case at this point. The class that we request could expect
-        // constructor params meaning that PHP warnings would occur here.
+        if (!class_exists($requestedName)) {
+            return false;
+        }
 
-        return true;
+        $reflectionClass = new \ReflectionClass($requestedName);
+        return $reflectionClass->implementsInterface(IdentifiableInterface::class);
     }
 
     /**
