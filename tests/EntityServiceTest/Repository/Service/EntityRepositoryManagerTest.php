@@ -15,6 +15,8 @@ use PolderKnowledge\EntityService\Repository\Feature\FlushableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\ReadableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\WritableInterface;
 use PolderKnowledge\EntityService\Repository\Service\EntityRepositoryManager;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
+use Zend\ServiceManager\ServiceManager;
 
 class EntityRepositoryManagerTest extends PHPUnit_Framework_TestCase
 {
@@ -64,5 +66,24 @@ class EntityRepositoryManagerTest extends PHPUnit_Framework_TestCase
 
         // Assert
         // ...
+    }
+
+    public function testExceptionWhenRequestingNonExistentClass()
+    {
+        $this->setExpectedException(ServiceNotFoundException::class);
+
+        $entityServiceManager = new EntityRepositoryManager();
+        $entityServiceManager->get('This\Class\Does\Not\Exist');
+    }
+
+    /**
+     * The serviceManager should not fall back to direct construction since this makes no sense when requesting a repository
+     */
+    public function testNoInvokableFallback()
+    {
+        $this->setExpectedException(ServiceNotFoundException::class);
+
+        $entityRepositoryManager = new EntityRepositoryManager();
+        $entityRepositoryManager->get(MyEntity::class);
     }
 }
