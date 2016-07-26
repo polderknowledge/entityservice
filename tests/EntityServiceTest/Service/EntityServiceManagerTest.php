@@ -10,10 +10,19 @@
 namespace PolderKnowledge\EntityServiceTest\Service;
 
 use PHPUnit_Framework_TestCase;
+use PolderKnowledge\EntityService\DefaultEntityService;
 use PolderKnowledge\EntityService\EntityServiceInterface;
+use PolderKnowledge\EntityService\Exception\InvalidServiceNameException;
+use PolderKnowledge\EntityService\Repository\Service\EntityRepositoryManager;
 use PolderKnowledge\EntityService\Service\EntityServiceManager;
 use PolderKnowledge\EntityServiceTestAsset\MyEntity;
+use PolderKnowledge\EntityServiceTestAsset\MyRepository;
 use stdClass;
+use Zend\EventManager\EventManager;
+use Zend\EventManager\SharedEventManager;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
+use Zend\ServiceManager\ServiceManager;
 
 class EntityServiceManagerTest extends PHPUnit_Framework_TestCase
 {
@@ -61,5 +70,58 @@ class EntityServiceManagerTest extends PHPUnit_Framework_TestCase
 
         // Assert
         /// ...
+    }
+
+    public function testStandardFunctionality()
+    {
+        $entityServiceManager = $this->createStandardEntityServiceManager();
+        $myEntityService = $entityServiceManager->get(MyEntity::class);
+        $this->assertInstanceOf(DefaultEntityService::class, $myEntityService);
+    }
+
+    public function testExceptionWhenRequestingNonExistentClass()
+    {
+        $entityServiceManager = $this->createStandardEntityServiceManager();
+
+        $this->setExpectedException(ServiceNotFoundException::class);
+        $entityServiceManager->get('This\Class\Does\Not\Exist');
+    }
+
+    public function testExceptionWhenRequestingNonEntityClass()
+    {
+        $entityServiceManager = $this->createStandardEntityServiceManager();
+
+        $this->setExpectedException(ServiceNotFoundException::class);
+        $entityServiceManager->get('ArrayIterator');
+    }
+
+    public function testExceptionWhenRequestingNonRegisteredEntityClass()
+    {
+        $entityServiceManager = $this->createStandardEntityServiceManager(false);
+
+        $this->setExpectedException(ServiceNotCreatedException::class);
+        $entityServiceManager->get(MyEntity::class);
+    }
+
+    private function createStandardEntityServiceManager($addDefaultRepository = true)
+    {
+        $applicationServiceManager = new ServiceManager;
+        $applicationServiceManager->setFactory('EventManager', function() {
+            $eventManager = new EventManager;
+            $eventManager->setSharedManager(new SharedEventManager);
+            return $eventManager;
+        });
+
+        $applicationServiceManager->setFactory('EntityRepositoryManager', function() use ($addDefaultRepository) {
+            $entityRepositoryManager = new EntityRepositoryManager();
+            if ($addDefaultRepository) {
+                $entityRepositoryManager->setInvokableClass(MyEntity::class, MyRepository::class);
+            }
+            return $entityRepositoryManager;
+        });
+
+        $entityServiceManager = new EntityServiceManager;
+        $entityServiceManager->setServiceLocator($applicationServiceManager);
+        return $entityServiceManager;
     }
 }

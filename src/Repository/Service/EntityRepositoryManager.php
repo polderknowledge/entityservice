@@ -21,6 +21,12 @@ use Zend\ServiceManager\AbstractPluginManager;
  */
 class EntityRepositoryManager extends AbstractPluginManager
 {
+    public function __construct($configOrContainerInstance = null, array $v3config = [])
+    {
+        parent::__construct($configOrContainerInstance, $v3config);
+        $this->autoAddInvokableClass = false;
+    }
+
     /**
      * {@inheritdoc}
      *

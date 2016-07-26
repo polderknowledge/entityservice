@@ -30,6 +30,7 @@ class EntityServiceManager extends AbstractPluginManager
 
         $this->addAbstractFactory(new EntityServiceAbstractServiceFactory());
         $this->addInitializer(new EventManagerInitializer());
+        $this->autoAddInvokableClass = false;
     }
 
     /**
