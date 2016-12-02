@@ -88,5 +88,4 @@ interface EntityServiceInterface extends EventManagerAwareInterface
      * @throws RuntimeException
      */
     public function flush($entity = null);
-
 }
