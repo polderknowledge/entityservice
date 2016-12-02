@@ -1,13 +1,13 @@
 <?php
 /**
- * Polder Knowledge / Entity Service (http://polderknowledge.nl)
+ * Polder Knowledge / entityservice (https://polderknowledge.com)
  *
- * @link http://developers.polderknowledge.nl/gitlab/polderknowledge/entityservice for the canonical source repository
- * @copyright Copyright (c) 2015-2015 Polder Knowledge (http://www.polderknowledge.nl)
- * @license http://polderknowledge.nl/license/proprietary proprietary
+ * @link https://github.com/polderknowledge/entityservice for the canonical source repository
+ * @copyright Copyright (c) 2016 Polder Knowledge (https://polderknowledge.com)
+ * @license https://github.com/polderknowledge/entityservice/blob/master/LICENSE.md MIT
  */
 
-namespace PolderKnowledge\EntityService;
+namespace PolderKnowledge\EntityService\Feature;
 
 /**
  * The TransactionAwareInterface interface makes it possible work with transactions on a service.
@@ -33,7 +33,7 @@ interface TransactionAwareInterface
      *
      * @return void
      */
-    public function rollBackTransaction();
+    public function rollbackTransaction();
 
     /**
      * Returns true when possible to start an transaction

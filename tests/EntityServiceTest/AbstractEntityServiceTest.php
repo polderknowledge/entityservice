@@ -1,14 +1,15 @@
 <?php
 /**
- * Polder Knowledge / Entity Service (http://polderknowledge.nl)
+ * Polder Knowledge / entityservice (https://polderknowledge.com)
  *
- * @link http://developers.polderknowledge.nl/gitlab/polderknowledge/entityservice for the canonical source repository
- * @copyright Copyright (c) 2015-2015 Polder Knowledge (http://www.polderknowledge.nl)
- * @license http://polderknowledge.nl/license/proprietary proprietary
+ * @link https://github.com/polderknowledge/entityservice for the canonical source repository
+ * @copyright Copyright (c) 2016 Polder Knowledge (https://polderknowledge.com)
+ * @license https://github.com/polderknowledge/entityservice/blob/master/LICENSE.md MIT
  */
 
 namespace PolderKnowledge\EntityServiceTest;
 
+use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 use PolderKnowledge\EntityService\AbstractEntityService;
@@ -24,32 +25,34 @@ use Zend\EventManager\EventManagerInterface;
 class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
 {
     /**
+     * @var MyEntity
+     */
+    protected $entity;
+
+    /**
      * @var PHPUnit_Framework_MockObject_MockObject
      */
-    protected $repositoryMock;
+    protected $repository;
 
     /**
      * @var AbstractEntityService
      */
     protected $service;
 
-    /**
-     * @var MyEntity
-     */
-    protected $entityMock;
-
     public function setUp()
     {
-        $this->entityMock = new MyEntity();
-        $this->repositoryMock = $this->getMock(MyRepository::class);
+        $this->entity = new MyEntity();
+        $this->repository = $this->getMockBuilder(MyRepository::class)->getMock();
 
-        $repositoryManager = new EntityRepositoryManager();
-        $repositoryManager->setService(MyEntity::class, $this->repositoryMock);
+        $container = $this->getMockForAbstractClass(ContainerInterface::class);
 
-        $this->service = $this->getMockForAbstractClass(AbstractEntityService::class, array(
-            $this->repositoryMock,
+        $repositoryManager = new EntityRepositoryManager($container);
+        $repositoryManager->setService(MyEntity::class, $this->repository);
+
+        $this->service = $this->getMockForAbstractClass(AbstractEntityService::class, [
+            $this->repository,
             MyEntity::class,
-        ));
+        ]);
     }
 
     public function testServiceHasEventManager()
@@ -73,10 +76,11 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
         $identifiers = $this->service->getEventManager()->getIdentifiers();
 
         // Assert
-        $this->assertEquals(array(
+        $this->assertEquals([
+            'EntityService',
             EntityService::class,
             MyEntity::class,
-        ), $identifiers);
+        ], $identifiers);
     }
 
     public function testSetEventManager()
@@ -124,27 +128,27 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
         // ...
 
         // Act
-        $result = $this->service->countBy(array());
+        $result = $this->service->countBy([]);
 
         // Assert
         $this->assertEquals(0, $result);
     }
 
     /**
-     * @expectedException PolderKnowledge\EntityService\Exception\RuntimeException
-     * @expectedExceptionMessage The repository for PolderKnowledge\EntityServiceTestAsset\MyEntity is not readable.
+     * @expectedException \PolderKnowledge\EntityService\Exception\RuntimeException
+     * @expectedExceptionMessage It is not possible to read entities of type "PolderKnowledge\EntityServiceTestAsset\MyEntity" from its repository.
      */
     public function testCountByNonReadable()
     {
         // Arrange
         $repository = $this->getMockForAbstractClass(EntityRepositoryInterface::class);
-        $service = $this->getMockForAbstractClass(AbstractEntityService::class, array(
+        $service = $this->getMockForAbstractClass(AbstractEntityService::class, [
             $repository,
             MyEntity::class,
-        ));
+        ]);
 
         // Act
-        $service->countBy(array());
+        $service->countBy([]);
 
         // Assert
         // ...
@@ -153,31 +157,30 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     public function testDelete()
     {
         // Arrange
-        $this->repositoryMock->expects($this->exactly(1))->method('delete');
-        $this->repositoryMock->expects($this->exactly(1))->method('flush');
+        $this->repository->expects($this->exactly(1))->method('delete');
 
         // Act
-        $this->service->delete($this->entityMock);
+        $this->service->delete($this->entity);
 
         // Assert
         // ...
     }
 
     /**
-     * @expectedException PolderKnowledge\EntityService\Exception\RuntimeException
-     * @expectedExceptionMessage The repository for PolderKnowledge\EntityServiceTestAsset\MyEntity is not deletable.
+     * @expectedException \PolderKnowledge\EntityService\Exception\RuntimeException
+     * @expectedExceptionMessage The entities of type "PolderKnowledge\EntityServiceTestAsset\MyEntity" cannot be deleted from its repository.
      */
-    public function testDeleteNonWritable()
+    public function testDeleteNonDeletable()
     {
         // Arrange
         $repository = $this->getMockForAbstractClass(EntityRepositoryInterface::class);
-        $service = $this->getMockForAbstractClass(AbstractEntityService::class, array(
+        $service = $this->getMockForAbstractClass(AbstractEntityService::class, [
             $repository,
             MyEntity::class,
-        ));
+        ]);
 
         // Act
-        $service->delete($this->entityMock);
+        $service->delete($this->entity);
 
         // Assert
         // ...
@@ -186,31 +189,30 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     public function testDeleteBy()
     {
         // Arrange
-        $this->repositoryMock->expects($this->exactly(1))->method('deleteBy');
-        $this->repositoryMock->expects($this->exactly(1))->method('flush');
+        $this->repository->expects($this->exactly(1))->method('deleteBy');
 
         // Act
-        $this->service->deleteBy(array());
+        $this->service->deleteBy([]);
 
         // Assert
         // ...
     }
 
     /**
-     * @expectedException PolderKnowledge\EntityService\Exception\RuntimeException
-     * @expectedExceptionMessage The repository for PolderKnowledge\EntityServiceTestAsset\MyEntity is not deletable.
+     * @expectedException \PolderKnowledge\EntityService\Exception\RuntimeException
+     * @expectedExceptionMessage The entities of type "PolderKnowledge\EntityServiceTestAsset\MyEntity" cannot be deleted from its repository.
      */
-    public function testDeleteByNonWritable()
+    public function testDeleteByNonDeltable()
     {
         // Arrange
         $repository = $this->getMockForAbstractClass(EntityRepositoryInterface::class);
-        $service = $this->getMockForAbstractClass(AbstractEntityService::class, array(
+        $service = $this->getMockForAbstractClass(AbstractEntityService::class, [
             $repository,
             MyEntity::class,
-        ));
+        ]);
 
         // Act
-        $service->deleteBy(array());
+        $service->deleteBy([]);
 
         // Assert
         // ...
@@ -219,7 +221,7 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     public function testFind()
     {
         // Arrange
-        $this->repositoryMock->expects($this->exactly(1))->method('find');
+        $this->repository->expects($this->exactly(1))->method('find');
 
         // Act
         $this->service->find(1);
@@ -229,17 +231,17 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException PolderKnowledge\EntityService\Exception\RuntimeException
-     * @expectedExceptionMessage The repository for PolderKnowledge\EntityServiceTestAsset\MyEntity is not readable.
+     * @expectedException \PolderKnowledge\EntityService\Exception\RuntimeException
+     * @expectedExceptionMessage It is not possible to read entities of type "PolderKnowledge\EntityServiceTestAsset\MyEntity" from its repository.
      */
     public function testFindNonReadable()
     {
         // Arrange
         $repository = $this->getMockForAbstractClass(EntityRepositoryInterface::class);
-        $service = $this->getMockForAbstractClass(AbstractEntityService::class, array(
+        $service = $this->getMockForAbstractClass(AbstractEntityService::class, [
             $repository,
             MyEntity::class,
-        ));
+        ]);
 
         // Act
         $service->find(1);
@@ -251,7 +253,7 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     public function testFindAll()
     {
         // Arrange
-        $this->repositoryMock->expects($this->exactly(1))->method('findAll');
+        $this->repository->expects($this->exactly(1))->method('findAll');
 
         // Act
         $this->service->findAll();
@@ -261,17 +263,17 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException PolderKnowledge\EntityService\Exception\RuntimeException
-     * @expectedExceptionMessage The repository for PolderKnowledge\EntityServiceTestAsset\MyEntity is not readable.
+     * @expectedException \PolderKnowledge\EntityService\Exception\RuntimeException
+     * @expectedExceptionMessage It is not possible to read entities of type "PolderKnowledge\EntityServiceTestAsset\MyEntity" from its repository.
      */
     public function testFindAllNonReadable()
     {
         // Arrange
         $repository = $this->getMockForAbstractClass(EntityRepositoryInterface::class);
-        $service = $this->getMockForAbstractClass(AbstractEntityService::class, array(
+        $service = $this->getMockForAbstractClass(AbstractEntityService::class, [
             $repository,
             MyEntity::class,
-        ));
+        ]);
 
         // Act
         $service->findAll();
@@ -283,30 +285,30 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     public function testFindBy()
     {
         // Arrange
-        $this->repositoryMock->expects($this->exactly(1))->method('findBy');
+        $this->repository->expects($this->exactly(1))->method('findBy');
 
         // Act
-        $this->service->findBy(array());
+        $this->service->findBy([]);
 
         // Assert
         // ...
     }
 
     /**
-     * @expectedException PolderKnowledge\EntityService\Exception\RuntimeException
-     * @expectedExceptionMessage The repository for PolderKnowledge\EntityServiceTestAsset\MyEntity is not readable.
+     * @expectedException \PolderKnowledge\EntityService\Exception\RuntimeException
+     * @expectedExceptionMessage It is not possible to read entities of type "PolderKnowledge\EntityServiceTestAsset\MyEntity" from its repository.
      */
     public function testFindByNonReadable()
     {
         // Arrange
         $repository = $this->getMockForAbstractClass(EntityRepositoryInterface::class);
-        $service = $this->getMockForAbstractClass(AbstractEntityService::class, array(
+        $service = $this->getMockForAbstractClass(AbstractEntityService::class, [
             $repository,
             MyEntity::class,
-        ));
+        ]);
 
         // Act
-        $service->findBy(array());
+        $service->findBy([]);
 
         // Assert
         // ...
@@ -315,30 +317,30 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     public function testFindOneBy()
     {
         // Arrange
-        $this->repositoryMock->expects($this->exactly(1))->method('findOneBy');
+        $this->repository->expects($this->exactly(1))->method('findOneBy');
 
         // Act
-        $this->service->findOneBy(array());
+        $this->service->findOneBy([]);
 
         // Assert
         // ...
     }
 
     /**
-     * @expectedException PolderKnowledge\EntityService\Exception\RuntimeException
-     * @expectedExceptionMessage The repository for PolderKnowledge\EntityServiceTestAsset\MyEntity is not readable.
+     * @expectedException \PolderKnowledge\EntityService\Exception\RuntimeException
+     * @expectedExceptionMessage It is not possible to read entities of type "PolderKnowledge\EntityServiceTestAsset\MyEntity" from its repository.
      */
     public function testFindOneByNonReadable()
     {
         // Arrange
         $repository = $this->getMockForAbstractClass(EntityRepositoryInterface::class);
-        $service = $this->getMockForAbstractClass(AbstractEntityService::class, array(
+        $service = $this->getMockForAbstractClass(AbstractEntityService::class, [
             $repository,
             MyEntity::class,
-        ));
+        ]);
 
         // Act
-        $service->findOneBy(array());
+        $service->findOneBy([]);
 
         // Assert
         // ...
@@ -347,64 +349,62 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     public function testPersist()
     {
         // Arrange
-        $this->repositoryMock->expects($this->exactly(1))->method('persist');
-        $this->repositoryMock->expects($this->exactly(1))->method('flush');
+        $this->repository->expects($this->exactly(1))->method('persist');
 
         // Act
-        $this->service->persist($this->entityMock);
+        $this->service->persist($this->entity);
 
         // Assert
         // ...
     }
 
     /**
-     * @expectedException PolderKnowledge\EntityService\Exception\RuntimeException
-     * @expectedExceptionMessage The repository for PolderKnowledge\EntityServiceTestAsset\MyEntity is not writable.
+     * @expectedException \PolderKnowledge\EntityService\Exception\RuntimeException
+     * @expectedExceptionMessage The entities of type "PolderKnowledge\EntityServiceTestAsset\MyEntity" cannot be written to its repository.
      */
     public function testPersistNonWritable()
     {
         // Arrange
         $repository = $this->getMockForAbstractClass(EntityRepositoryInterface::class);
-        $service = $this->getMockForAbstractClass(AbstractEntityService::class, array(
+        $service = $this->getMockForAbstractClass(AbstractEntityService::class, [
             $repository,
             MyEntity::class,
-        ));
+        ]);
 
         // Act
-        $service->persist($this->entityMock);
+        $service->persist($this->entity);
 
         // Assert
         // ...
     }
 
-    public function testMultiPersist()
+    public function testFlush()
     {
         // Arrange
-        $this->repositoryMock->expects($this->exactly(2))->method('persist');
-        $this->repositoryMock->expects($this->exactly(1))->method('flush');
+        $this->repository->expects($this->exactly(1))->method('flush');
 
         // Act
-        $this->service->multiPersist(array($this->entityMock, $this->entityMock));
+        $this->service->flush($this->entity);
 
         // Assert
         // ...
     }
 
     /**
-     * @expectedException PolderKnowledge\EntityService\Exception\RuntimeException
-     * @expectedExceptionMessage The repository for PolderKnowledge\EntityServiceTestAsset\MyEntity is not writable.
+     * @expectedException \PolderKnowledge\EntityService\Exception\RuntimeException
+     * @expectedExceptionMessage The entities of type "PolderKnowledge\EntityServiceTestAsset\MyEntity" cannot be written to its repository.
      */
-    public function testMultiPersistNonWritable()
+    public function testFlushNonWritable()
     {
         // Arrange
         $repository = $this->getMockForAbstractClass(EntityRepositoryInterface::class);
-        $service = $this->getMockForAbstractClass(AbstractEntityService::class, array(
+        $service = $this->getMockForAbstractClass(AbstractEntityService::class, [
             $repository,
             MyEntity::class,
-        ));
+        ]);
 
         // Act
-        $service->multiPersist(array());
+        $service->flush([]);
 
         // Assert
         // ...
@@ -413,7 +413,7 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     public function testBeginTransaction()
     {
         // Arrange
-        $this->repositoryMock->expects($this->exactly(1))->method('beginTransaction');
+        $this->repository->expects($this->exactly(1))->method('beginTransaction');
 
         // Act
         $this->service->beginTransaction();
@@ -423,17 +423,17 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException PolderKnowledge\EntityService\Exception\ServiceException
+     * @expectedException \PolderKnowledge\EntityService\Exception\ServiceException
      * @expectedExceptionMessage The repository for PolderKnowledge\EntityServiceTestAsset\MyEntity doesn't support Transactions
      */
     public function testBeginTransactionWithNonTransaction()
     {
         // Arrange
         $repository = $this->getMockForAbstractClass(MyRepositoryNonTransaction::class);
-        $service = $this->getMockForAbstractClass(AbstractEntityService::class, array(
+        $service = $this->getMockForAbstractClass(AbstractEntityService::class, [
             $repository,
             MyEntity::class,
-        ));
+        ]);
 
         // Act
         $service->beginTransaction();
@@ -445,7 +445,7 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     public function testCommitTransaction()
     {
         // Arrange
-        $this->repositoryMock->expects($this->exactly(1))->method('commitTransaction');
+        $this->repository->expects($this->exactly(1))->method('commitTransaction');
 
         // Act
         $this->service->commitTransaction();
@@ -455,17 +455,17 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException PolderKnowledge\EntityService\Exception\ServiceException
+     * @expectedException \PolderKnowledge\EntityService\Exception\ServiceException
      * @expectedExceptionMessage The repository for PolderKnowledge\EntityServiceTestAsset\MyEntity doesn't support Transactions
      */
     public function testCommitTransactionWithNonTransaction()
     {
         // Arrange
         $repository = $this->getMockForAbstractClass(MyRepositoryNonTransaction::class);
-        $service = $this->getMockForAbstractClass(AbstractEntityService::class, array(
+        $service = $this->getMockForAbstractClass(AbstractEntityService::class, [
             $repository,
             MyEntity::class,
-        ));
+        ]);
 
         // Act
         $service->commitTransaction();
@@ -477,7 +477,7 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     public function testRollbackTransaction()
     {
         // Arrange
-        $this->repositoryMock->expects($this->exactly(1))->method('rollbackTransaction');
+        $this->repository->expects($this->exactly(1))->method('rollbackTransaction');
 
         // Act
         $this->service->rollbackTransaction();
@@ -487,17 +487,17 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException PolderKnowledge\EntityService\Exception\ServiceException
+     * @expectedException \PolderKnowledge\EntityService\Exception\ServiceException
      * @expectedExceptionMessage The repository for PolderKnowledge\EntityServiceTestAsset\MyEntity doesn't support Transactions
      */
     public function testRollbackTransactionWithNonTransaction()
     {
         // Arrange
         $repository = $this->getMockForAbstractClass(MyRepositoryNonTransaction::class);
-        $service = $this->getMockForAbstractClass(AbstractEntityService::class, array(
+        $service = $this->getMockForAbstractClass(AbstractEntityService::class, [
             $repository,
             MyEntity::class,
-        ));
+        ]);
 
         // Act
         $service->rollbackTransaction();
@@ -507,17 +507,19 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException PolderKnowledge\EntityService\Exception\RuntimeException
+     * @expectedException \PolderKnowledge\EntityService\Exception\RuntimeException
      * @expectedExceptionMessage Hello
      */
     public function testTriggerWithError()
     {
         // Arrange
         $repository = $this->getMockForAbstractClass(MyRepositoryNonTransaction::class);
-        $service = $this->getMockForAbstractClass(AbstractEntityService::class, array(
+
+        $service = $this->getMockForAbstractClass(AbstractEntityService::class, [
             $repository,
             MyEntity::class,
-        ));
+        ]);
+
         $service->getEventManager()->attach('find', function ($e) {
             $e->setError('Hello');
             $e->setErrorNr('123');

@@ -1,14 +1,15 @@
 <?php
 /**
- * Polder Knowledge / Entity Service (http://polderknowledge.nl)
+ * Polder Knowledge / entityservice (https://polderknowledge.com)
  *
- * @link http://developers.polderknowledge.nl/gitlab/polderknowledge/entityservice for the canonical source repository
- * @copyright Copyright (c) 2015-2015 Polder Knowledge (http://www.polderknowledge.nl)
- * @license http://polderknowledge.nl/license/proprietary proprietary
+ * @link https://github.com/polderknowledge/entityservice for the canonical source repository
+ * @copyright Copyright (c) 2016 Polder Knowledge (https://polderknowledge.com)
+ * @license https://github.com/polderknowledge/entityservice/blob/master/LICENSE.md MIT
  */
 
 namespace PolderKnowledge\EntityService\Repository\Doctrine\Service;
 
+use Interop\Container\ContainerInterface;
 use PolderKnowledge\EntityService\Repository\Doctrine\ORMRepository;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -20,34 +21,43 @@ class RepositoryAbstractFactory implements AbstractFactoryInterface
 {
     /**
      * {@inheritdoc}
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
-     * @return bool
      */
-    public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function canCreate(ContainerInterface $container, $requestedName)
     {
-        // Ideally we would check if the class that we want to create is an instance of IdentifiableInterface.
-        // Unforunaltey we cannot check if that is the case at this point. The class that we request could expect
-        // constructor params meaning that PHP warnings would occur here.
-
         return true;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
-     * @return ORMRepository
      */
-    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        $entityManager = $serviceManager->get("Doctrine\Orm\EntityManager");
+        $doctrineServiceName = 'Doctrine\\ORM\\EntityManager';
+
+        if ($options && array_key_exists('doctrine_entity_manager', $options)) {
+            $doctrineServiceName = $options['doctrine_entity_manager'];
+        }
+
+        $entityManager = $container->get($doctrineServiceName);
 
         return new ORMRepository($entityManager, $requestedName);
+    }
+
+    public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    {
+        if (method_exists($serviceLocator, 'getServiceLocator')) {
+            $serviceLocator = $serviceLocator->getServiceLocator();
+        }
+
+        return $this->canCreate($serviceLocator, $requestedName);
+    }
+
+    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    {
+        if (method_exists($serviceLocator, 'getServiceLocator')) {
+            $serviceLocator = $serviceLocator->getServiceLocator();
+        }
+
+        return $this($serviceLocator, $requestedName);
     }
 }

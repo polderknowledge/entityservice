@@ -7,10 +7,11 @@
  * @license https://github.com/polderknowledge/entityservice/blob/master/LICENSE.md MIT
  */
 
-namespace PolderKnowledge\EntityServiceTestAsset;
+namespace PolderKnowledge\EntityService;
 
-use Zend\ServiceManager\AbstractPluginManager;
-
-class MyPluginManager extends AbstractPluginManager
+/**
+ * A default implementation of an entity service.
+ */
+final class EntityService extends AbstractEntityService
 {
 }

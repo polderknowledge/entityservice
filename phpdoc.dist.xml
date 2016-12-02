@@ -5,6 +5,7 @@
         <encoding>utf-8</encoding>
         <target>build/phpdoc-cache</target>
         <markers>
+            <item>HACK</item>
             <item>TODO</item>
             <item>FIXME</item>
         </markers>
@@ -13,7 +14,8 @@
         </extensions>
         <visibility></visibility>
         <files>
-            <directory>.</directory>
+            <directory>module/</directory>
+            <directory>src/</directory>
             <ignore>tests/*</ignore>
             <ignore>vendor/*</ignore>
         </files>

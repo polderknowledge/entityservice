@@ -1,16 +1,15 @@
 <?php
 /**
- * Polder Knowledge / Entity Service (http://polderknowledge.nl)
+ * Polder Knowledge / entityservice (https://polderknowledge.com)
  *
- * @link http://developers.polderknowledge.nl/gitlab/polderknowledge/entityservice for the canonical source repository
- * @copyright Copyright (c) 2015-2015 Polder Knowledge (http://www.polderknowledge.nl)
- * @license http://polderknowledge.nl/license/proprietary proprietary
+ * @link https://github.com/polderknowledge/entityservice for the canonical source repository
+ * @copyright Copyright (c) 2016 Polder Knowledge (https://polderknowledge.com)
+ * @license https://github.com/polderknowledge/entityservice/blob/master/LICENSE.md MIT
  */
 
 namespace PolderKnowledge\EntityService\Repository\Feature;
 
 use Doctrine\Common\Collections\Criteria;
-use PolderKnowledge\EntityService\Entity\Feature\DeletableInterface as FeatureDeletable;
 
 /**
  * The DeletableInterface interface makes it possible to delete entities from a repository.
@@ -20,9 +19,9 @@ interface DeletableInterface
     /**
      * Deletes the given object
      *
-     * @param FeatureDeletable $entity The entity to delete.
+     * @param object $entity The entity to delete.
      */
-    public function delete(FeatureDeletable $entity);
+    public function delete($entity);
 
     /**
      * Removes objects by a set of criteria.

@@ -1,10 +1,10 @@
 <?php
 /**
- * Polder Knowledge / Entity Service (http://polderknowledge.nl)
+ * Polder Knowledge / entityservice (https://polderknowledge.com)
  *
- * @link http://developers.polderknowledge.nl/gitlab/polderknowledge/entityservice for the canonical source repository
- * @copyright Copyright (c) 2015-2015 Polder Knowledge (http://www.polderknowledge.nl)
- * @license http://polderknowledge.nl/license/proprietary proprietary
+ * @link https://github.com/polderknowledge/entityservice for the canonical source repository
+ * @copyright Copyright (c) 2016 Polder Knowledge (https://polderknowledge.com)
+ * @license https://github.com/polderknowledge/entityservice/blob/master/LICENSE.md MIT
  */
 
 namespace PolderKnowledge\EntityService\Repository\Doctrine;
@@ -12,15 +12,14 @@ namespace PolderKnowledge\EntityService\Repository\Doctrine;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use PolderKnowledge\EntityService\Entity\Feature\DeletableInterface as EntityFeatureDeletable;
-use PolderKnowledge\EntityService\Entity\Feature\IdentifiableInterface as EntityFeatureIdentifiable;
-use PolderKnowledge\EntityService\Repository\Doctrine\QueryBuilderExpressionVisitor;
+use Doctrine\ORM\QueryBuilder;
 use PolderKnowledge\EntityService\Repository\EntityRepositoryInterface;
 use PolderKnowledge\EntityService\Repository\Feature\DeletableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\FlushableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\ReadableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\TransactionAwareInterface;
 use PolderKnowledge\EntityService\Repository\Feature\WritableInterface;
+use UnexpectedValueException;
 
 /**
  * Class ORMRepository is a default implementation for a repository using doctrine orm.
@@ -90,8 +89,8 @@ class ORMRepository implements
             $queryBuilder->addCriteria($clonedCriteria);
         } elseif (!empty($criteria)) {
             foreach ($criteria as $field => $value) {
-                $queryBuilder->andWhere($queryBuilder->expr()->eq('e.' . $field, ':'.$field));
-                $queryBuilder->setParameter(':'.$field, $value);
+                $queryBuilder->andWhere($queryBuilder->expr()->eq('e.' . $field, ':' . $field));
+                $queryBuilder->setParameter(':' . $field, $value);
             }
         }
 
@@ -101,9 +100,9 @@ class ORMRepository implements
     /**
      * Deletes the given object
      *
-     * @param EntityFeatureDeletable $entity The entity to delete.
+     * @param object $entity The entity to delete.
      */
-    public function delete(EntityFeatureDeletable $entity)
+    public function delete($entity)
     {
         $this->entityManager->remove($entity);
     }
@@ -116,11 +115,9 @@ class ORMRepository implements
      */
     public function deleteBy($criteria)
     {
-        $entities = $this->findBy($criteria);
-
-        foreach ($entities as $entity) {
-            $this->entityManager->remove($entity);
-        }
+        $queryBuilder = $this->getQueryBuilder($criteria);
+        $queryBuilder->delete('e');
+        $queryBuilder->getQuery()->execute();
     }
 
     /**
@@ -203,29 +200,9 @@ class ORMRepository implements
      */
     protected function getQueryBuilder(Criteria $criteria)
     {
+        /** @var QueryBuilder $queryBuilder */
         $queryBuilder = $this->getRepository()->createQueryBuilder('e');
-
-        $visitor = new QueryBuilderExpressionVisitor('e', $queryBuilder);
-
-        $whereExpression = $criteria->getWhereExpression();
-        if ($whereExpression !== null) {
-            $queryBuilder->andWhere($visitor->dispatch($whereExpression));
-            $queryBuilder->setParameters($visitor->getParameters());
-        }
-
-        if ($criteria->getFirstResult() !== null) {
-            $queryBuilder->setFirstResult($criteria->getFirstResult());
-        }
-
-        if ($criteria->getMaxResults() !== null) {
-            $queryBuilder->setMaxResults($criteria->getMaxResults());
-        }
-
-        if ($criteria->getOrderings()) {
-            foreach ($criteria->getOrderings() as $field => $direction) {
-                $queryBuilder->addOrderBy(sprintf('e.%s', $field), $direction);
-            }
-        }
+        $queryBuilder->addCriteria($criteria);
 
         return $queryBuilder;
     }
@@ -257,10 +234,10 @@ class ORMRepository implements
     /**
      * Will flush the given entity. If non given all queued entities will be flushed.
      *
-     * @param EntityFeatureIdentifiable $entity The entity to flush.
+     * @param object $entity The entity to flush.
      * @return void
      */
-    public function flush(EntityFeatureIdentifiable $entity = null)
+    public function flush($entity = null)
     {
         $this->entityManager->flush($entity);
     }
@@ -268,9 +245,9 @@ class ORMRepository implements
     /**
      * Persist the given entity.
      *
-     * @param EntityFeatureIdentifiable $entity The entity to persist.
+     * @param object $entity The entity to persist.
      */
-    public function persist(EntityFeatureIdentifiable $entity)
+    public function persist($entity)
     {
         $this->entityManager->persist($entity);
     }
@@ -300,7 +277,7 @@ class ORMRepository implements
      *
      * @return void
      */
-    public function rollBackTransaction()
+    public function rollbackTransaction()
     {
         $this->entityManager->rollback();
     }

@@ -1,17 +1,18 @@
 <?php
 /**
- * Polder Knowledge / Entity Service (http://polderknowledge.nl)
+ * Polder Knowledge / entityservice (https://polderknowledge.com)
  *
- * @link http://developers.polderknowledge.nl/gitlab/polderknowledge/entityservice for the canonical source repository
- * @copyright Copyright (c) 2015-2015 Polder Knowledge (http://www.polderknowledge.nl)
- * @license http://polderknowledge.nl/license/proprietary proprietary
+ * @link https://github.com/polderknowledge/entityservice for the canonical source repository
+ * @copyright Copyright (c) 2016 Polder Knowledge (https://polderknowledge.com)
+ * @license https://github.com/polderknowledge/entityservice/blob/master/LICENSE.md MIT
  */
 
 namespace PolderKnowledge\EntityService;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use PolderKnowledge\EntityService\Entity\Feature\IdentifiableInterface;
+use Iterator;
+use PolderKnowledge\EntityService\Exception\RuntimeException;
 use Zend\EventManager\EventManagerAwareInterface;
 
 /**
@@ -30,9 +31,9 @@ interface EntityServiceInterface extends EventManagerAwareInterface
     /**
      * Deletes the given object from the repository
      *
-     * @param IdentifiableInterface $entity The entity to delete.
+     * @param object $entity The entity to delete.
      */
-    public function delete(IdentifiableInterface $entity);
+    public function delete($entity);
 
     /**
      * Deletes all objects matching the criteria from the repository
@@ -75,15 +76,17 @@ interface EntityServiceInterface extends EventManagerAwareInterface
     /**
      * Persist the given object
      *
-     * @param IdentifiableInterface $entity The entity to persist.
+     * @param object $entity The entity to persist.
      */
-    public function persist(IdentifiableInterface $entity);
+    public function persist($entity);
 
     /**
-     * Persists multiple entities to repository.
+     * Flushes the provided entity or all persisted entities when no entity is provided.
      *
-     * @param array|Iterator|Collection $entities The collection with entities.
+     * @param object $entity
+     * @return mixed
      * @throws RuntimeException
      */
-    public function multiPersist($entities);
+    public function flush($entity = null);
+
 }

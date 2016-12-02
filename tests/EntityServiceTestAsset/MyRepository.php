@@ -1,22 +1,20 @@
 <?php
 /**
- * Polder Knowledge / Entity Service (http://polderknowledge.nl)
+ * Polder Knowledge / entityservice (https://polderknowledge.com)
  *
- * @link http://developers.polderknowledge.nl/gitlab/polderknowledge/entityservice for the canonical source repository
- * @copyright Copyright (c) 2015-2015 Polder Knowledge (http://www.polderknowledge.nl)
- * @license http://polderknowledge.nl/license/proprietary proprietary
+ * @link https://github.com/polderknowledge/entityservice for the canonical source repository
+ * @copyright Copyright (c) 2016 Polder Knowledge (https://polderknowledge.com)
+ * @license https://github.com/polderknowledge/entityservice/blob/master/LICENSE.md MIT
  */
 
 namespace PolderKnowledge\EntityServiceTestAsset;
 
-use PolderKnowledge\EntityService\Entity\Feature\DeletableInterface as FeatureDeletable;
-use PolderKnowledge\EntityService\Entity\Feature\IdentifiableInterface;
 use PolderKnowledge\EntityService\Repository\EntityRepositoryInterface;
 use PolderKnowledge\EntityService\Repository\Feature\DeletableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\FlushableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\ReadableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\WritableInterface;
-use PolderKnowledge\EntityService\TransactionAwareInterface;
+use PolderKnowledge\EntityService\Feature\TransactionAwareInterface;
 
 class MyRepository implements
     EntityRepositoryInterface,
@@ -26,7 +24,7 @@ class MyRepository implements
     WritableInterface,
     TransactionAwareInterface
 {
-    public function delete(FeatureDeletable $entity)
+    public function delete($entity)
     {
     }
 
@@ -54,11 +52,11 @@ class MyRepository implements
     {
     }
 
-    public function flush(IdentifiableInterface $entity = null)
+    public function flush($entity = null)
     {
     }
 
-    public function persist(IdentifiableInterface $entity)
+    public function persist($entity)
     {
     }
 
@@ -74,7 +72,7 @@ class MyRepository implements
     {
     }
 
-    public function rollBackTransaction()
+    public function rollbackTransaction()
     {
     }
 }

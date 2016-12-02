@@ -7,10 +7,13 @@
  * @license https://github.com/polderknowledge/entityservice/blob/master/LICENSE.md MIT
  */
 
-namespace PolderKnowledge\EntityServiceTestAsset;
+namespace PolderKnowledge\EntityService\Exception;
 
-use Zend\ServiceManager\AbstractPluginManager;
+use Zend\ServiceManager\Exception\InvalidServiceException as BaseException;
 
-class MyPluginManager extends AbstractPluginManager
+/**
+ * An instance of InvalidServiceNameException is thrown when a service is invalid.
+ */
+class InvalidServiceException extends BaseException
 {
 }
