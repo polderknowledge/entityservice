@@ -14,10 +14,10 @@ use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 use PolderKnowledge\EntityService\AbstractEntityService;
 use PolderKnowledge\EntityService\Repository\EntityRepositoryInterface;
-use PolderKnowledge\EntityService\Repository\Service\EntityRepositoryManager;
 use PolderKnowledge\EntityService\Service\EntityService;
 use PolderKnowledge\EntityServiceTestAsset\MyEntity;
 use PolderKnowledge\EntityServiceTestAsset\MyRepository;
+use PolderKnowledge\EntityServiceTestAsset\MyRepositoryManager;
 use PolderKnowledge\EntityServiceTestAsset\MyRepositoryNonTransaction;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
@@ -46,7 +46,7 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
 
         $container = $this->getMockForAbstractClass(ContainerInterface::class);
 
-        $repositoryManager = new EntityRepositoryManager($container);
+        $repositoryManager = new MyRepositoryManager($container);
         $repositoryManager->setService(MyEntity::class, $this->repository);
 
         $this->service = $this->getMockForAbstractClass(AbstractEntityService::class, [
