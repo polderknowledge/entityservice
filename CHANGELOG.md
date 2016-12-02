@@ -4,6 +4,24 @@ All Notable changes to `entityservice` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## 3.0.0 - 2016-12-02
+
+### Added
+- New version of the library where all Zend Framework components are moved out of the repository.
+- Made the repository ready for open source.
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Nothing
+
+### Removed
+- Nothing
+
+### Security
+- Nothing
+
 ## 2.0.6 - 2016-07-26
 
 ### Added
