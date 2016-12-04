@@ -38,7 +38,7 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     private $repository;
 
     /**
-     * EventManager handeling all events triggered by this service
+     * EventManager handling all events triggered by this service
      *
      * @var EventManagerInterface
      */
@@ -56,6 +56,7 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
      *
      * @param EntityRepositoryInterface $repository The repository that is used to communicate with.
      * @param string $entityClassName The FQCN of the entity.
+     * @throws \PolderKnowledge\EntityService\Exception\RuntimeException
      */
     public function __construct(EntityRepositoryInterface $repository, $entityClassName)
     {
@@ -178,6 +179,8 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
      *
      * @param object $entity The entity to delete.
      * @return mixed
+     * @throws \Zend\EventManager\Exception\InvalidArgumentException
+     * @throws \PolderKnowledge\EntityService\Exception\RuntimeException
      */
     public function delete($entity)
     {
@@ -195,6 +198,8 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
      *
      * @param array|Criteria $criteria The criteria values to match on.
      * @return mixed
+     * @throws \Zend\EventManager\Exception\InvalidArgumentException
+     * @throws \PolderKnowledge\EntityService\Exception\RuntimeException
      */
     public function deleteBy($criteria)
     {
@@ -212,6 +217,8 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
      *
      * @param array|Criteria $criteria The criteria values to match on.
      * @return int
+     * @throws \Zend\EventManager\Exception\InvalidArgumentException
+     * @throws \PolderKnowledge\EntityService\Exception\RuntimeException
      */
     public function countBy($criteria)
     {
@@ -229,6 +236,8 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
      *
      * @param mixed $id The id of the entity.
      * @return object|null
+     * @throws \Zend\EventManager\Exception\InvalidArgumentException
+     * @throws \PolderKnowledge\EntityService\Exception\RuntimeException
      */
     public function find($id)
     {
@@ -245,6 +254,8 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
      * Finds all entities in the repository.
      *
      * @return array Returns the entities that exist.
+     * @throws \Zend\EventManager\Exception\InvalidArgumentException
+     * @throws \PolderKnowledge\EntityService\Exception\RuntimeException
      */
     public function findAll()
     {
@@ -260,6 +271,8 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
      *
      * @param array|Criteria $criteria The array with criteria to search on.
      * @return array
+     * @throws \Zend\EventManager\Exception\InvalidArgumentException
+     * @throws \PolderKnowledge\EntityService\Exception\RuntimeException
      */
     public function findBy($criteria)
     {
@@ -277,6 +290,8 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
      *
      * @param array|Criteria $criteria The criteria values to match on.
      * @return object|null
+     * @throws \Zend\EventManager\Exception\InvalidArgumentException
+     * @throws \PolderKnowledge\EntityService\Exception\RuntimeException
      */
     public function findOneBy($criteria)
     {
@@ -294,6 +309,7 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
      *
      * @param object $entity
      * @return mixed
+     * @throws \Zend\EventManager\Exception\InvalidArgumentException
      * @throws RuntimeException
      */
     public function persist($entity)
@@ -312,6 +328,7 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
      *
      * @param object $entity
      * @return mixed
+     * @throws \Zend\EventManager\Exception\InvalidArgumentException
      * @throws RuntimeException
      */
     public function flush($entity = null)
@@ -331,6 +348,8 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
      * @param  string $name
      * @param  array $params
      * @return mixed
+     * @throws \Zend\EventManager\Exception\InvalidArgumentException
+     * @throws \PolderKnowledge\EntityService\Exception\RuntimeException
      */
     protected function trigger($name, array $params)
     {

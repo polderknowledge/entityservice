@@ -9,6 +9,7 @@
 
 namespace PolderKnowledge\EntityService\Event;
 
+use ArrayAccess;
 use PolderKnowledge\EntityService\Exception\RuntimeException;
 use Zend\EventManager\Event;
 
@@ -25,7 +26,7 @@ final class EntityEvent extends Event
     private $entityClassName;
 
     /**
-     * A flag that indicates whether or not prpagation can be stopped.
+     * A flag that indicates whether or not propagation can be stopped.
      *
      * @var bool
      */
@@ -144,7 +145,7 @@ final class EntityEvent extends Event
     }
 
     /**
-     * Gets the message of the error that occured when working with the entity.
+     * Gets the message of the error that occurred when working with the entity.
      *
      * @return string
      */
@@ -154,7 +155,7 @@ final class EntityEvent extends Event
     }
 
     /**
-     * Sets the message of the error that occured when working with the entity.
+     * Sets the message of the error that occurred when working with the entity.
      *
      * @param string $error The error message to set.
      * @return self
@@ -166,7 +167,7 @@ final class EntityEvent extends Event
     }
 
     /**
-     * Gets the error number of the error that occured when working with the entity.
+     * Gets the error number of the error that occurred when working with the entity.
      *
      * @return integer
      */
@@ -176,7 +177,7 @@ final class EntityEvent extends Event
     }
 
     /**
-     * Sets the error number of the error that occured when working with the entity.
+     * Sets the error number of the error that occurred when working with the entity.
      *
      * @param integer $errorNr The error number to set.
      * @return EntityEvent Returns the instance of this class so that chaining can be used.
