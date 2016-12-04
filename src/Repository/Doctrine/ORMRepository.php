@@ -73,6 +73,9 @@ class ORMRepository implements
      *
      * @param array|Criteria $criteria The criteria to find entities by.
      * @return int Returns the amount of entities that are found.
+     * @throws \Doctrine\ORM\Query\QueryException
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws UnexpectedValueException
      */
     public function countBy($criteria)
@@ -111,7 +114,8 @@ class ORMRepository implements
      * Removes objects by a set of criteria.
      *
      * @param array|Criteria $criteria
-     * @return int Returns the number of records that are deleted.
+     * @return void
+     * @throws \Doctrine\ORM\Query\QueryException
      */
     public function deleteBy($criteria)
     {
@@ -149,6 +153,7 @@ class ORMRepository implements
      *
      * @param array|Criteria $criteria The criteria to find entities by.
      * @return array Returns an array with found entities. Returns an empty array when no entities are found.
+     * @throws \Doctrine\ORM\Query\QueryException
      * @throws UnexpectedValueException Thrown when provided parameters are not supported.
      */
     public function findBy($criteria)
@@ -172,6 +177,8 @@ class ORMRepository implements
      *
      * @param array|Criteria $criteria The criteria. The criteria to find the entity by.
      * @return object|null Returns the entity that is found or null when no entity is found.
+     * @throws \Doctrine\ORM\Query\QueryException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneBy($criteria)
     {
@@ -180,7 +187,7 @@ class ORMRepository implements
 
             $criteria = Criteria::create();
             foreach ($criteriaParams as $name => $value) {
-                $criteria->andWhere($criteria->expr()->eq($name, $value));
+                $criteria->andWhere(Criteria::expr()->eq($name, $value));
             }
         }
 
@@ -197,6 +204,7 @@ class ORMRepository implements
      *
      * @param Criteria $criteria
      * @return \Doctrine\ORM\QueryBuilder
+     * @throws \Doctrine\ORM\Query\QueryException
      */
     protected function getQueryBuilder(Criteria $criteria)
     {

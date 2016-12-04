@@ -9,9 +9,7 @@
 
 namespace PolderKnowledge\EntityService;
 
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Iterator;
 use PolderKnowledge\EntityService\Exception\RuntimeException;
 use Zend\EventManager\EventManagerAwareInterface;
 
