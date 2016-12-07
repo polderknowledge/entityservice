@@ -9,15 +9,13 @@
 
 namespace PolderKnowledge\EntityServiceTest;
 
-use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 use PolderKnowledge\EntityService\AbstractEntityService;
+use PolderKnowledge\EntityService\EntityService;
 use PolderKnowledge\EntityService\Repository\EntityRepositoryInterface;
-use PolderKnowledge\EntityService\Service\EntityService;
 use PolderKnowledge\EntityServiceTestAsset\MyEntity;
 use PolderKnowledge\EntityServiceTestAsset\MyRepository;
-use PolderKnowledge\EntityServiceTestAsset\MyRepositoryManager;
 use PolderKnowledge\EntityServiceTestAsset\MyRepositoryNonTransaction;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
@@ -43,11 +41,6 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     {
         $this->entity = new MyEntity();
         $this->repository = $this->getMockBuilder(MyRepository::class)->getMock();
-
-        $container = $this->getMockForAbstractClass(ContainerInterface::class);
-
-        $repositoryManager = new MyRepositoryManager($container);
-        $repositoryManager->setService(MyEntity::class, $this->repository);
 
         $this->service = $this->getMockForAbstractClass(AbstractEntityService::class, [
             $this->repository,
@@ -78,7 +71,7 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
         // Assert
         $this->assertEquals([
             'EntityService',
-            EntityService::class,
+            'PolderKnowledge\EntityService\Service\EntityService',
             MyEntity::class,
         ], $identifiers);
     }
