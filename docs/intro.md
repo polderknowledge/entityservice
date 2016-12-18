@@ -1,9 +1,9 @@
 # Introduction
 
 Polder Knowledge EntityService is a service layer to interact with any data storage you might want to use.
-By using this extra abstraction layer you will be able to create a loos binding with your data storage.
+By using this extra abstraction layer you will be able to create a loose binding with your data storage.
 In many situations an ORM is used to connect with a database for example. But what if your users are moved to a
-micro-service? You will have to adapt your full application? This is where this library comes in.
+micro-service? Will you have to adapt your full application? This is where this library comes in.
 
 It gives you the option to interact with any storage like it was a database. Extra functionality like sending 
 an email when a user was created can be added by attaching a listener to the required service.
@@ -14,15 +14,15 @@ The example below shows a very basic setup of a service.
 
 ```php
 <?php
-  //Container is your applications InteroperableContainer    
+  // Container is your applications InteroperableContainer    
   $entityManager = $container->get(Doctrine\ORM\EntityManager::class);
-  //Repository can be the provided ORMRepository or any other custom repository you want to use.
+  // Repository can be the provided ORMRepository or any other custom repository you want to use.
   $repository = new \PolderKnowledge\EntityService\Repository\Doctrine\ORMRepository($entityManager, MyEntity::class);
   
-  //Setup the service
+  // Setup the service
   $entityService = new \PolderKnowledge\EntityService\EntityService($repository);
   
-  //Ready to fetch the required entity.
+  // Ready to fetch the required entity.
   $myObject = $entityService->find(1);
 ```
 
@@ -34,24 +34,24 @@ And attach it using the `attach` method of the EntityService
 
 use Zend\EventManager\EventManagerInterface;
 
-final class myHandler extends \Zend\EventManager\AbstractListenerAggregate
+final class MyHandler extends \Zend\EventManager\AbstractListenerAggregate
 {
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        //Use positive priorities to attach your handler before execution.
-        //Use negative priorities to attach your handler after execution.
+        // Use positive priorities to attach your handler before execution.
+        // Use negative priorities to attach your handler after execution.
         $this->listeners[] = $events->attach('persist', array($this, 'onPersist'), 10);
     }
     
     public function onPersist(\PolderKnowledge\EntityService\Event\EntityEvent $event)
     {
-        //Do your magic
+        // Do your magic
         
-        //Fetch the current entity
+        // Fetch the current entity
         $entity = $event->getParam('entity');
         
-        //Call stop propagation to abort
-        //$event->stopPropagation();
+        // Call stop propagation to abort
+        // $event->stopPropagation();
     }
 }
 ```
