@@ -42,10 +42,12 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
         $this->entity = new MyEntity();
         $this->repository = $this->getMockBuilder(MyRepository::class)->getMock();
 
-        $this->service = $this->getMockForAbstractClass(AbstractEntityService::class, [
+        $serviceBuilder = $this->getMockBuilder(AbstractEntityService::class);
+        $serviceBuilder->setConstructorArgs([
             $this->repository,
             MyEntity::class,
         ]);
+        $this->service = $serviceBuilder->getMockForAbstractClass();
     }
 
     public function testServiceHasEventManager()
@@ -343,6 +345,7 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     {
         // Arrange
         $this->repository->expects($this->exactly(1))->method('persist');
+        $this->repository->expects($this->exactly(1))->method('flush');
 
         // Act
         $this->service->persist($this->entity);
@@ -371,13 +374,18 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
         // ...
     }
 
-    public function testFlush()
+    public function testMultiPersist()
     {
         // Arrange
+        $this->repository->expects($this->exactly(3))->method('persist');
         $this->repository->expects($this->exactly(1))->method('flush');
 
         // Act
-        $this->service->flush($this->entity);
+        $this->service->multiPersist([
+            $this->entity,
+            $this->entity,
+            $this->entity,
+        ]);
 
         // Assert
         // ...
@@ -387,7 +395,7 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
      * @expectedException \PolderKnowledge\EntityService\Exception\RuntimeException
      * @expectedExceptionMessage The entities of type "PolderKnowledge\EntityServiceTestAsset\MyEntity" cannot be written to its repository.
      */
-    public function testFlushNonWritable()
+    public function testMultiPersistNonWritable()
     {
         // Arrange
         $repository = $this->getMockForAbstractClass(EntityRepositoryInterface::class);
@@ -397,7 +405,7 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
         ]);
 
         // Act
-        $service->flush([]);
+        $service->multiPersist($this->entity);
 
         // Assert
         // ...
