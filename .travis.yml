@@ -20,11 +20,11 @@ cache:
 
 env:
   global:
-    - SITE_URL: https://polderknowledge.github.io/entityservice
-    - GH_USER_NAME: "Polder Knowledge"
-    - GH_USER_EMAIL: jaap@polderknowledge.nl
-    - GH_REF: github.com/polderknowledge/entityservice.git
-
+  - SITE_URL: https://polderknowledge.github.io/entityservice
+  - GH_USER_NAME: Polder Knowledge
+  - GH_USER_EMAIL: jaap@polderknowledge.nl
+  - GH_REF: github.com/polderknowledge/entityservice.git
+  - secure: cySUxozkTjvSbq7Nx1zT7JhIfhhJJoysYGlDt69EmaVyH5fjacSXOnEx2Ip1mJYeRhGcjL/siroTYCea/gUzZjpSnQliM1pQf7WHzJ/V8bt7k991JOSSmSh1ecjVi2SoyqRuSxChzMjWTke+R6jG4Ws4n9TYxcOJe7q49A8g4XkPrH5jR0rFzCe9rd2TP9SXqZdXTXjw3kI1XxJIwDyHzDZItTMEL4RMiW+6TgVuvHoWwtRKXjH7kjt029pAkN1M6skLg+e+2xyWDBrbZxaPV1vRqudyw/uM7p1j0rzMSYEdT+RwS2MRYLD0AHY6Gn+FGwRvC98XPif9jYRENn3VXDtE8+ks2ouC9RuubWreF5usGUkFrF4HrFxB4HgqIJx/8Vubu3Wq8Y3SwJQg1GxTozXX57bBSs7nUYcyBwBhax21I+Q7jdnTJulpAwKs1sAvr9FkNcB/UqaFJ/5SSsnUi5U6PBWDf/wcsE5Iz/6VgKr7qR2HNdDnZJWSbeu7U9L5ASMOo1NAymsjxI3cE6lwEJ4pua3qyBNNjfVYhLdWdRp6aAUUByB68zTPX5VMDUEUG7E36QPjRVPsi6a5W5cqRyE1JLyviD5liDk2pmTQuDoyyUsW1ob8kpTaOXbwTPO+Frpy71qyNu8T1QCsnzhAxm5qHtSOXCmeWuX8ZQH8Mm4=
 matrix:
   allow_failures:
     - php: 5.5
