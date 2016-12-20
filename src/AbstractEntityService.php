@@ -9,6 +9,7 @@
 
 namespace PolderKnowledge\EntityService;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use PolderKnowledge\EntityService\Event\EntityEvent;
 use PolderKnowledge\EntityService\Exception\RuntimeException;
@@ -16,8 +17,10 @@ use PolderKnowledge\EntityService\Exception\ServiceException;
 use PolderKnowledge\EntityService\Feature\TransactionAwareInterface;
 use PolderKnowledge\EntityService\Repository\EntityRepositoryInterface;
 use PolderKnowledge\EntityService\Repository\Feature\DeletableInterface;
+use PolderKnowledge\EntityService\Repository\Feature\FlushableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\ReadableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\WritableInterface;
+use Traversable;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
@@ -156,8 +159,36 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
         $this->listeners[] = $events->attach('findAll', $callback, 0);
         $this->listeners[] = $events->attach('findBy', $callback, 0);
         $this->listeners[] = $events->attach('findOneBy', $callback, 0);
-        $this->listeners[] = $events->attach('persist', $callback, 0);
-        $this->listeners[] = $events->attach('flush', $callback, 0);
+        $this->listeners[] = $events->attach(
+            'persist',
+            function (EntityEvent $event) {
+                $repository = $event->getTarget()->getRepository();
+
+                call_user_func_array([$repository, 'persist'], $event->getParams());
+
+                if ($repository instanceof FlushableInterface) {
+                    $repository->flush();
+                }
+            },
+            0
+        );
+        $this->listeners[] = $events->attach(
+            'multiPersist',
+            function (EntityEvent $event) {
+                $repository = $event->getTarget()->getRepository();
+
+                $entities = current($event->getParams());
+
+                foreach ($entities as $entity) {
+                    call_user_func_array([$repository, 'persist'], [$entity]);
+                }
+
+                if ($repository instanceof FlushableInterface) {
+                    $repository->flush();
+                }
+            },
+            0
+        );
 
         $this->listeners[] = $events->attach('*', function (EntityEvent $event) {
             $event->disableStoppingOfPropagation();
@@ -324,21 +355,20 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     }
 
     /**
-     * Flushes the provided entity or all persisted entities when no entity is provided.
+     * Persist the given object and flushes it to the storage device.
      *
-     * @param object $entity
+     * @param array|Collection|Traversable $entities The entities to persist.
      * @return mixed
-     * @throws \Zend\EventManager\Exception\InvalidArgumentException
      * @throws RuntimeException
      */
-    public function flush($entity = null)
+    public function multiPersist($entities)
     {
         if (!$this->isRepositoryWritable()) {
             throw $this->createNotWritableException();
         }
 
         return $this->trigger(__FUNCTION__, [
-            'entity' => $entity,
+            'entities' => $entities,
         ]);
     }
 

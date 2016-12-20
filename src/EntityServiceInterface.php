@@ -9,8 +9,10 @@
 
 namespace PolderKnowledge\EntityService;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use PolderKnowledge\EntityService\Exception\RuntimeException;
+use Traversable;
 use Zend\EventManager\EventManagerAwareInterface;
 
 /**
@@ -72,18 +74,18 @@ interface EntityServiceInterface extends EventManagerAwareInterface
     public function findOneBy($criteria);
 
     /**
-     * Persist the given object
+     * Persist the given object and flushes it to the storage device.
      *
      * @param object $entity The entity to persist.
+     * @throws RuntimeException
      */
     public function persist($entity);
 
     /**
-     * Flushes the provided entity or all persisted entities when no entity is provided.
+     * Persist the given object and flushes it to the storage device.
      *
-     * @param object $entity
-     * @return mixed
+     * @param array|Collection|Traversable $entities The entities to persist.
      * @throws RuntimeException
      */
-    public function flush($entity = null);
+    public function multiPersist($entities);
 }
