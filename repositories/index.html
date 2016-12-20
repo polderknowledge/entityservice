@@ -4,20 +4,19 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="PolderKnowledge\EntityService">  
-    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <link rel="shortcut icon" href="../img/favicon.ico">
 
-    <title>EntityService</title>
+    <title>Repositories - EntityService</title>
 
     <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw=" crossorigin="anonymous">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/fontawesome/4.6.3/css/font-awesome.min.css" integrity="sha256-AIodEDkC8V/bHBkfyxzolUMw57jeQ9CauwhVW6YJ9CA=" crossorigin="anonymous">
-    <link rel="stylesheet" href="./css/styles-52f3a38875.css">
+    <link rel="stylesheet" href="../css/styles-52f3a38875.css">
 
     
 </head>
 
-<body class="homepage" >
+<body>
 
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
@@ -36,7 +35,7 @@
 
             <!-- Main title -->
             <span class="navbar-brand">
-              <a class="logo-link" href="http://polderknowledge.com" data-toggle="tooltip" data-placement="bottom" title="Polder Knowledge"><img src="./img/logo.svg" height="28" alt="Polder Knowledge" /></a>
+              <a class="logo-link" href="http://polderknowledge.com" data-toggle="tooltip" data-placement="bottom" title="Polder Knowledge"><img src="../img/logo.svg" height="28" alt="Polder Knowledge" /></a>
               <a href="">EntityService</a>
             </span>
         </div>
@@ -48,26 +47,26 @@
                 <ul class="nav navbar-nav">
                 
                 
+                    <li >
+                        <a href="..">Home</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../intro/">Intro</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../events/">Events</a>
+                    </li>
+                
+                
+                
                     <li class="active">
-                        <a href=".">Home</a>
-                    </li>
-                
-                
-                
-                    <li >
-                        <a href="intro/">Intro</a>
-                    </li>
-                
-                
-                
-                    <li >
-                        <a href="events/">Events</a>
-                    </li>
-                
-                
-                
-                    <li >
-                        <a href="repositories/">Repositories</a>
+                        <a href="./">Repositories</a>
                     </li>
                 
                 
@@ -101,7 +100,64 @@
     </div>
 </div>
 
+    <!-- content:begin -->
+    <div id="page-top" class="container docs">
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
     
+        <li class="main active"><a href="#repositories">Repositories</a></li>
+        
+    
+    </ul>
+
+    
+    <ul class="pager hidden-print">
+      <li class="previous">
+        <a rel="prev" href="../events/"><i class="fa fa-arrow-left"></i> Previous</a>
+      </li>
+      <li class="next disabled ">
+        <a rel="next" >Next <i class="fa fa-arrow-right"></i></a>
+      </li>
+    </ul>
+    
+</div></div>
+        <div class="col-md-9" role="main">
+
+<ol class="breadcrumb" role="navigation" aria-label="breadcrumbs navigation">
+  <li><a href="">EntityService</a> &raquo;</li>
+  
+    
+  
+  <li class="active">Repositories</li>
+</ol>
+
+<h1 id="repositories">Repositories</h1>
+<p>This library exist out of two layers the first layer of abstraction is the <code>EntityServiceInterface</code>
+this interface provides a easy to use CRUD interface. Which will work for all services the same way.
+The actual connection with your datastorage is done via the Repository.</p>
+<p>All Repositories MUST implement the <code>EntityRepositoryInterface</code> depending on your needs you SHOULD implement one of the 
+feature interfaces. The <code>AbstractEntityService</code> will check for this features and throws an exeception when a method 
+is not supported by the used Repository.</p>
+<p>This library only provides a implementation for Doctrine ORM entities.</p>
+
+<hr />
+
+
+<nav>
+  <ul class="pager hidden-print">
+    <li class="previous">
+      <a rel="prev" href="../events/"><i class="fa fa-arrow-left"></i> Previous</a>
+    </li>
+    <li class="next disabled ">
+      <a rel="next" >Next <i class="fa fa-arrow-right"></i></a>
+    </li>
+  </ul>
+</nav>
+</div>
+        
+    </div>
+    <!-- content:end -->
 
     <div id="footerwrap">
     <div class="container">
@@ -145,9 +201,9 @@
 
     <script src="//cdn.jsdelivr.net/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="//cdn.jsdelivr.net/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo=" crossorigin="anonymous"></script>
-    <script>var base_url = '.';</script>
-    <script src="./js/scripts-8b95ab2fc3.js"></script>
-    <script data-main="./mkdocs/js/search.js" src="./mkdocs/js/require.js"></script>
+    <script>var base_url = '..';</script>
+    <script src="../js/scripts-8b95ab2fc3.js"></script>
+    <script data-main="../mkdocs/js/search.js" src="../mkdocs/js/require.js"></script>
 
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
         <div class="modal-dialog">
@@ -179,7 +235,7 @@
     <div class="zf-components">
   <div class="zf-components-grid">
     <div class="zf-logo">
-      <a href="http://polderknowledge.com" data-toggle="tooltip" data-placement="bottom" title="Go to the Polder Knowledge homepage"><img src="./img/logo.svg" alt="Polder Knowledge" width="250" /></a>
+      <a href="http://polderknowledge.com" data-toggle="tooltip" data-placement="bottom" title="Go to the Polder Knowledge homepage"><img src="../img/logo.svg" alt="Polder Knowledge" width="250" /></a>
     </div>
 
     <div class="component-list"></div>
@@ -191,8 +247,3 @@
 </body>
 
 </html>
-
-<!--
-MkDocs version : 0.16.0
-Build Date UTC : 2016-12-20 15:02:05
--->

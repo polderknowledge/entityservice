@@ -4,20 +4,19 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="PolderKnowledge\EntityService">  
-    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <link rel="shortcut icon" href="../img/favicon.ico">
 
-    <title>EntityService</title>
+    <title>Intro - EntityService</title>
 
     <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw=" crossorigin="anonymous">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/fontawesome/4.6.3/css/font-awesome.min.css" integrity="sha256-AIodEDkC8V/bHBkfyxzolUMw57jeQ9CauwhVW6YJ9CA=" crossorigin="anonymous">
-    <link rel="stylesheet" href="./css/styles-52f3a38875.css">
+    <link rel="stylesheet" href="../css/styles-52f3a38875.css">
 
     
 </head>
 
-<body class="homepage" >
+<body>
 
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
@@ -36,7 +35,7 @@
 
             <!-- Main title -->
             <span class="navbar-brand">
-              <a class="logo-link" href="http://polderknowledge.com" data-toggle="tooltip" data-placement="bottom" title="Polder Knowledge"><img src="./img/logo.svg" height="28" alt="Polder Knowledge" /></a>
+              <a class="logo-link" href="http://polderknowledge.com" data-toggle="tooltip" data-placement="bottom" title="Polder Knowledge"><img src="../img/logo.svg" height="28" alt="Polder Knowledge" /></a>
               <a href="">EntityService</a>
             </span>
         </div>
@@ -48,26 +47,26 @@
                 <ul class="nav navbar-nav">
                 
                 
+                    <li >
+                        <a href="..">Home</a>
+                    </li>
+                
+                
+                
                     <li class="active">
-                        <a href=".">Home</a>
+                        <a href="./">Intro</a>
                     </li>
                 
                 
                 
                     <li >
-                        <a href="intro/">Intro</a>
+                        <a href="../events/">Events</a>
                     </li>
                 
                 
                 
                     <li >
-                        <a href="events/">Events</a>
-                    </li>
-                
-                
-                
-                    <li >
-                        <a href="repositories/">Repositories</a>
+                        <a href="../repositories/">Repositories</a>
                     </li>
                 
                 
@@ -101,7 +100,109 @@
     </div>
 </div>
 
+    <!-- content:begin -->
+    <div id="page-top" class="container docs">
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
     
+        <li class="main active"><a href="#introduction">Introduction</a></li>
+        
+            <li><a href="#usage">Usage</a></li>
+        
+    
+    </ul>
+
+    
+    <ul class="pager hidden-print">
+      <li class="previous">
+        <a rel="prev" href=".."><i class="fa fa-arrow-left"></i> Previous</a>
+      </li>
+      <li class="next">
+        <a rel="next" href="../events/">Next <i class="fa fa-arrow-right"></i></a>
+      </li>
+    </ul>
+    
+</div></div>
+        <div class="col-md-9" role="main">
+
+<ol class="breadcrumb" role="navigation" aria-label="breadcrumbs navigation">
+  <li><a href="">EntityService</a> &raquo;</li>
+  
+    
+  
+  <li class="active">Intro</li>
+</ol>
+
+<h1 id="introduction">Introduction</h1>
+<p>Polder Knowledge EntityService is a service layer to interact with any data storage you might want to use.
+By using this extra abstraction layer you will be able to create a loose binding with your data storage.
+In many situations an ORM is used to connect with a database for example. But what if your users are moved to a
+micro-service? Will you have to adapt your full application? This is where this library comes in.</p>
+<p>It gives you the option to interact with any storage like it was a database. Extra functionality like sending 
+an email when a user was created can be added by attaching a listener to the required service.</p>
+<h2 id="usage">Usage</h2>
+<p>The example below shows a very basic setup of a service.</p>
+<pre class="codehilite"><code class="language-php">&lt;?php
+  // Container is your applications InteroperableContainer    
+  $entityManager = $container-&gt;get(Doctrine\ORM\EntityManager::class);
+  // Repository can be the provided ORMRepository or any other custom repository you want to use.
+  $repository = new \PolderKnowledge\EntityService\Repository\Doctrine\ORMRepository($entityManager, MyEntity::class);
+
+  // Setup the service
+  $entityService = new \PolderKnowledge\EntityService\EntityService($repository);
+
+  // Ready to fetch the required entity.
+  $myObject = $entityService-&gt;find(1);</code></pre>
+
+
+<p>To attach a new event handler simply create your handler class like the example below.
+And attach it using the <code>attach</code> method of the EntityService</p>
+<p><pre class="codehilite"><code class="language-php">&lt;?php
+
+use Zend\EventManager\EventManagerInterface;
+
+final class MyHandler extends \Zend\EventManager\AbstractListenerAggregate
+{
+    public function attach(EventManagerInterface $events, $priority = 1)
+    {
+        // Use positive priorities to attach your handler before execution.
+        // Use negative priorities to attach your handler after execution.
+        $this-&gt;listeners[] = $events-&gt;attach('persist', array($this, 'onPersist'), 10);
+    }
+
+    public function onPersist(\PolderKnowledge\EntityService\Event\EntityEvent $event)
+    {
+        // Do your magic
+
+        // Fetch the current entity
+        $entity = $event-&gt;getParam('entity');
+
+        // Call stop propagation to abort
+        // $event-&gt;stopPropagation();
+    }
+}</code></pre>
+
+For more information about the available events look at the <a href="../events">events</a> page. When you are not 
+familiar with <a href="https://docs.zendframework.com/zend-eventmanager/">zend-eventmanager</a> take a look at their docs.</p>
+
+<hr />
+
+
+<nav>
+  <ul class="pager hidden-print">
+    <li class="previous">
+      <a rel="prev" href=".."><i class="fa fa-arrow-left"></i> Previous</a>
+    </li>
+    <li class="next">
+      <a rel="next" href="../events/">Next <i class="fa fa-arrow-right"></i></a>
+    </li>
+  </ul>
+</nav>
+</div>
+        
+    </div>
+    <!-- content:end -->
 
     <div id="footerwrap">
     <div class="container">
@@ -145,9 +246,9 @@
 
     <script src="//cdn.jsdelivr.net/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="//cdn.jsdelivr.net/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo=" crossorigin="anonymous"></script>
-    <script>var base_url = '.';</script>
-    <script src="./js/scripts-8b95ab2fc3.js"></script>
-    <script data-main="./mkdocs/js/search.js" src="./mkdocs/js/require.js"></script>
+    <script>var base_url = '..';</script>
+    <script src="../js/scripts-8b95ab2fc3.js"></script>
+    <script data-main="../mkdocs/js/search.js" src="../mkdocs/js/require.js"></script>
 
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
         <div class="modal-dialog">
@@ -179,7 +280,7 @@
     <div class="zf-components">
   <div class="zf-components-grid">
     <div class="zf-logo">
-      <a href="http://polderknowledge.com" data-toggle="tooltip" data-placement="bottom" title="Go to the Polder Knowledge homepage"><img src="./img/logo.svg" alt="Polder Knowledge" width="250" /></a>
+      <a href="http://polderknowledge.com" data-toggle="tooltip" data-placement="bottom" title="Go to the Polder Knowledge homepage"><img src="../img/logo.svg" alt="Polder Knowledge" width="250" /></a>
     </div>
 
     <div class="component-list"></div>
@@ -191,8 +292,3 @@
 </body>
 
 </html>
-
-<!--
-MkDocs version : 0.16.0
-Build Date UTC : 2016-12-20 15:02:05
--->

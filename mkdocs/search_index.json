@@ -1,0 +1,149 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "entityservice\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThis library provides functionality to work with entities. An entity is the representation of an object that usually can be retrieved from- and stored on a storage device (e.g. database, webservice, file system). This library makes it possible to quickly access a manager class without the need of creating the repositories.\n\n\nInstall\n\n\nVia Composer\n\n\n$ composer require polderknowledge/entityservice\n\n\n\n\nUsage\n\n\nPlease read the documentation for this package for a quick setup.\n\n\nChange log\n\n\nPlease see \nCHANGELOG\n for more information what has changed recently.\n\n\nTesting\n\n\n$ composer test\n\n\n\n\nContributing\n\n\nPlease see \nCONTRIBUTING\n and \nCONDUCT\n for details.\n\n\nSecurity\n\n\nIf you discover any security related issues, please report them via \nHackerOne\n \ninstead of using the issue tracker or e-mail.\n\n\nCommunity\n\n\nWe have an IRC channel where you can find us every now and then. We're on the Freenode network in the\nchannel #polderknowledge.\n\n\nCredits\n\n\n\n\nPolder Knowledge\n\n\nAll Contributors\n\n\n\n\nLicense\n\n\nPlease see \nLICENSE.md\n for the license of this application.", 
+            "title": "Home"
+        }, 
+        {
+            "location": "/#entityservice", 
+            "text": "This library provides functionality to work with entities. An entity is the representation of an object that usually can be retrieved from- and stored on a storage device (e.g. database, webservice, file system). This library makes it possible to quickly access a manager class without the need of creating the repositories.", 
+            "title": "entityservice"
+        }, 
+        {
+            "location": "/#install", 
+            "text": "Via Composer  $ composer require polderknowledge/entityservice", 
+            "title": "Install"
+        }, 
+        {
+            "location": "/#usage", 
+            "text": "Please read the documentation for this package for a quick setup.", 
+            "title": "Usage"
+        }, 
+        {
+            "location": "/#change-log", 
+            "text": "Please see  CHANGELOG  for more information what has changed recently.", 
+            "title": "Change log"
+        }, 
+        {
+            "location": "/#testing", 
+            "text": "$ composer test", 
+            "title": "Testing"
+        }, 
+        {
+            "location": "/#contributing", 
+            "text": "Please see  CONTRIBUTING  and  CONDUCT  for details.", 
+            "title": "Contributing"
+        }, 
+        {
+            "location": "/#security", 
+            "text": "If you discover any security related issues, please report them via  HackerOne  \ninstead of using the issue tracker or e-mail.", 
+            "title": "Security"
+        }, 
+        {
+            "location": "/#community", 
+            "text": "We have an IRC channel where you can find us every now and then. We're on the Freenode network in the\nchannel #polderknowledge.", 
+            "title": "Community"
+        }, 
+        {
+            "location": "/#credits", 
+            "text": "Polder Knowledge  All Contributors", 
+            "title": "Credits"
+        }, 
+        {
+            "location": "/#license", 
+            "text": "Please see  LICENSE.md  for the license of this application.", 
+            "title": "License"
+        }, 
+        {
+            "location": "/intro/", 
+            "text": "Introduction\n\n\nPolder Knowledge EntityService is a service layer to interact with any data storage you might want to use.\nBy using this extra abstraction layer you will be able to create a loose binding with your data storage.\nIn many situations an ORM is used to connect with a database for example. But what if your users are moved to a\nmicro-service? Will you have to adapt your full application? This is where this library comes in.\n\n\nIt gives you the option to interact with any storage like it was a database. Extra functionality like sending \nan email when a user was created can be added by attaching a listener to the required service.\n\n\nUsage\n\n\nThe example below shows a very basic setup of a service.\n\n\n?php\n  // Container is your applications InteroperableContainer    \n  $entityManager = $container-\nget(Doctrine\\ORM\\EntityManager::class);\n  // Repository can be the provided ORMRepository or any other custom repository you want to use.\n  $repository = new \\PolderKnowledge\\EntityService\\Repository\\Doctrine\\ORMRepository($entityManager, MyEntity::class);\n\n  // Setup the service\n  $entityService = new \\PolderKnowledge\\EntityService\\EntityService($repository);\n\n  // Ready to fetch the required entity.\n  $myObject = $entityService-\nfind(1);\n\n\n\n\nTo attach a new event handler simply create your handler class like the example below.\nAnd attach it using the \nattach\n method of the EntityService\n\n\n?php\n\nuse Zend\\EventManager\\EventManagerInterface;\n\nfinal class MyHandler extends \\Zend\\EventManager\\AbstractListenerAggregate\n{\n    public function attach(EventManagerInterface $events, $priority = 1)\n    {\n        // Use positive priorities to attach your handler before execution.\n        // Use negative priorities to attach your handler after execution.\n        $this-\nlisteners[] = $events-\nattach('persist', array($this, 'onPersist'), 10);\n    }\n\n    public function onPersist(\\PolderKnowledge\\EntityService\\Event\\EntityEvent $event)\n    {\n        // Do your magic\n\n        // Fetch the current entity\n        $entity = $event-\ngetParam('entity');\n\n        // Call stop propagation to abort\n        // $event-\nstopPropagation();\n    }\n}\n\n\nFor more information about the available events look at the \nevents\n page. When you are not \nfamiliar with \nzend-eventmanager\n take a look at their docs.", 
+            "title": "Intro"
+        }, 
+        {
+            "location": "/intro/#introduction", 
+            "text": "Polder Knowledge EntityService is a service layer to interact with any data storage you might want to use.\nBy using this extra abstraction layer you will be able to create a loose binding with your data storage.\nIn many situations an ORM is used to connect with a database for example. But what if your users are moved to a\nmicro-service? Will you have to adapt your full application? This is where this library comes in.  It gives you the option to interact with any storage like it was a database. Extra functionality like sending \nan email when a user was created can be added by attaching a listener to the required service.", 
+            "title": "Introduction"
+        }, 
+        {
+            "location": "/intro/#usage", 
+            "text": "The example below shows a very basic setup of a service.  ?php\n  // Container is your applications InteroperableContainer    \n  $entityManager = $container- get(Doctrine\\ORM\\EntityManager::class);\n  // Repository can be the provided ORMRepository or any other custom repository you want to use.\n  $repository = new \\PolderKnowledge\\EntityService\\Repository\\Doctrine\\ORMRepository($entityManager, MyEntity::class);\n\n  // Setup the service\n  $entityService = new \\PolderKnowledge\\EntityService\\EntityService($repository);\n\n  // Ready to fetch the required entity.\n  $myObject = $entityService- find(1);  To attach a new event handler simply create your handler class like the example below.\nAnd attach it using the  attach  method of the EntityService  ?php\n\nuse Zend\\EventManager\\EventManagerInterface;\n\nfinal class MyHandler extends \\Zend\\EventManager\\AbstractListenerAggregate\n{\n    public function attach(EventManagerInterface $events, $priority = 1)\n    {\n        // Use positive priorities to attach your handler before execution.\n        // Use negative priorities to attach your handler after execution.\n        $this- listeners[] = $events- attach('persist', array($this, 'onPersist'), 10);\n    }\n\n    public function onPersist(\\PolderKnowledge\\EntityService\\Event\\EntityEvent $event)\n    {\n        // Do your magic\n\n        // Fetch the current entity\n        $entity = $event- getParam('entity');\n\n        // Call stop propagation to abort\n        // $event- stopPropagation();\n    }\n} \n\nFor more information about the available events look at the  events  page. When you are not \nfamiliar with  zend-eventmanager  take a look at their docs.", 
+            "title": "Usage"
+        }, 
+        {
+            "location": "/events/", 
+            "text": "Events\n\n\nOne of the most important ways to extend the behavior of an EntityService are the\nevents triggered by the service. The \nAbstractEntityService\n class is fully event\ndriven. Even the repository used by the service is triggered via the same event.\nThis allows the user to prevent the real execution of the repository. Or modify the\ndata that will be processed. E.g. add extra criteria to a find event to fetch only\nelements that are owned by the current signed in user. Or add the id of the current\npersisted entity.\n\n\nEach event handler has a execution priority, the repository is executed on priority \n0\n. It\nis not recommended to attach other listeners at the same priority since the order of execution \nis not guaranteed by zend-eventmanager. Each method triggers a single event so priority is required\nto manipulate the order of execution. Use positive numbers to be able to execute your handler before the\nrepository or negative numbers to execute your handler post repository. \n\n\n\n\nBe aware of the fact that you won't be able to stop propagation after the repository was executed. Validation or any other\nshortcut to prevent the repository from execution have to be done pre-repository.\n\n\n\n\nAvailable events\n\n\nIn this chapter all default events of the \nAbstractEntityServices\n are described.\n\n\ncountBy\n\n\n\n\n\n\n\n\nParameter\n\n\ndescription\n\n\n\n\n\n\n\n\n\n\ncriteria\n\n\nCan be a Criteria object or an array\n\n\n\n\n\n\n\n\ndelete\n\n\n\n\n\n\n\n\nParameter\n\n\ndescription\n\n\n\n\n\n\n\n\n\n\nentity\n\n\nObject to remove\n\n\n\n\n\n\n\n\ndeleteBy\n\n\n\n\n\n\n\n\nParameter\n\n\ndescription\n\n\n\n\n\n\n\n\n\n\ncriteria\n\n\nCan be a Criteria object or an array\n\n\n\n\n\n\n\n\nfind\n\n\n\n\n\n\n\n\nParameter\n\n\ndescription\n\n\n\n\n\n\n\n\n\n\nid\n\n\nId of the entity to find\n\n\n\n\n\n\n\n\nfindAll\n\n\nNo parameters available\n\n\nfindOneBy\n\n\n\n\n\n\n\n\nParameter\n\n\ndescription\n\n\n\n\n\n\n\n\n\n\ncriteria\n\n\nCan be a Criteria object or an array\n\n\n\n\n\n\n\n\nfindBy\n\n\n\n\n\n\n\n\nParameter\n\n\ndescription\n\n\n\n\n\n\n\n\n\n\ncriteria\n\n\nCan be a Criteria object or an array\n\n\n\n\n\n\n\n\nflush\n\n\n\n\n\n\n\n\nParameter\n\n\ndescription\n\n\n\n\n\n\n\n\n\n\nentity\n\n\nEntity to flush, can be null\n\n\n\n\n\n\n\n\npersist\n\n\n\n\n\n\n\n\nParameter\n\n\ndescription\n\n\n\n\n\n\n\n\n\n\nentity\n\n\nEntity to persist\n\n\n\n\n\n\n\n\nmultiPersist\n\n\n\n\n\n\n\n\nParameter\n\n\ndescription\n\n\n\n\n\n\n\n\n\n\nentities\n\n\nEntities to flush, can be null", 
+            "title": "Events"
+        }, 
+        {
+            "location": "/events/#events", 
+            "text": "One of the most important ways to extend the behavior of an EntityService are the\nevents triggered by the service. The  AbstractEntityService  class is fully event\ndriven. Even the repository used by the service is triggered via the same event.\nThis allows the user to prevent the real execution of the repository. Or modify the\ndata that will be processed. E.g. add extra criteria to a find event to fetch only\nelements that are owned by the current signed in user. Or add the id of the current\npersisted entity.  Each event handler has a execution priority, the repository is executed on priority  0 . It\nis not recommended to attach other listeners at the same priority since the order of execution \nis not guaranteed by zend-eventmanager. Each method triggers a single event so priority is required\nto manipulate the order of execution. Use positive numbers to be able to execute your handler before the\nrepository or negative numbers to execute your handler post repository.    Be aware of the fact that you won't be able to stop propagation after the repository was executed. Validation or any other\nshortcut to prevent the repository from execution have to be done pre-repository.", 
+            "title": "Events"
+        }, 
+        {
+            "location": "/events/#available-events", 
+            "text": "In this chapter all default events of the  AbstractEntityServices  are described.", 
+            "title": "Available events"
+        }, 
+        {
+            "location": "/events/#countby", 
+            "text": "Parameter  description      criteria  Can be a Criteria object or an array", 
+            "title": "countBy"
+        }, 
+        {
+            "location": "/events/#delete", 
+            "text": "Parameter  description      entity  Object to remove", 
+            "title": "delete"
+        }, 
+        {
+            "location": "/events/#deleteby", 
+            "text": "Parameter  description      criteria  Can be a Criteria object or an array", 
+            "title": "deleteBy"
+        }, 
+        {
+            "location": "/events/#find", 
+            "text": "Parameter  description      id  Id of the entity to find", 
+            "title": "find"
+        }, 
+        {
+            "location": "/events/#findall", 
+            "text": "No parameters available", 
+            "title": "findAll"
+        }, 
+        {
+            "location": "/events/#findoneby", 
+            "text": "Parameter  description      criteria  Can be a Criteria object or an array", 
+            "title": "findOneBy"
+        }, 
+        {
+            "location": "/events/#findby", 
+            "text": "Parameter  description      criteria  Can be a Criteria object or an array", 
+            "title": "findBy"
+        }, 
+        {
+            "location": "/events/#flush", 
+            "text": "Parameter  description      entity  Entity to flush, can be null", 
+            "title": "flush"
+        }, 
+        {
+            "location": "/events/#persist", 
+            "text": "Parameter  description      entity  Entity to persist", 
+            "title": "persist"
+        }, 
+        {
+            "location": "/events/#multipersist", 
+            "text": "Parameter  description      entities  Entities to flush, can be null", 
+            "title": "multiPersist"
+        }, 
+        {
+            "location": "/repositories/", 
+            "text": "Repositories\n\n\nThis library exist out of two layers the first layer of abstraction is the \nEntityServiceInterface\n\nthis interface provides a easy to use CRUD interface. Which will work for all services the same way.\nThe actual connection with your datastorage is done via the Repository.\n\n\nAll Repositories MUST implement the \nEntityRepositoryInterface\n depending on your needs you SHOULD implement one of the \nfeature interfaces. The \nAbstractEntityService\n will check for this features and throws an exeception when a method \nis not supported by the used Repository.\n\n\nThis library only provides a implementation for Doctrine ORM entities.", 
+            "title": "Repositories"
+        }, 
+        {
+            "location": "/repositories/#repositories", 
+            "text": "This library exist out of two layers the first layer of abstraction is the  EntityServiceInterface \nthis interface provides a easy to use CRUD interface. Which will work for all services the same way.\nThe actual connection with your datastorage is done via the Repository.  All Repositories MUST implement the  EntityRepositoryInterface  depending on your needs you SHOULD implement one of the \nfeature interfaces. The  AbstractEntityService  will check for this features and throws an exeception when a method \nis not supported by the used Repository.  This library only provides a implementation for Doctrine ORM entities.", 
+            "title": "Repositories"
+        }
+    ]
+}
