@@ -1,0 +1,11 @@
+docs_dir: docs/book
+site_dir: docs/html
+pages:
+    - index.md
+    - Intro: intro.md
+    - Events: events.md
+    - Repositories: repositories.md
+site_name: EntityService
+site_description: PolderKnowledge\EntityService
+repo_url: 'https://github.com/polderknowledge/entityservice'
+copyright: 'Copyright (c) 2002-2016 <a href="https://www.polderknowledge.com/">Polder Knowledge</a>'
