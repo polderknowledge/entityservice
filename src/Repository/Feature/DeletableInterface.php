@@ -26,8 +26,9 @@ interface DeletableInterface
     /**
      * Removes objects by a set of criteria.
      *
-     * @param array|Criteria $criteria
+     * @param object $entityClass the class of the entity on which to run the delete query
+     * @param Criteria $criteria
      * @return int Returns the number of records that are deleted.
      */
-    public function deleteBy($criteria);
+    public function deleteBy($entityClass, Criteria $criteria);
 }
