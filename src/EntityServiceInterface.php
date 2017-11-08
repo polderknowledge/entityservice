@@ -38,10 +38,9 @@ interface EntityServiceInterface extends EventManagerAwareInterface
     /**
      * Deletes all objects matching the criteria from the repository
      *
-     * @param object $entityClass the class of the entity on which to run the delete query
      * @param Criteria $criteria The criteria values to match on.
      */
-    public function deleteBy($entityClass, Criteria $criteria);
+    public function deleteBy(Criteria $criteria);
 
     /**
      * Find one object in the repository matching the $id
