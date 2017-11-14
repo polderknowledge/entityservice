@@ -1,11 +1,8 @@
 language: php
 
 php:
-  - 5.5
-  - 5.6
   - 7.0
   - 7.1
-  - hhvm
 
 # This triggers builds to run on the new TravisCI infrastructure.
 # See: http://docs.travis-ci.com/user/workers/container-based-infrastructure/
@@ -26,11 +23,8 @@ env:
   - GH_REF: github.com/polderknowledge/entityservice.git
   - secure: cySUxozkTjvSbq7Nx1zT7JhIfhhJJoysYGlDt69EmaVyH5fjacSXOnEx2Ip1mJYeRhGcjL/siroTYCea/gUzZjpSnQliM1pQf7WHzJ/V8bt7k991JOSSmSh1ecjVi2SoyqRuSxChzMjWTke+R6jG4Ws4n9TYxcOJe7q49A8g4XkPrH5jR0rFzCe9rd2TP9SXqZdXTXjw3kI1XxJIwDyHzDZItTMEL4RMiW+6TgVuvHoWwtRKXjH7kjt029pAkN1M6skLg+e+2xyWDBrbZxaPV1vRqudyw/uM7p1j0rzMSYEdT+RwS2MRYLD0AHY6Gn+FGwRvC98XPif9jYRENn3VXDtE8+ks2ouC9RuubWreF5usGUkFrF4HrFxB4HgqIJx/8Vubu3Wq8Y3SwJQg1GxTozXX57bBSs7nUYcyBwBhax21I+Q7jdnTJulpAwKs1sAvr9FkNcB/UqaFJ/5SSsnUi5U6PBWDf/wcsE5Iz/6VgKr7qR2HNdDnZJWSbeu7U9L5ASMOo1NAymsjxI3cE6lwEJ4pua3qyBNNjfVYhLdWdRp6aAUUByB68zTPX5VMDUEUG7E36QPjRVPsi6a5W5cqRyE1JLyviD5liDk2pmTQuDoyyUsW1ob8kpTaOXbwTPO+Frpy71qyNu8T1QCsnzhAxm5qHtSOXCmeWuX8ZQH8Mm4=
 matrix:
-  allow_failures:
-    - php: 5.5
   include:
-    - php: 5.6
-      env:
+    - env:
         - DEPLOY_DOCS="$(if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then echo -n 'true' ; else echo -n 'false' ; fi)"
         - PATH="$HOME/.local/bin:$PATH"
 
@@ -45,7 +39,7 @@ script:
 
 after_script:
   - |
-    if [[ "$TRAVIS_PHP_VERSION" == '5.6' ]]; then
+    if [[ "$TRAVIS_PHP_VERSION" == '7.0' ]]; then
       wget https://scrutinizer-ci.com/ocular.phar
       php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml
     fi

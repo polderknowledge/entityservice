@@ -8,4 +8,9 @@ All Repositories MUST implement the `EntityRepositoryInterface` depending on you
 feature interfaces. The `AbstractEntityService` will check for this features and throws an exeception when a method 
 is not supported by the used Repository.
 
-This library only provides a implementation for Doctrine ORM entities.
+## Implementations
+
+Currently 2 repositories are implementated
+
+1. Repository backed by a Doctrine EntityManager
+2. Repository backed by a Doctrine Collection

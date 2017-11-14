@@ -4,6 +4,14 @@ All Notable changes to `entityservice` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## 4.1.0
+
+- Added a repository backed by a Doctrine Collection
+
+## 4.0.0
+
+- Removed flush method
+
 ## 3.0.0 - 2016-12-02
 
 ### Added
