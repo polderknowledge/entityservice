@@ -19,7 +19,7 @@ $ composer require polderknowledge/entityservice
 
 ## Usage
 
-Please read the documentation for this package for a quick setup.
+Please read the [documentation](https://polderknowledge.github.io/entityservice/) for this package for a quick setup.
 
 ## Change log
 
