@@ -19,6 +19,7 @@ use PolderKnowledge\EntityService\Repository\Feature\FlushableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\ReadableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\TransactionAwareInterface;
 use PolderKnowledge\EntityService\Repository\Feature\WritableInterface;
+use PolderKnowledge\EntityService\Repository\Util;
 use UnexpectedValueException;
 
 /**
@@ -119,6 +120,8 @@ class ORMRepository implements
      */
     public function deleteBy($criteria)
     {
+        $criteria = Util::normalizeCriteria($criteria);
+
         $queryBuilder = $this->getQueryBuilder($criteria);
         $queryBuilder->delete('e');
         $queryBuilder->getQuery()->execute();
@@ -158,14 +161,7 @@ class ORMRepository implements
      */
     public function findBy($criteria)
     {
-        if (!$criteria instanceof Criteria) {
-            $criteriaParams = $criteria;
-
-            $criteria = Criteria::create();
-            foreach ($criteriaParams as $name => $value) {
-                $criteria->andWhere(Criteria::expr()->eq($name, $value));
-            }
-        }
+        $criteria = Util::normalizeCriteria($criteria);
 
         $queryBuilder = $this->getQueryBuilder($criteria);
 
@@ -182,14 +178,7 @@ class ORMRepository implements
      */
     public function findOneBy($criteria)
     {
-        if (!$criteria instanceof Criteria) {
-            $criteriaParams = $criteria;
-
-            $criteria = Criteria::create();
-            foreach ($criteriaParams as $name => $value) {
-                $criteria->andWhere(Criteria::expr()->eq($name, $value));
-            }
-        }
+        $criteria = Util::normalizeCriteria($criteria);
 
         $criteria->setFirstResult(0);
         $criteria->setMaxResults(1);

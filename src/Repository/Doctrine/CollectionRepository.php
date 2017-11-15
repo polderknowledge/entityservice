@@ -10,6 +10,7 @@ use PolderKnowledge\EntityService\Repository\Feature\DeletableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\ReadableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\TransactionAwareInterface;
 use PolderKnowledge\EntityService\Repository\Feature\WritableInterface;
+use PolderKnowledge\EntityService\Repository\Util;
 use UnexpectedValueException;
 
 class CollectionRepository implements
@@ -36,6 +37,8 @@ class CollectionRepository implements
 
     public function deleteBy($criteria)
     {
+        $criteria = Util::normalizeCriteria($criteria);
+
         $itemsToDelete = $this->allItems->matching($criteria);
 
         foreach ($itemsToDelete as $item) {
@@ -46,6 +49,8 @@ class CollectionRepository implements
 
     public function countBy($criteria)
     {
+        $criteria = Util::normalizeCriteria($criteria);
+
         return $this->allItems->matching($criteria)->count();
     }
 
@@ -65,11 +70,15 @@ class CollectionRepository implements
 
     public function findBy($criteria)
     {
+        $criteria = Util::normalizeCriteria($criteria);
+
         return $this->allItems->matching($criteria)->toArray();
     }
 
     public function findOneBy($criteria)
     {
+        $criteria = Util::normalizeCriteria($criteria);
+
         return $this->allItems->matching($criteria)->first();
     }
 

@@ -73,4 +73,15 @@ class CollectionRepositoryTest extends \PHPUnit_Framework_TestCase
         self::assertEquals($entityTwo, $service->find(2));
         self::assertEquals(null, $service->find(3));
     }
+
+    public function testArrayCriteria()
+    {
+        $entityOne = new MyEntity(1);
+        $entityTwo = new MyEntity(2);
+
+        $collectionRepository = new CollectionRepository([$entityOne, $entityTwo]);
+        $service = new EntityService($collectionRepository, MyEntity::class);
+
+        self::assertEquals([$entityTwo], array_values($service->findBy(['id' => 2])));
+    }
 }
