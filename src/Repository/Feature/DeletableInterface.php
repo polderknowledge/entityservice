@@ -26,8 +26,8 @@ interface DeletableInterface
     /**
      * Removes objects by a set of criteria.
      *
-     * @param array|Criteria $criteria
+     * @param Criteria $criteria
      * @return int Returns the number of records that are deleted.
      */
-    public function deleteBy($criteria);
+    public function deleteBy(Criteria $criteria);
 }

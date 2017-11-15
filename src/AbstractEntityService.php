@@ -227,12 +227,12 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
     /**
      * Deletes all objects matching the criteria from the repository
      *
-     * @param array|Criteria $criteria The criteria values to match on.
+     * @param Criteria $criteria The criteria values to match on.
      * @return mixed
      * @throws \Zend\EventManager\Exception\InvalidArgumentException
      * @throws \PolderKnowledge\EntityService\Exception\RuntimeException
      */
-    public function deleteBy($criteria)
+    public function deleteBy(Criteria $criteria)
     {
         if (!$this->isRepositoryDeletable()) {
             throw $this->createNotDeletableException();

@@ -114,16 +114,16 @@ class ORMRepository implements
     /**
      * Removes objects by a set of criteria.
      *
-     * @param array|Criteria $criteria
+     * @param Criteria $criteria
      * @return void
      * @throws \Doctrine\ORM\Query\QueryException
      */
-    public function deleteBy($criteria)
+    public function deleteBy(Criteria $criteria)
     {
         $criteria = Util::normalizeCriteria($criteria);
 
         $queryBuilder = $this->getQueryBuilder($criteria);
-        $queryBuilder->delete('e');
+        $queryBuilder->delete($this->entityName, 'e');
         $queryBuilder->getQuery()->execute();
     }
 

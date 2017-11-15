@@ -35,7 +35,7 @@ class CollectionRepository implements
         $this->persisted->removeElement($entity);
     }
 
-    public function deleteBy($criteria)
+    public function deleteBy(Criteria $criteria)
     {
         $criteria = Util::normalizeCriteria($criteria);
 
