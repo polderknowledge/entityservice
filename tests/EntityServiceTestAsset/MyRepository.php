@@ -9,6 +9,7 @@
 
 namespace PolderKnowledge\EntityServiceTestAsset;
 
+use Doctrine\Common\Collections\Criteria;
 use PolderKnowledge\EntityService\Repository\EntityRepositoryInterface;
 use PolderKnowledge\EntityService\Repository\Feature\DeletableInterface;
 use PolderKnowledge\EntityService\Repository\Feature\FlushableInterface;
@@ -28,7 +29,7 @@ class MyRepository implements
     {
     }
 
-    public function deleteBy($criteria)
+    public function deleteBy(Criteria $criteria)
     {
     }
 
