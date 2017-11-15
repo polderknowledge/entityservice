@@ -9,6 +9,7 @@
 
 namespace PolderKnowledge\EntityServiceTest;
 
+use Doctrine\Common\Collections\Criteria;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 use PolderKnowledge\EntityService\AbstractEntityService;
@@ -185,9 +186,10 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
     {
         // Arrange
         $this->repository->expects($this->exactly(1))->method('deleteBy');
+        $criteria = new Criteria();
 
         // Act
-        $this->service->deleteBy([]);
+        $this->service->deleteBy($criteria);
 
         // Assert
         // ...
@@ -205,9 +207,10 @@ class AbstractEntityServiceTest extends PHPUnit_Framework_TestCase
             $repository,
             MyEntity::class,
         ]);
+        $criteria = new Criteria();
 
         // Act
-        $service->deleteBy([]);
+        $service->deleteBy($criteria);
 
         // Assert
         // ...
