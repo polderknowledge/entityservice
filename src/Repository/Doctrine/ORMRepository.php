@@ -123,7 +123,7 @@ class ORMRepository implements
         $criteria = Util::normalizeCriteria($criteria);
 
         $queryBuilder = $this->getQueryBuilder($criteria);
-        $queryBuilder->delete('e');
+        $queryBuilder->delete($this->entityName, 'e');
         $queryBuilder->getQuery()->execute();
     }
 
