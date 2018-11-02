@@ -153,12 +153,36 @@ abstract class AbstractEntityService extends AbstractListenerAggregate implement
         };
 
         $this->listeners[] = $events->attach('countBy', $callback, 0);
-        $this->listeners[] = $events->attach('delete', $callback, 0);
-        $this->listeners[] = $events->attach('deleteBy', $callback, 0);
         $this->listeners[] = $events->attach('find', $callback, 0);
         $this->listeners[] = $events->attach('findAll', $callback, 0);
         $this->listeners[] = $events->attach('findBy', $callback, 0);
         $this->listeners[] = $events->attach('findOneBy', $callback, 0);
+        $this->listeners[] = $events->attach(
+            'delete',
+            function (EntityEvent $event) {
+                $repository = $event->getTarget()->getRepository();
+
+                call_user_func_array([$repository, 'delete'], $event->getParams());
+
+                if ($repository instanceof FlushableInterface) {
+                    $repository->flush();
+                }
+            },
+            0
+        );
+        $this->listeners[] = $events->attach(
+            'deleteBy',
+            function (EntityEvent $event) {
+                $repository = $event->getTarget()->getRepository();
+
+                call_user_func_array([$repository, 'deleteBy'], $event->getParams());
+
+                if ($repository instanceof FlushableInterface) {
+                    $repository->flush();
+                }
+            },
+            0
+        );
         $this->listeners[] = $events->attach(
             'persist',
             function (EntityEvent $event) {
